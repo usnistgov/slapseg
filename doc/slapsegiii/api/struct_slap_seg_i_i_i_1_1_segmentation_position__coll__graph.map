@@ -1,0 +1,4 @@
+<map id="SlapSegIII::SegmentationPosition" name="SlapSegIII::SegmentationPosition">
+<area shape="rect" id="node2" href="$struct_slap_seg_i_i_i_1_1_segmentation_position_1_1_result.html" title="An individual segmentation position discovery. " alt="" coords="5,5,175,112"/>
+<area shape="rect" id="node3" href="$struct_slap_seg_i_i_i_1_1_coordinate.html" title="A 2D coordinate, assuming an origin at the top left. " alt="" coords="199,13,354,105"/>
+</map>
