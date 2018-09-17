@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['invalidimagedata',['InvalidImageData',['../struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea7ea2025214691c2fcce2cdc0091a33fd',1,'SlapSegIII::ReturnStatus']]]
+  ['failedtosegment',['FailedToSegment',['../struct_slap_seg_i_i_i_1_1_segmentation_position_1_1_result.html#a3da81d7ca5ac951f0f93b385863a7447a4168a967262d1877a3bbb07c27ff101c',1,'SlapSegIII::SegmentationPosition::Result']]],
+  ['fingernotfound',['FingerNotFound',['../struct_slap_seg_i_i_i_1_1_segmentation_position_1_1_result.html#a3da81d7ca5ac951f0f93b385863a7447ac3743f5646b4cfc09f32158a4910df10',1,'SlapSegIII::SegmentationPosition::Result']]],
+  ['fullpalm',['FullPalm',['../struct_slap_seg_i_i_i_1_1_slap_image.html#ac8aaacf4a6470b3e57c80838ac16bc55a76dce8adf2175a0cc1d17586f4d36238',1,'SlapSegIII::SlapImage']]]
 ];

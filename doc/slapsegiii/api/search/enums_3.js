@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['orientation',['Orientation',['../struct_slap_seg_i_i_i_1_1_slap_image.html#a2dea14289897bbb563551792a6e9ebad',1,'SlapSegIII::SlapImage']]]
+  ['kind',['Kind',['../struct_slap_seg_i_i_i_1_1_slap_image.html#ac8aaacf4a6470b3e57c80838ac16bc55',1,'SlapSegIII::SlapImage']]]
 ];

@@ -116,6 +116,13 @@ Public Types</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a2dea14289897bbb563551792a6e9ebad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hand orientation being segmented.  <a href="struct_slap_seg_i_i_i_1_1_slap_image.html#a2dea14289897bbb563551792a6e9ebad">More...</a><br /></td></tr>
 <tr class="separator:a2dea14289897bbb563551792a6e9ebad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23054d194c3199a901b26d8e011fcde0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a23054d194c3199a901b26d8e011fcde0">Deficiency</a> { <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a23054d194c3199a901b26d8e011fcde0a08004d9d4c599f44814a861568d200cb">Deficiency::Artifacts</a> = 0, 
+<a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a23054d194c3199a901b26d8e011fcde0a85253967cdd27c00498d849ec7daa673">Deficiency::ImageQuality</a>, 
+<a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a23054d194c3199a901b26d8e011fcde0a79140cb2f9491f328505201fb0563c08">Deficiency::HandGeometry</a>, 
+<a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a23054d194c3199a901b26d8e011fcde0a4307e7e7986aa21a4b7c3ef2b5e948f6">Deficiency::Incomplete</a>
+ }</td></tr>
+<tr class="memdesc:a23054d194c3199a901b26d8e011fcde0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reasons that a <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html" title="Data and metadata of an image containing multiple fingerprints. ">SlapImage</a> cannot be reliably segmented.  <a href="struct_slap_seg_i_i_i_1_1_slap_image.html#a23054d194c3199a901b26d8e011fcde0">More...</a><br /></td></tr>
+<tr class="separator:a23054d194c3199a901b26d8e011fcde0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -259,6 +266,42 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a23054d194c3199a901b26d8e011fcde0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23054d194c3199a901b26d8e011fcde0">&#9670;&nbsp;</a></span>Deficiency</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a23054d194c3199a901b26d8e011fcde0">SlapSegIII::SlapImage::Deficiency</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reasons that a <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html" title="Data and metadata of an image containing multiple fingerprints. ">SlapImage</a> cannot be reliably segmented. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a23054d194c3199a901b26d8e011fcde0a08004d9d4c599f44814a861568d200cb"></a>Artifacts&#160;</td><td class="fielddoc"><p>Moisture/condensation "halos," "ghost" impressions, etc. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a23054d194c3199a901b26d8e011fcde0a85253967cdd27c00498d849ec7daa673"></a>ImageQuality&#160;</td><td class="fielddoc"><p>Low contrast, over-inked, too much pressure, etc. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a23054d194c3199a901b26d8e011fcde0a79140cb2f9491f328505201fb0563c08"></a>HandGeometry&#160;</td><td class="fielddoc"><p>Hand placed sideways, upside-down, or is overly-rotated in impressions where rotation is not expected. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a23054d194c3199a901b26d8e011fcde0a4307e7e7986aa21a4b7c3ef2b5e948f6"></a>Incomplete&#160;</td><td class="fielddoc"><p>Overwhelming majority of expected ridge structure is not present. </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00134">134</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9c212850f08012d17d39bb7dc631ed97"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9c212850f08012d17d39bb7dc631ed97">&#9670;&nbsp;</a></span>SlapImage() <span class="overload">[1/2]</span></h2>
@@ -376,7 +419,7 @@ Public Attributes</h2></td></tr>
 
 <p>Width of the image. </p>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00169">169</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00192">192</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 
 </div>
 </div>
@@ -394,7 +437,7 @@ Public Attributes</h2></td></tr>
 
 <p>Height of the image. </p>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00171">171</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00194">194</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 
 </div>
 </div>
@@ -412,7 +455,7 @@ Public Attributes</h2></td></tr>
 
 <p>Resolution of the image in pixels per inch. </p>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00173">173</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00196">196</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 
 </div>
 </div>
@@ -430,7 +473,7 @@ Public Attributes</h2></td></tr>
 
 <p>The kind of capture employed to create the image. </p>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00175">175</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00198">198</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 
 </div>
 </div>
@@ -448,7 +491,7 @@ Public Attributes</h2></td></tr>
 
 <p>The capture technology used to create the image. </p>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00177">177</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00200">200</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 
 </div>
 </div>
@@ -466,7 +509,7 @@ Public Attributes</h2></td></tr>
 
 <p>The orientation of fingers in the image. </p>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00179">179</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00202">202</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 
 </div>
 </div>
@@ -486,7 +529,7 @@ Public Attributes</h2></td></tr>
 <p>It is raw 8 bits/pixel grayscale image data, canonically coded as defined in ISO/IEC 19794-4:2005, section 6.2.</p>
 <dl class="section note"><dt>Note</dt><dd>To pass pixels to a C-style array, invoke pixel's <code>data()</code> method (<code>pixels.data()</code>). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00191">191</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00214">214</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 
 </div>
 </div>

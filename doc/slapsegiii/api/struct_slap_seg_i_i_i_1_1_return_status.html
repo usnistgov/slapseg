@@ -100,10 +100,11 @@ Public Types</h2></td></tr>
 <tr class="memitem:ac2866121d09b2e624ed5c99f654ad28e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28e">Code</a> { <br />
 &#160;&#160;<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea505a83f220c02df2f85c3810cd9ceb38">Code::Success</a> = 0, 
 <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea7ea2025214691c2fcce2cdc0091a33fd">Code::InvalidImageData</a>, 
-<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea3960ff2bdeb38a7cc49bf03c91a42c82">Code::RotationDetected</a>, 
-<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28eaae0846ce7fdb6cfbd98cc739d95f2f8e">Code::UnsupportedResolution</a>, 
+<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea29b1cb882056409c6ef6a2e199098be6">Code::RequestRecapture</a>, 
+<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea1745afd5c10fa6e614eeb4be757dab2c">Code::RequestRecaptureWithAttempt</a>, 
 <br />
-&#160;&#160;<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ead0e9d4232bf91600e6c4eca73fffb743">Code::UnsupportedSlapType</a>, 
+&#160;&#160;<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28eaae0846ce7fdb6cfbd98cc739d95f2f8e">Code::UnsupportedResolution</a>, 
+<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ead0e9d4232bf91600e6c4eca73fffb743">Code::UnsupportedSlapType</a>, 
 <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28eafa2e75d0ec2eff8aaf7be40134ecceac">Code::VendorDefined</a>
 <br />
  }</td></tr>
@@ -112,15 +113,19 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab5576ecfee5cc74a4a1c9180fdfcea54"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ab5576ecfee5cc74a4a1c9180fdfcea54">ReturnStatus</a> (const <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28e">Code</a> <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ad065b5a9ee8510d82f58977a0c056a6e">code</a>=<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea505a83f220c02df2f85c3810cd9ceb38">Code::Success</a>, const std::string &amp;<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ad9f122fcf340cc1b8834b1e39a6b489b">message</a>=&quot;&quot;)</td></tr>
-<tr class="memdesc:ab5576ecfee5cc74a4a1c9180fdfcea54"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html" title="Information about the execution of an API method. ">ReturnStatus</a> constructor.  <a href="#ab5576ecfee5cc74a4a1c9180fdfcea54">More...</a><br /></td></tr>
-<tr class="separator:ab5576ecfee5cc74a4a1c9180fdfcea54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78ad271f8ae87b4a48689ad863658b76"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#a78ad271f8ae87b4a48689ad863658b76">ReturnStatus</a> (const <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28e">Code</a> <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ad065b5a9ee8510d82f58977a0c056a6e">code</a>=<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea505a83f220c02df2f85c3810cd9ceb38">Code::Success</a>, const std::set&lt; <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a23054d194c3199a901b26d8e011fcde0">SlapImage::Deficiency</a> &gt; &amp;<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#a66322130fc607a3a3ea7228c79b756a1">imageDeficiencies</a>={}, const std::string &amp;<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ad9f122fcf340cc1b8834b1e39a6b489b">message</a>=&quot;&quot;)</td></tr>
+<tr class="memdesc:a78ad271f8ae87b4a48689ad863658b76"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html" title="Information about the execution of an API method. ">ReturnStatus</a> constructor.  <a href="#a78ad271f8ae87b4a48689ad863658b76">More...</a><br /></td></tr>
+<tr class="separator:a78ad271f8ae87b4a48689ad863658b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ad065b5a9ee8510d82f58977a0c056a6e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28e">Code</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ad065b5a9ee8510d82f58977a0c056a6e">code</a> {}</td></tr>
 <tr class="memdesc:ad065b5a9ee8510d82f58977a0c056a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returned status code.  <a href="#ad065b5a9ee8510d82f58977a0c056a6e">More...</a><br /></td></tr>
 <tr class="separator:ad065b5a9ee8510d82f58977a0c056a6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66322130fc607a3a3ea7228c79b756a1"><td class="memItemLeft" align="right" valign="top"><a id="a66322130fc607a3a3ea7228c79b756a1"></a>
+std::set&lt; <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a23054d194c3199a901b26d8e011fcde0">SlapImage::Deficiency</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#a66322130fc607a3a3ea7228c79b756a1">imageDeficiencies</a> {}</td></tr>
+<tr class="memdesc:a66322130fc607a3a3ea7228c79b756a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deficiencies with a <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html" title="Data and metadata of an image containing multiple fingerprints. ">SlapImage</a> (required only when code is RequestRecapture or RequestRecaptureWithAttempt). <br /></td></tr>
+<tr class="separator:a66322130fc607a3a3ea7228c79b756a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9f122fcf340cc1b8834b1e39a6b489b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ad9f122fcf340cc1b8834b1e39a6b489b">message</a> {}</td></tr>
 <tr class="memdesc:ad9f122fcf340cc1b8834b1e39a6b489b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explanatory message (optional).  <a href="#ad9f122fcf340cc1b8834b1e39a6b489b">More...</a><br /></td></tr>
 <tr class="separator:ad9f122fcf340cc1b8834b1e39a6b489b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,7 +133,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Information about the execution of an API method. </p>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00285">285</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00303">303</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="ac2866121d09b2e624ed5c99f654ad28e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac2866121d09b2e624ed5c99f654ad28e">&#9670;&nbsp;</a></span>Code</h2>
@@ -156,7 +161,11 @@ Public Attributes</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="ac2866121d09b2e624ed5c99f654ad28ea7ea2025214691c2fcce2cdc0091a33fd"></a>InvalidImageData&#160;</td><td class="fielddoc"><p>Failure: Image data was not parsable. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ac2866121d09b2e624ed5c99f654ad28ea3960ff2bdeb38a7cc49bf03c91a42c82"></a>RotationDetected&#160;</td><td class="fielddoc"><p>Too much rotation detected on an image that should not be rotated (image should have been rejected). </p>
+<tr><td class="fieldname"><a id="ac2866121d09b2e624ed5c99f654ad28ea29b1cb882056409c6ef6a2e199098be6"></a>RequestRecapture&#160;</td><td class="fielddoc"><p>Failure: Image cannot be reliably segmented and should be recaptured. </p>
+<p>No best-effort segmentation attempt will be provided. At least one Deficiency shall be specified. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ac2866121d09b2e624ed5c99f654ad28ea1745afd5c10fa6e614eeb4be757dab2c"></a>RequestRecaptureWithAttempt&#160;</td><td class="fielddoc"><p>Failure: Image cannot be reliably segmented and should be recaptured. </p>
+<p>Best-effort segmentation was attempted. At least one Deficiency shall be specified. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ac2866121d09b2e624ed5c99f654ad28eaae0846ce7fdb6cfbd98cc739d95f2f8e"></a>UnsupportedResolution&#160;</td><td class="fielddoc"><p>Failure: Image resolution not supported. </p>
 </td></tr>
@@ -167,13 +176,13 @@ Public Attributes</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00288">288</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00306">306</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ab5576ecfee5cc74a4a1c9180fdfcea54"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5576ecfee5cc74a4a1c9180fdfcea54">&#9670;&nbsp;</a></span>ReturnStatus()</h2>
+<a id="a78ad271f8ae87b4a48689ad863658b76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78ad271f8ae87b4a48689ad863658b76">&#9670;&nbsp;</a></span>ReturnStatus()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -183,6 +192,12 @@ Public Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28e">Code</a>&#160;</td>
           <td class="paramname"><em>code</em> = <code><a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea505a83f220c02df2f85c3810cd9ceb38">Code::Success</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::set&lt; <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a23054d194c3199a901b26d8e011fcde0">SlapImage::Deficiency</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>imageDeficiencies</em> = <code>{}</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -202,6 +217,7 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">code</td><td>Status code from a method. </td></tr>
+    <tr><td class="paramname">imageDeficiencies</td><td>If code is RequestRecapture or RequestRecaptureWithAttempt, one or more Deficiency describing why a recapture should be requested. </td></tr>
     <tr><td class="paramname">message</td><td>Message providing insight into code's value.</td></tr>
   </table>
   </dd>
@@ -227,7 +243,7 @@ Public Attributes</h2></td></tr>
 
 <p>Returned status code. </p>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00325">325</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00358">358</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 
 </div>
 </div>
@@ -245,7 +261,7 @@ Public Attributes</h2></td></tr>
 
 <p>Explanatory message (optional). </p>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00327">327</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00365">365</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 
 </div>
 </div>
