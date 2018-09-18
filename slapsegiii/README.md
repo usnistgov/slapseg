@@ -1,0 +1,41 @@
+SlapSeg III
+===========
+
+Slap Fingerprint Segmentation Evaluation (SlapSeg) III is a public test of
+automated slap fingerprint segmentation algorithms. In SlapSeg III, output from
+automated algorithms is compared to output from a human examiner and analyzed
+for similarity. Algorithms are additionally encouraged to note deficiencies in
+images tenprint card scans, identification flats, upper palm, and full palm
+captures.
+
+Contents
+--------
+ * Validation (*coming soon*)
+   - Package used to verify and submit SlapSeg III libraries for testing at
+     NIST.
+- `libslapsegiii` (*coming soon*)
+   - Library containing required implementations of methods from the
+     [SlapSeg III API]. Submitted libraries must link against **but not
+     include** this library
+
+Communication
+-------------
+If you found a bug and can provide steps to reliably reproduce it, or if you
+have a feature request, please [open an issue]. Other questions may be addressed
+to the [NIST SlapSeg team](mailto:slapseg@nist.gov).
+
+The SlapSeg team sends updates about the SlapSeg tests to their mailing list.
+Enter your e-mail address on the [mailing list site], or send a blank e-mail to
+SlapSeg+subscribe@list.nist.gov to be automatically subscribed. Posts to the
+list are mirrored on an [RSS feed].
+
+License
+-------
+The items in this repository are released in the public domain. See the
+[LICENSE] for details.
+
+[SlapSeg III API]: https://pages.nist.gov/slapseg/doc/slapsegiii/api
+[open an issue]: https://github.com/usnistgov/slapseg/issues
+[mailing list site]: https://groups.google.com/a/list.nist.gov/forum/#!forum/slapseg/join
+[RSS feed]: https://groups.google.com/a/list.nist.gov/forum/feed/slapseg/msgs/rss.xml
+[LICENSE]: https://github.com/usnistgov/slapseg/blob/master/LICENSE.md
