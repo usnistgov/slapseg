@@ -1,0 +1,476 @@
+/**
+ * @mainpage
+ * @section Overview
+ * This is the API that must be implemented to participate in the National
+ * Institute of Standards and Technology (NIST)'s [Slap Fingerprint Segmentation
+ * III Evaluation](https://www.nist.gov/itl/iad/image-group/slapsegiii)
+ * (%SlapSegIII).
+ *
+ * @section Implementation
+ * A pure-virtual (abstract) class called SlapSegIII::Interface has been
+ * created. Participants must implement all methods of SlapSegIII::Interface in
+ * a subclass, and submit this implementation as a shared library. The name of
+ * the library must follow the instructions outlined in the test plan, and be
+ * identical to the information returned from
+ * SlapSegIII::Interface::getIdentification(). A test application will link
+ * against the submitted library, instantiate an instance of the implementation
+ * by calling SlapSegIII::Interface::getImplementation(), and perform various
+ * segmentation operations.
+ *
+ * @section Contact
+ * Additional information regarding the Slap Fingerprint Segmentation Evaluation
+ * by emailing the test liaisons at slapseg@nist.gov.
+ *
+ * @section License
+ * This software was developed at NIST by employees of the Federal Government
+ * in the course of their official duties. Pursuant to title 17 Section 105 of
+ * the United States Code, this software is not subject to copyright protection
+ * and is in the public domain. NIST assumes no responsibility whatsoever for
+ * its use by other parties, and makes no guarantees, expressed or implied,
+ * about its quality, reliability, or any other characteristic.
+ */
+
+#ifndef SLAPSEGIII_H_
+#define SLAPSEGIII_H_
+
+#include <memory>
+#include <set>
+#include <string>
+#include <vector>
+
+/** Slap Fingerprint Segmentation Evaluation III namespace. */
+namespace SlapSegIII
+{
+	/** Friction ridge generalized position. */
+	enum class FrictionRidgeGeneralizedPosition
+	{
+		/** Unknown. */
+		Unknown = 0,
+		/** Right thumb. */
+		RightThumb = 1,
+		/** Right index. */
+		RightIndex = 2,
+		/** Right middle. */
+		RightMiddle = 3,
+		/** Right ring. */
+		RightRing = 4,
+		/** Right little. */
+		RightLittle = 5,
+		/** Left thumb. */
+		LeftThumb = 6,
+		/** Left index. */
+		LeftIndex = 7,
+		/** Left middle. */
+		LeftMiddle = 8,
+		/** Left ring. */
+		LeftRing = 9,
+		/** Left little. */
+		LeftLittle = 10
+	};
+
+	/** A 2D coordinate, assuming an origin at the top left. */
+	struct Coordinate
+	{
+		/**
+		 * Coordinate constructor.
+		 *
+		 * @param x
+		 * X coordinate.
+		 * @param y
+		 * Y coordinate.
+		 */
+		Coordinate(
+		    const int32_t x = 0,
+		    const int32_t y = 0)
+		    noexcept;
+
+		/** X coordinate */
+		int32_t x{};
+		/** Y coordinate */
+		int32_t y{};
+	};
+	/** Convenience definition for struct Coordinate. */
+	using Coordinate = struct Coordinate;
+
+	/** Data and metadata of an image containing multiple fingerprints. */
+	struct SlapImage
+	{
+		/** Kind of slap image */
+		enum class Kind
+		{
+			/** Two inch (rotated) slap (FRGP 13, 14) */
+			TwoInch = 2,
+			/** Three inch Identification Flats (FRGP 13, 14, 15) */
+			ThreeInch = 3,
+			/** Upper palm (FRGP 15, 26, 28) */
+			UpperPalm = 5,
+			/** Full palm (FRGP 21, 23) */
+			FullPalm = 8
+		};
+
+		/** Friction ridge capture technology. */
+		enum class CaptureTechnology
+		{
+			/** Unknown. */
+			Unknown = 0,
+			/** Scanned ink on paper. */
+			ScannedInkOnPaper = 2,
+			/** Optical, total internal reflection, bright field. */
+			OpticalTIRBright = 3
+		};
+
+		/** Hand orientation being segmented. */
+		enum class Orientation
+		{
+			/** Right hand. */
+			Right = 0,
+			/** Left hand. */
+			Left = 1,
+			/** Two thumbs. */
+			Thumbs = 2
+		};
+
+		/** Reasons that a SlapImage cannot be reliably segmented. */
+		enum class Deficiency
+		{
+			/**
+			 * Moisture/condensation "halos," "ghost"
+			 * impressions, etc.
+			 */
+			Artifacts = 0,
+			/** Low contrast, over-inked, too much pressure, etc. */
+			ImageQuality,
+			/**
+			 * Hand placed sideways, upside-down, or is
+			 * overly-rotated in impressions where rotation is not
+			 * expected.
+			 */
+			HandGeometry,
+			/**
+			 * Overwhelming majority of expected ridge structure
+			 * is not present.
+			 */
+			Incomplete
+		};
+
+		/** Default SlapImage constructor. */
+		SlapImage() = default;
+
+		/**
+		 * @brief
+		 * SlapImage constructor.
+		 *
+		 * @param width
+		 * Width of the image.
+		 * @param height
+		 * Height of the image.
+		 * @param ppi
+		 * Resolution of the image in pixels per inch.
+		 * @param kind
+		 * The kind of capture employed to create the image.
+		 * @param captureTechnology
+		 * The capture technology used to create the image.
+		 * @param orientation
+		 * The orientation of fingers in the image.
+		 * @param pixels
+		 * `width` * `height` bytes of image data, with `pixels.front()`
+		 * representing the top-left pixel and `pixels.back()`
+		 * representing the bottom-right pixel. It is raw 8 bits/pixel
+		 * grayscale image data, canonically coded as defined in ISO/IEC
+		 * 19794-4:2005, section 6.2.
+		 */
+		SlapImage(
+		    const uint16_t width,
+		    const uint16_t height,
+		    const uint16_t ppi,
+		    const Kind kind,
+		    const CaptureTechnology captureTechnology,
+		    const Orientation orientation,
+		    const std::vector<uint8_t> &pixels);
+
+		/** Width of the image. */
+		uint16_t width{};
+		/** Height of the image. */
+		uint16_t height{};
+		/** Resolution of the image in pixels per inch. */
+		uint16_t ppi{};
+		/** The kind of capture employed to create the image. */
+		Kind kind{};
+		/**  The capture technology used to create the image. */
+		CaptureTechnology captureTechnology{};
+		/** The orientation of fingers in the image. */
+		Orientation orientation{};
+		/**
+		 * `width` * `height` bytes of image data, with `pixels.front()`
+		 * representing the top-left pixel and `pixels.back()`
+		 * representing the bottom-right pixel. It is raw 8 bits/pixel
+		 * grayscale image data, canonically coded as defined in ISO/IEC
+		 * 19794-4:2005, section 6.2.
+		 *
+		 * @note
+		 * To pass pixels to a C-style array, invoke pixel's `data()`
+		 * method (`pixels.data()`).
+		 */
+		std::vector<uint8_t> pixels{};
+	};
+	/** Convenience definition for struct SlapImage. */
+	using SlapImage = struct SlapImage;
+
+	/** Representation of a segmentation position. */
+	struct SegmentationPosition
+	{
+		/** An individual segmentation position discovery. */
+		struct Result
+		{
+			/** Possible results of segmenting a single finger. */
+			enum class Code
+			{
+				/** Success. */
+				Success = 0,
+				/** Finger not found to segment. */
+				FingerNotFound,
+				/** Finger present, but can't be segmented. */
+				FailedToSegment,
+				/** Failure: Other reason. See error message. */
+				VendorDefined
+			};
+
+			/**
+			 * Result constructor.
+			 *
+			 * @param code
+			 * Status from segmenting an individual finger.
+			 * @param message
+			 * Message providing insight into code's value.
+			 */
+			Result(
+			    const Code code = Code::Success,
+			    const std::string &message = "");
+
+			/** Status from segmenting an individual finger. */
+			Code code{};
+			/** Message providing insight into code's value. */
+			std::string message{};
+		};
+		/** Convenience definition for struct Result. */
+		using Result = struct Result;
+
+		/** Default SegmentationPosition constructor. */
+		SegmentationPosition() = default;
+
+		/**
+		 * @brief
+		 * SegmentationPosition constructor.
+		 *
+		 * @param frgp
+		 * FrictionRidgeGeneralizedPosition for the bounded finger.
+		 * @param tl
+		 * Top-left vertex.
+		 * @param tr
+		 * Top-right vertex.
+		 * @param bl
+		 * Bottom-left vertex.
+		 * @param br
+		 * Bottom-right vertex.
+		 * @param result
+		 * Segmentation result.
+		 */
+		SegmentationPosition(
+		    const FrictionRidgeGeneralizedPosition frgp,
+		    const Coordinate &tl,
+		    const Coordinate &tr,
+		    const Coordinate &bl,
+		    const Coordinate &br,
+		    const Result result = {});
+
+		/** Friction ridge generalized position */
+		FrictionRidgeGeneralizedPosition frgp{};
+		/** Top-left coordinate. */
+		Coordinate tl{};
+		/** Top-right coordinate. */
+		Coordinate tr{};
+		/** Bottom-left coordinate. */
+		Coordinate bl{};
+		/** Bottom-right coordinate. */
+		Coordinate br{};
+		/** Result of segmentation position discovery. */
+		Result result{};
+	};
+	/** Convenience definition for struct FingerSegment. */
+	using FingerSegment = struct FingerSegment;
+
+	/** Information about the execution of an API method. */
+	struct ReturnStatus
+	{
+		/** Possible exit status of a SlapSegIII API method. */
+		enum class Code
+		{
+			/** Success. */
+			Success = 0,
+			/** Failure: Image data was not parsable. */
+			InvalidImageData,
+			/**
+			  * Failure: Image cannot be reliably segmented and
+			  * should be recaptured. No best-effort segmentation
+			  * attempt will be provided. At least one Deficiency
+			  * shall be specified.
+			  */
+			RequestRecapture,
+			/**
+			  * Failure: Image cannot be reliably segmented and
+			  * should be recaptured. Best-effort segmentation was
+			  * attempted. At least one Deficiency shall be
+			  * specified.
+			  */
+			RequestRecaptureWithAttempt,
+			/** Failure: Image resolution not supported. */
+			UnsupportedResolution,
+			/** Failure: Slap type is not supported. */
+			UnsupportedSlapType,
+			/** Failure: Other reason. See error message. */
+			VendorDefined
+		};
+
+		/**
+		 * @brief
+		 * ReturnStatus constructor.
+		 *
+		 * @param code
+		 * Status code from a method.
+		 * @param imageDeficiencies
+		 * If code is RequestRecapture or RequestRecaptureWithAttempt,
+		 * one or more Deficiency describing why a recapture should
+		 * be requested.
+		 * @param message
+		 * Message providing insight into code's value.
+		 *
+		 * @note
+		 * If successful, returning from a method can be accomplished
+		 * by `return {};`.
+		 */
+		ReturnStatus(
+		    const Code code = Code::Success,
+		    const std::set<SlapImage::Deficiency>
+		    &imageDeficiencies = {},
+		    const std::string &message = "");
+
+		/** Returned status code. */
+		Code code{};
+		/**
+		 * Deficiencies with a SlapImage (required only when code is
+		 * RequestRecapture or RequestRecaptureWithAttempt).
+		 */
+		std::set<SlapImage::Deficiency> imageDeficiencies{};
+		/** Explanatory message (optional). */
+		std::string message{};
+	};
+	/** Convenience definition for struct ReturnStatus */
+	using ReturnStatus = struct ReturnStatus;
+
+	/**
+	 * @brief
+	 * Slap Fingerprint Segmentation III interface.
+	 *
+	 * @details
+	 * Participants must inherit from this class and implement all methods.
+	 */
+	class Interface
+	{
+	public:
+		/**
+		 * @brief
+		 * Return identification and version information for this
+		 * submission.
+		 *
+		 * @return
+		 * Identifier and version number for this submission.
+		 *
+		 * @note
+		 * This method shall return instantly.
+		 */
+		virtual
+		std::tuple<std::string, uint16_t>
+		getIdentification()
+		    const = 0;
+
+		/**
+		 * @brief
+		 * Obtain slap image heights supported by this implementation.
+		 *
+		 * @return
+		 * Set of supported SlapImage::Kind.
+		 *
+		 * @note
+		 * Returned set must include at least one SlapImage::Kind.
+		 *
+		 * @note
+		 * This method shall return instantly.
+		 */
+		virtual
+		std::set<SlapImage::Kind>
+		getSupported()
+		    const = 0;
+
+		/**
+		 * @brief
+		 * Discover fingerprint segmentation positions within a slap
+		 * image.
+		 *
+		 * @param image
+		 * Image data and metadata to segment.
+		 *
+		 * @return
+		 * A tuple whose first member is ReturnStatus (with
+		 * ReturnStatus.code set to ReturnStatus::Code::Success when
+		 * successful, or another ReturnStatus::Code and reason
+		 * ReturnStatus.message on failure) and whose second member is
+		 * a std::vector containing a SegmentationPosition for each
+		 * segmentation position found within image.
+		 * @note
+		 * In failure situations, a best-effort segmentation shall
+		 * still be performed. Some images may be provided whose
+		 * content should cause an implementation to reject the image.
+		 * This is in support of an evaluation goal to determine if an
+		 * implementation can correctly determine when to issue a
+		 * request for recapture and specifiy the reasoning. If the
+		 * implementation incorrectly determines a failure, the
+		 * best-effort segmentation positions can still be scored.
+		 * Additionally, this best-effort segmentation demonstraits the
+		 * types of problems that can be worked around, (e.g., on
+		 * ink-card scans where the enrollee is no longer present).
+		 *
+		 * @note
+		 * This method shall return on average within the time limits
+		 * specified in Table 8 of the %SlapSegIII Test Plan.
+		 */
+		virtual
+		std::tuple<ReturnStatus, std::vector<SegmentationPosition>>
+		segment(
+		    const SlapImage &image) = 0;
+
+		/** Destructor. */
+		virtual ~Interface() = default;
+
+		/**
+		 * @brief
+		 * Obtain a managed pointer to an object implementing
+		 * SlapSegIII::Interface.
+		 *
+		 * @return
+		 * Shared pointer to an instance of Interface containing the
+		 * participant's segmentation algorithm.
+		 *
+		 * @note
+		 * A possible implementation might be:
+		 * `return (std::make_shared<Implementation>());`
+		 *
+		 * @note
+		 * This method shall return in <= 10 seconds.
+		 */
+		static
+		std::shared_ptr<Interface>
+		getImplementation();
+	};
+}
+
+#endif /* SLAPSEGIII_H_ */
