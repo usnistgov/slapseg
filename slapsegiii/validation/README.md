@@ -26,7 +26,6 @@ Contents
    - [validate]: (*coming soon*) Script that automates running the validation
      and performing checks on the output.
  * Supporting Files
-   - [bin/]: Build location of the validation executable.
    - [README.md]: This file.
    - [src/]: Source code to build the validation executable.
    - [VERSION]: Version number of the validation package.
