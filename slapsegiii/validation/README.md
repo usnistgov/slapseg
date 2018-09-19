@@ -68,7 +68,7 @@ How to Run
 <details>
   <summary><em>Expand to view the output from an example run.</em></summary>
 
-```sh
+```
 $ SLAPSEGIII_MARKETING_NAME="NIST Fingerprint Segmenter v5" ./validate
 
 SlapSeg III Validation (201806141455) -- Wed Sep 19 10:22:26 EDT 2018
