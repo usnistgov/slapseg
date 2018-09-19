@@ -10,10 +10,10 @@ captures.
 
 Contents
 --------
- * Validation (*coming soon*)
+ * [Validation]
    - Package used to verify and submit SlapSeg III libraries for testing at
      NIST.
-- `libslapsegiii` (*coming soon*)
+- [`libslapsegiii`]
    - Library containing required implementations of methods from the
      [SlapSeg III API]. Submitted libraries must link against **but not
      include** this library
@@ -34,6 +34,8 @@ License
 The items in this repository are released in the public domain. See the
 [LICENSE] for details.
 
+[Validation]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/
+[`libslapsegiii`]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src/libslapsegiii
 [SlapSeg III API]: https://pages.nist.gov/slapseg/doc/slapsegiii/api
 [open an issue]: https://github.com/usnistgov/slapseg/issues
 [mailing list site]: https://groups.google.com/a/list.nist.gov/forum/#!forum/slapseg/join
