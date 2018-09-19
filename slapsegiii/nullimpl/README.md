@@ -29,7 +29,7 @@ License
 The items in this repository are released in the public domain. See the
 [LICENSE] for details.
 
-[libslapsegiii]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/libslapsegiii
+[`libslapsegiii`]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src/libslapsegiii
 [NIST SlapSeg team]: mailto:slapseg@nist.gov
 [open an issue]: https://github.com/usnistgov/slapseg/issues
 [mailing list site]: https://groups.google.com/a/list.nist.gov/forum/#!forum/slapseg/join
