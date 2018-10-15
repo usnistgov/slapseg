@@ -311,6 +311,21 @@ SlapSegIII::Validation::segment(
 		throw std::runtime_error("Exception while segmenting " +
 		    imageName);
 	}
+
+	/* Enforce correct reporting of image deficiencies */
+	if (((std::get<0>(rv).code == ReturnStatus::Code::RequestRecapture) ||
+	    (std::get<0>(rv).code ==
+	    ReturnStatus::Code::RequestRecaptureWithAttempt)) &&
+	    (std::get<0>(rv).imageDeficiencies.size() == 0))
+		throw std::runtime_error("At least one image deficiency must "
+		    "be set if requesting recapture for image " + imageName);
+	if ((std::get<0>(rv).imageDeficiencies.size() != 0) &&
+	    (std::get<0>(rv).code != ReturnStatus::Code::RequestRecapture) &&
+	    (std::get<0>(rv).code !=
+	    ReturnStatus::Code::RequestRecaptureWithAttempt))
+		throw std::runtime_error("Cannot declare an image deficiency "
+		    "if not requesting a recapture for image " + imageName);
+
 	const auto elapsed = std::to_string(std::chrono::duration_cast<
 	    std::chrono::microseconds>(stop - start).count());
 
