@@ -265,13 +265,17 @@ namespace SlapSegIII
 		 * @param frgp
 		 * FrictionRidgeGeneralizedPosition for the bounded finger.
 		 * @param tl
-		 * Top-left vertex.
+		 * Top-left coordinate, where *top* refers to the top of the
+		 * fingerprint.
 		 * @param tr
-		 * Top-right vertex.
+		 * Top-right coordinate, where *top* refers to the top of the
+		 * fingerprint.
 		 * @param bl
-		 * Bottom-left vertex.
+		 * Bottom-left coordinate, where *bottom* refers to distal
+		 * interphalangeal joint of the fingerprint.
 		 * @param br
-		 * Bottom-right vertex.
+		 * Bottom-right coordinate, where *bottom* refers to distal
+		 * interphalangeal joint of the fingerprint.
 		 * @param result
 		 * Segmentation result.
 		 */
@@ -285,13 +289,25 @@ namespace SlapSegIII
 
 		/** Friction ridge generalized position */
 		FrictionRidgeGeneralizedPosition frgp{};
-		/** Top-left coordinate. */
+		/**
+		 * Top-left coordinate, where *top* refers to the top of the
+		 * fingerprint.
+		 */
 		Coordinate tl{};
-		/** Top-right coordinate. */
+		/**
+		 * Top-right coordinate, where *top* refers to the top of the
+		 * fingerprint.
+		 */
 		Coordinate tr{};
-		/** Bottom-left coordinate. */
+		/**
+		 * Bottom-left coordinate, where *bottom* refers to distal
+		 * interphalangeal joint of the fingerprint.
+		 */
 		Coordinate bl{};
-		/** Bottom-right coordinate. */
+		/**
+		 * Bottom-right coordinate, where *bottom* refers to distal
+		 * interphalangeal joint of the fingerprint.
+		 */
 		Coordinate br{};
 		/** Result of segmentation position discovery. */
 		Result result{};
