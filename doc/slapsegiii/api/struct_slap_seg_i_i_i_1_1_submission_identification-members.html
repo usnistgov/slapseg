@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Slap Fingerprint Segmentation Evaluation III: Main Page</title>
+<title>Slap Fingerprint Segmentation Evaluation III: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -53,7 +53,6 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
-</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -68,24 +67,25 @@ $(function() {
 </iframe>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespace_slap_seg_i_i_i.html">SlapSegIII</a></li><li class="navelem"><a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html">SubmissionIdentification</a></li>  </ul>
+</div>
+</div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Slap Fingerprint Segmentation Evaluation III Documentation</div>  </div>
+<div class="title">SlapSegIII::SubmissionIdentification Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="Overview"></a>
-Overview</h1>
-<p>This is the API that must be implemented to participate in the National Institute of Standards and Technology (NIST)'s <a href="https://www.nist.gov/itl/iad/image-group/slapsegiii">Slap Fingerprint Segmentation III Evaluation</a> (SlapSegIII).</p>
-<h1><a class="anchor" id="Implementation"></a>
-Implementation</h1>
-<p>A pure-virtual (abstract) class called <a class="el" href="class_slap_seg_i_i_i_1_1_interface.html" title="Slap Fingerprint Segmentation III interface. ">SlapSegIII::Interface</a> has been created. Participants must implement all methods of <a class="el" href="class_slap_seg_i_i_i_1_1_interface.html" title="Slap Fingerprint Segmentation III interface. ">SlapSegIII::Interface</a> in a subclass, and submit this implementation as a shared library. The name of the library must follow the instructions outlined in the test plan, and be identical to the information returned from <a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#af61f49a5bedad84a1586e2d88d99abc5" title="Obtain identification and version information for this submission. ">SlapSegIII::Interface::getIdentification()</a>. A test application will link against the submitted library, instantiate an instance of the implementation by calling <a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#a59c52c75c40dc5991d75619b2090f4ad" title="Obtain a managed pointer to an object implementing SlapSegIII::Interface. ">SlapSegIII::Interface::getImplementation()</a>, and perform various segmentation operations.</p>
-<h1><a class="anchor" id="Contact"></a>
-Contact</h1>
-<p>Additional information regarding the Slap Fingerprint Segmentation Evaluation by emailing the test liaisons at <a href="#" onclick="location.href='mai'+'lto:'+'sla'+'ps'+'eg@'+'ni'+'st.'+'go'+'v'; return false;">slaps<span style="display: none;">.nosp@m.</span>eg@n<span style="display: none;">.nosp@m.</span>ist.g<span style="display: none;">.nosp@m.</span>ov</a>.</p>
-<h1><a class="anchor" id="License"></a>
-License</h1>
-<p>This software was developed at NIST by employees of the Federal Government in the course of their official duties. Pursuant to title 17 Section 105 of the United States Code, this software is not subject to copyright protection and is in the public domain. NIST assumes no responsibility whatsoever for its use by other parties, and makes no guarantees, expressed or implied, about its quality, reliability, or any other characteristic. </p>
-</div></div><!-- contents -->
+
+<p>This is the complete list of members for <a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html">SlapSegIII::SubmissionIdentification</a>, including all inherited members.</p>
+<table class="directory">
+  <tr class="even"><td class="entry"><a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html#aa3ff3f019b9498add78ca06127b7df75">libraryIdentifier</a></td><td class="entry"><a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html">SlapSegIII::SubmissionIdentification</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html#aa6167ffb2837a632c597352ff2c2eeab">marketingIdentifier</a></td><td class="entry"><a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html">SlapSegIII::SubmissionIdentification</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html#a9f4c2071a28a191ccacb7f1d7adbbe50">SubmissionIdentification</a>()=default</td><td class="entry"><a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html">SlapSegIII::SubmissionIdentification</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html#a154e062bc6b1761167aca1f1c6d95615">SubmissionIdentification</a>(const std::string &amp;libraryIdentifier, const uint16_t version, const std::string &amp;marketingIdentifier=&quot;&quot;)</td><td class="entry"><a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html">SlapSegIII::SubmissionIdentification</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html#a65a0268cae8c0a23f466f93656b7f16c">version</a></td><td class="entry"><a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html">SlapSegIII::SubmissionIdentification</a></td><td class="entry"></td></tr>
+</table></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.14-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

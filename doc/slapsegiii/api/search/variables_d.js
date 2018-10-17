@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y',['y',['../struct_slap_seg_i_i_i_1_1_coordinate.html#a72acfee0a1d8fdc5c6d59e7fb5678e23',1,'SlapSegIII::Coordinate']]]
+  ['width',['width',['../struct_slap_seg_i_i_i_1_1_slap_image.html#a2830e99ea88d21154c60be08ed5b79e0',1,'SlapSegIII::SlapImage']]]
 ];
