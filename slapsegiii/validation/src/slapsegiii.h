@@ -380,8 +380,65 @@ namespace SlapSegIII
 		/** Explanatory message (optional). */
 		std::string message{};
 	};
-	/** Convenience definition for struct ReturnStatus */
+	/** Convenience definition for struct ReturnStatus. */
 	using ReturnStatus = struct ReturnStatus;
+
+	/** Information identifying this submission. */
+	struct SubmissionIdentification
+	{
+		/** Default constructor. */
+		SubmissionIdentification() = default;
+
+		/**
+		 * @brief
+		 * SubmissionIdentification constructor.
+		 *
+		 * @param libraryIdentifier
+		 * Identifier for this submission.
+		 * @param version
+		 * Unique version number for this submission.
+		 * @param marketingIdentifier
+		 * Optional marketing name for this submission.
+		 */
+		SubmissionIdentification(
+		    const std::string &libraryIdentifier,
+		    const uint16_t version,
+		    const std::string &marketingIdentifier = "");
+
+		/**
+		 * @brief
+		 * Version number for this submission.
+		 *
+		 * @details
+		 * Must be unique with every new submission. Must match the
+		 * final underscore-delimited token of the filename of the
+		 * core library.
+		 */
+		uint16_t version{};
+		/**
+		 * @brief
+		 * Identifier for this submission.
+		 *
+		 * @details
+		 * Should be the same for all submissions from the same
+		 * organization. Case-sensitive. Must match the regular
+		 * expression "[:alnum:]+". Must be the same as the second
+		 * underscore-delimited token of the filename of the core
+		 * library.
+		 */
+		std::string libraryIdentifier{};
+		/**
+		 * @brief
+		 * Marketing name for this submission.
+		 *
+		 * @details
+		 * Optional. Must match the regular expression "[[:graph:] ]*".
+		 */
+		std::string marketingIdentifier{};
+
+	};
+	/** Convenience definition for struct SubmissionIdentification. */
+	using SubmissionIdentification = struct SubmissionIdentification;
 
 	/**
 	 * @brief
@@ -395,17 +452,18 @@ namespace SlapSegIII
 	public:
 		/**
 		 * @brief
-		 * Return identification and version information for this
+		 * Obtain identification and version information for this
 		 * submission.
 		 *
 		 * @return
-		 * Identifier and version number for this submission.
+		 * SubmissionIdentification with identification details about
+		 * this submission.
 		 *
 		 * @note
 		 * This method shall return instantly.
 		 */
 		virtual
-		std::tuple<std::string, uint16_t>
+		SubmissionIdentification
 		getIdentification()
 		    const = 0;
 

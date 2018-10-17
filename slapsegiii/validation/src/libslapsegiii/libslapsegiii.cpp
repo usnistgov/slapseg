@@ -65,6 +65,17 @@ SlapSegIII::SlapImage::SlapImage(
 
 }
 
+SlapSegIII::SubmissionIdentification::SubmissionIdentification(
+    const std::string &libraryIdentifier,
+    const uint16_t version,
+    const std::string &marketingIdentifier) :
+    version(version),
+    libraryIdentifier(libraryIdentifier),
+    marketingIdentifier(marketingIdentifier)
+{
+
+}
+
 SlapSegIII::ReturnStatus::ReturnStatus(
     const Code code,
     const std::set<SlapImage::Deficiency> &imageDeficiencies,

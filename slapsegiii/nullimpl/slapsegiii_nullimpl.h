@@ -18,7 +18,7 @@ namespace SlapSegIII
 	class NullImplementation : public Interface
 	{
 	public:
-		std::tuple<std::string, uint16_t>
+		SubmissionIdentification
 		getIdentification()
 		    const
 		    override;

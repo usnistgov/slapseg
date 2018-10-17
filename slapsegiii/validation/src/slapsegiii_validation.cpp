@@ -114,15 +114,13 @@ SlapSegIII::Validation::parseArguments(
 void
 SlapSegIII::Validation::printIdentification()
 {
-	static const uint8_t name{0};
-	static const uint8_t version{1};
-
 	const auto id = SlapSegIII::Interface::getImplementation()->
 	    getIdentification();
 
-	std::cout << "Identifier = " << std::get<name>(id) << '\n' <<
+	std::cout << "LibraryIdentifier = " << id.libraryIdentifier << '\n' <<
+	    "MarketingIdentifier = " << id.marketingIdentifier << '\n' <<
 	    "Version = 0x" << std::setw(4) << std::setfill('0') << std::hex <<
-	    std::get<version>(id) << '\n';
+	    id.version << '\n';
 }
 
 void

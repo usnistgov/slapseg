@@ -17,7 +17,7 @@ BASENAME = slapsegiii_nullimpl
 SOURCES = $(BASENAME).cpp
 OBJECTS = $(SOURCES:%.cpp=%.o)
 
-IDENTIFIER = $(shell grep Identifier{ $(BASENAME).cpp | cut -d{ -f2 | cut -dx -f2 | tr -C -d '[:alnum:]')
+IDENTIFIER = $(shell grep LibraryIdentifier{ $(BASENAME).cpp | cut -d{ -f2 | cut -dx -f2 | tr -C -d '[:alnum:]')
 VERSION = $(shell grep Version{ $(BASENAME).cpp | cut -d{ -f2 | cut -dx -f2 | tr -C -d '[:digit:]')
 
 

@@ -10,14 +10,16 @@
 
 #include <slapsegiii_nullimpl.h>
 
-std::tuple<std::string, uint16_t>
+SlapSegIII::SubmissionIdentification
 SlapSegIII::NullImplementation::getIdentification()
     const
 {
 	static const uint16_t Version{0x0001};
-	static const std::string Identifier{"nullimpl"};
+	static const std::string LibraryIdentifier{"nullimpl"};
+	static const std::string MarketingIdentifier{"NIST SlapSegIII Stub "
+	    "Implementation (version 0.0.1)"};
 
-	return (std::make_tuple(Identifier, Version));
+	return {LibraryIdentifier, Version, MarketingIdentifier};
 }
 
 
