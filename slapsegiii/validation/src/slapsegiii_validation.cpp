@@ -429,6 +429,15 @@ main(
 {
 	int rv = EXIT_FAILURE;
 
+	if (SlapSegIII::API_MAJOR_VERSION != 0) {
+    		std::cerr << "Incompatible API version encountered.\n "
+    		    "- Validation: 0.*.*\n - Participant: " <<
+    		    SlapSegIII::API_MAJOR_VERSION << '.' <<
+    		    SlapSegIII::API_MINOR_VERSION << '.' <<
+    		    SlapSegIII::API_PATCH_VERSION << '\n';
+		return (rv);
+	}
+
 	SlapSegIII::Validation::Arguments args{};
 	try {
 		args = SlapSegIII::Validation::parseArguments(argc, argv);

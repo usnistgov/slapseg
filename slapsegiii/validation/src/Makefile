@@ -25,7 +25,7 @@ ifeq ($(CORE_LIB), )
         $(error You did not place your libraries in $(LIB_DIR))
 endif
 
-CXXFLAGS += -Wall -pedantic -std=c++11 -I$(INC_DIR) -I. -O3
+CXXFLAGS += -Wall -pedantic -std=c++11 -I$(INC_DIR) -I. -O3 -DNIST_EXTERN_API_VERSION
 LDFLAGS += -L$(LIB_DIR) -lslapsegiii -l$(patsubst lib%.so,%,$(CORE_LIB)) -Wl,-rpath,$(shell readlink -f $(LIB_DIR))
 
 BINARY = slapsegiii_validation

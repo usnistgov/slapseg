@@ -10,7 +10,7 @@
 INC_DIR = ../
 LIB_DIR = ../../lib
 
-CXXFLAGS += -fPIC -Wall -pedantic -std=c++11 -I$(INC_DIR)
+CXXFLAGS += -fPIC -Wall -pedantic -std=c++11 -I$(INC_DIR) -DNIST_EXTERN_API_VERSION
 
 SOURCES = libslapsegiii.cpp
 OBJECTS = $(SOURCES:%.cpp=%.o)
