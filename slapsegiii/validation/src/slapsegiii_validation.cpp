@@ -332,7 +332,7 @@ SlapSegIII::Validation::segment(
 	    std::get<0>(rv).code ==
 	    ReturnStatus::Code::RequestRecaptureWithAttempt) {
 		const auto correctQuantity = std::to_string(
-		    Validate::hasCorrectQuantity(std::get<1>(rv), kind,
+		    Validate::hasCorrectQuantity(std::get<1>(rv),
 		    md.orientation));
 
 		for (const auto &pos : std::get<1>(rv))
@@ -351,7 +351,7 @@ SlapSegIII::Validation::segment(
 			    "\"," + correctQuantity + '\n';
 	} else {
 		for (const auto &frgp :
-		    Validate::getExpectedFrictionRidgeGeneralizedPositions(kind,
+		    Validate::getExpectedFrictionRidgeGeneralizedPositions(
 		    md.orientation))
 			logLine += imageName + ',' + elapsed + ',' +
 			    e2i2s(std::get<0>(rv).code) + ',' +

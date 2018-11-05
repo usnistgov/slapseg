@@ -22,7 +22,6 @@ SlapSegIII::NullImplementation::getIdentification()
 	return {LibraryIdentifier, Version, MarketingIdentifier};
 }
 
-
 std::set<SlapSegIII::SlapImage::Kind>
 SlapSegIII::NullImplementation::getSupported()
     const
@@ -74,11 +73,6 @@ SlapSegIII::NullImplementation::segment(
 		    FrictionRidgeGeneralizedPosition::RightLittle,
 		    Coordinate{0, 0}, Coordinate{10, 0}, Coordinate{0, 10},
 		    Coordinate{10, 10});
-		if (image.kind == SlapImage::Kind::FullPalm)
-			positions.emplace_back(
-			    FrictionRidgeGeneralizedPosition::RightLittle,
-			    Coordinate{0, 0}, Coordinate{10, 0},
-			    Coordinate{0, 10}, Coordinate{10, 10});
 		break;
 	case SlapImage::Orientation::Left:
 		positions.emplace_back(
@@ -97,11 +91,6 @@ SlapSegIII::NullImplementation::segment(
 		    FrictionRidgeGeneralizedPosition::LeftLittle,
 		    Coordinate{0, 0}, Coordinate{10, 0}, Coordinate{0, 10},
 		    Coordinate{10, 10});
-		if (image.kind == SlapImage::Kind::FullPalm)
-			positions.emplace_back(
-			    FrictionRidgeGeneralizedPosition::LeftThumb,
-			    Coordinate{0, 0}, Coordinate{10, 0},
-			    Coordinate{0, 10}, Coordinate{10, 10});
 		break;
 	}
 

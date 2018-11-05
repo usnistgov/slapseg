@@ -106,17 +106,16 @@ namespace SlapSegIII
 			 * Determine if the SlapSegIII API allows a
 			 * SegmentationPosition to be rotated (theta != 0).
 			 *
-			 * @param p
-			 * SegmentationPosition in question.
 			 * @param kind
-			 * Kind of image from which positions was derived.
+			 * Kind of image from which SegmentationPosition were
+			 * derived.
 			 *
 			 * @return
-			 * Whether or not p is permitted to be rotated.
+			 * Whether or not SegmentationPosition are permitted to
+			 * be rotated.
 			 */
 			bool
 			canBeRotated(
-			    const SegmentationPosition &p,
 			    const SlapImage::Kind kind);
 
 			/**
@@ -129,8 +128,6 @@ namespace SlapSegIII
 			 * @param positions
 			 * Collection of SegmentationPositions returned by
 			 * SlapSegIII::Interface::segment().
-			 * @param kind
-			 * Kind of image from which positions was derived.
 			 * @param orientation
 			 * Orientation of image from which positions was
 			 * derived.
@@ -144,7 +141,6 @@ namespace SlapSegIII
 			bool
 			hasCorrectQuantity(
 			    const std::vector<SegmentationPosition> &positions,
-			    const SlapImage::Kind kind,
 			    const SlapImage::Orientation orientation);
 
 			/**
@@ -154,8 +150,6 @@ namespace SlapSegIII
 			 * SlapSegIII::Interface::segment(), as required by the
 			 * SlapSegIII API.
 			 *
-			 * @param kind
-			 * Kind of image in question.
 			 * @param orientation
 			 * Orientation of image in question.
 			 *
@@ -164,7 +158,6 @@ namespace SlapSegIII
 			 */
 			uint8_t
 			getCorrectQuantity(
-			    const SlapImage::Kind kind,
 			    const SlapImage::Orientation orientation);
 
 			/**
@@ -172,19 +165,16 @@ namespace SlapSegIII
 			 * Obtain the set of FrictionRidgeGeneralizedPositions
 			 * that would be returned in a perfect segmentation.
 			 *
-			 * @param kind
-			 * Kind of image in question.
 			 * @param orientation
 			 * Orientation of image in question.
 			 *
 			 * @return
 			 * Set of FrictionRidgeGeneralizedPositions that are
 			 * expected to be returned if segmenting the type of
-			 * image described via kind and orientation.
+			 * image described by orientation.
 			 */
 			std::set<FrictionRidgeGeneralizedPosition>
 			getExpectedFrictionRidgeGeneralizedPositions(
-			    const SlapImage::Kind kind,
 			    const SlapImage::Orientation orientation);
 
 			/**

@@ -98,9 +98,9 @@ namespace SlapSegIII
 		/** Kind of slap image */
 		enum class Kind
 		{
-			/** Two inch (rotated) slap (FRGP 13, 14) */
+			/** Tenprint card (FRGP 13, 14) */
 			TwoInch = 2,
-			/** Three inch Identification Flats (FRGP 13, 14, 15) */
+			/** Identification Flats (FRGP 13, 14, 15) */
 			ThreeInch = 3,
 			/** Upper palm (FRGP 15, 26, 28) */
 			UpperPalm = 5,
@@ -500,6 +500,7 @@ namespace SlapSegIII
 		 * ReturnStatus.message on failure) and whose second member is
 		 * a std::vector containing a SegmentationPosition for each
 		 * segmentation position found within image.
+		 *
 		 * @note
 		 * In failure situations, a best-effort segmentation shall
 		 * still be performed. Some images may be provided whose
@@ -509,13 +510,17 @@ namespace SlapSegIII
 		 * request for recapture and specifiy the reasoning. If the
 		 * implementation incorrectly determines a failure, the
 		 * best-effort segmentation positions can still be scored.
-		 * Additionally, this best-effort segmentation demonstraits the
-		 * types of problems that can be worked around, (e.g., on
-		 * ink-card scans where the enrollee is no longer present).
 		 *
 		 * @note
 		 * This method shall return on average within the time limits
 		 * specified in Table 8 of the %SlapSegIII Test Plan.
+		 *
+		 * @note
+		 * Be cognizant of semantics in returned SegmentationPosition.
+		 * Fingers in TwoInch should be rotated identically while
+		 * UpperPalm and FullPalm may be rotated independently.
+		 * ThreeInch shall not be rotated. See Section 3 of the
+		 * %SlapSegIII Test Plan for more details.
 		 */
 		virtual
 		std::tuple<ReturnStatus, std::vector<SegmentationPosition>>

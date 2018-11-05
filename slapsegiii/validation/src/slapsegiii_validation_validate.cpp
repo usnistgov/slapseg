@@ -26,7 +26,7 @@ SlapSegIII::Validation::Validate::validateSegmentationPosition(
 		    static_cast<typename std::underlying_type<ErrorCode>::type>(
 		    ErrorCode::NonRectangularCoordinates));
 
-	if (!canBeRotated(position, slapImage->kind)) {
+	if (!canBeRotated(slapImage->kind)) {
 		if (isRotated(position))
 			errors.set(
 			    static_cast<typename
@@ -77,51 +77,38 @@ SlapSegIII::Validation::Validate::gatherDeficiencies(
 
 bool
 SlapSegIII::Validation::Validate::canBeRotated(
-    const SegmentationPosition &p,
     const SlapImage::Kind kind)
 {
-	switch (kind) {
-	case SlapImage::Kind::TwoInch:
-		return (true);
-	case SlapImage::Kind::FullPalm:
-		return ((p.frgp ==
-		    FrictionRidgeGeneralizedPosition::LeftThumb) ||
-		    (p.frgp == FrictionRidgeGeneralizedPosition::RightThumb));
-	default:
-		return (false);
-	}
+	return (kind != SlapImage::Kind::ThreeInch);
 }
 
 bool
 SlapSegIII::Validation::Validate::hasCorrectQuantity(
     const std::vector<SegmentationPosition> &positions,
-    const SlapImage::Kind kind,
     const SlapImage::Orientation orientation)
 {
-	return (positions.size() == getCorrectQuantity(kind, orientation));
+	return (positions.size() == getCorrectQuantity(orientation));
 }
 
 uint8_t
 SlapSegIII::Validation::Validate::getCorrectQuantity(
-    const SlapImage::Kind kind,
     const SlapImage::Orientation orientation)
 {
 	switch (orientation) {
 	case SlapImage::Orientation::Thumbs:
 		return (2);
-	default:
-		switch (kind) {
-		case SlapImage::Kind::FullPalm:
-			return (5);
-		default:
-			return (4);
-		}
+	case SlapImage::Orientation::Left:
+		/* FALLTHROUGH */
+	case SlapImage::Orientation::Right:
+		return (4);
 	}
+
+	/* Not reached */
+	return (0);
 }
 
 std::set<SlapSegIII::FrictionRidgeGeneralizedPosition>
 SlapSegIII::Validation::Validate::getExpectedFrictionRidgeGeneralizedPositions(
-    const SlapImage::Kind kind,
     const SlapImage::Orientation orientation)
 {
 	switch (orientation) {
@@ -129,39 +116,20 @@ SlapSegIII::Validation::Validate::getExpectedFrictionRidgeGeneralizedPositions(
 		return {FrictionRidgeGeneralizedPosition::LeftThumb,
 		    FrictionRidgeGeneralizedPosition::RightThumb};
 	case SlapImage::Orientation::Left:
-		switch (kind) {
-		case SlapImage::Kind::FullPalm:
-			return {FrictionRidgeGeneralizedPosition::LeftThumb,
-			    FrictionRidgeGeneralizedPosition::LeftIndex,
-			    FrictionRidgeGeneralizedPosition::LeftMiddle,
-			    FrictionRidgeGeneralizedPosition::LeftRing,
-			    FrictionRidgeGeneralizedPosition::LeftLittle};
-		default:
-			return {FrictionRidgeGeneralizedPosition::LeftIndex,
-			    FrictionRidgeGeneralizedPosition::LeftMiddle,
-			    FrictionRidgeGeneralizedPosition::LeftRing,
-			    FrictionRidgeGeneralizedPosition::LeftLittle};
-		}
+		return {FrictionRidgeGeneralizedPosition::LeftIndex,
+		    FrictionRidgeGeneralizedPosition::LeftMiddle,
+		    FrictionRidgeGeneralizedPosition::LeftRing,
+		    FrictionRidgeGeneralizedPosition::LeftLittle};
 	case SlapImage::Orientation::Right:
-		switch (kind) {
-		case SlapImage::Kind::FullPalm:
-			return {FrictionRidgeGeneralizedPosition::RightThumb,
-			    FrictionRidgeGeneralizedPosition::RightIndex,
-			    FrictionRidgeGeneralizedPosition::RightMiddle,
-			    FrictionRidgeGeneralizedPosition::RightRing,
-			    FrictionRidgeGeneralizedPosition::RightLittle};
-		default:
-			return {FrictionRidgeGeneralizedPosition::RightIndex,
-			    FrictionRidgeGeneralizedPosition::RightMiddle,
-			    FrictionRidgeGeneralizedPosition::RightRing,
-			    FrictionRidgeGeneralizedPosition::RightLittle};
-		}
+		return {FrictionRidgeGeneralizedPosition::RightIndex,
+		    FrictionRidgeGeneralizedPosition::RightMiddle,
+		    FrictionRidgeGeneralizedPosition::RightRing,
+		    FrictionRidgeGeneralizedPosition::RightLittle};
 	}
 
 	/* Not reached */
 	return {};
 }
-
 
 bool
 SlapSegIII::Validation::Validate::isOutsideImage(
