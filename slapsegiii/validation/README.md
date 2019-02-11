@@ -57,9 +57,6 @@ How to Run
  2. Put SlapSeg III fingerprint imagery received from NIST in this directory
     (i.e., the directory containing this file, [README.md]).
  3. Execute [validate].
-    - If you would like us to publish a marketing or brand name as part of your
-      SlapSeg III report, indicate it by setting the variable
-      `SLAPSEGIII_MARKETING_NAME` before executing.
  4. **If successful**, sign *and* encrypt the resulting output archive in a
     single step, and e-mail it, along with the encrypting identity's public key,
     to slapseg@nist.gov. If unsuccessful, correct any errors described and try
