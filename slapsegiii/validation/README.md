@@ -38,7 +38,7 @@ Requirements
      conditions, the required fingerprint imagery is not included in this GitHub
      repository. Download the data (*coming soon*) by requesting it from our
      website after agreeing to the terms.
- * CentOS 7.5.1804
+ * CentOS 7.6.1810
    - Even if this is not the latest version of CentOS, it will be the version
      used to run the evaluation. Direct downloads are available from the [CentOS
      Vault] ([🇺🇸 USA], [🇪🇺 Europe]).
@@ -69,19 +69,19 @@ How to Run
   <summary><em>Expand to view the output from an example run.</em></summary>
 
 ```
-$ SLAPSEGIII_MARKETING_NAME="NIST Fingerprint Segmenter v5" ./validate
+$ cp /path/to/libslapsegiii_nfseg_5001.so lib/
+$ ./validate
 
-SlapSeg III Validation (201806141455) -- Wed Sep 19 10:22:26 EDT 2018
+SlapSeg III Validation (201806141455) -- Thu Feb  7 11:56:41 EST 2019
 ================================================================================
 Checking for required packages... [OKAY]
 Checking for previous validation attempts... [OKAY]
 Checking validation version... (no Internet connection) [SKIP]
-Checking OS and version... (7.5.1804) [OKAY]
+Checking OS and version... (7.6.1810) [OKAY]
 Checking for validation images... [OKAY]
 Checking validation image versions... [OKAY]
 Looking for core library... (libslapsegiii_nfseg_5001.so) [OKAY]
 Checking for known environment variables... [OKAY]
-	* SLAPSEGIII_MARKETING_NAME: NIST Fingerprint Segmenter v5
 Building... [OKAY]
 Checking that you have all necessary images... [OKAY]
 Running segmentation... [OKAY]
@@ -89,7 +89,7 @@ Checking segmentation logs... [OKAY]
 Creating validation submission... (validation_nfseg_5001.tar.gz) [OKAY]
 
 ================================================================================
-You have successfully completed the first step in SlapSeg III validation. Please
+You have successfully completed the first step in SlapSegIII validation. Please
 sign and encrypt this file, send it to slapseg@nist.gov, and await a
 notification.
 
@@ -105,7 +105,7 @@ gpg --output validation_nfseg_5001.tar.gz.asc \
 
 Additionally, be sure to include the public key of the identity that signed the
 validation package. This key must be the key whose key fingerprint was printed
-on the SlapSeg III application.
+on the SlapSegIII application.
 
 Example public key extraction:
 gpg --output nfseg_5001_public_key.asc --armor \
@@ -123,6 +123,7 @@ https://github.com/usnistgov/slapseg/tree/master/slapsegiii/validation/VERSION
 Download:
 https://github.com/usnistgov/slapseg/releases
 ********************************************************************************
+Thu Feb  7 11:59:51 EST 2019
 ```
 </details>
 
@@ -182,8 +183,8 @@ The items in this repository are released in the public domain. See the
 
 [API]: http://pages.nist.gov/slapseg/doc/slapsegiii/api/
 [CentOS Vault]: http://vault.centos.org/
-[🇺🇸 USA]: http://mirror.umd.edu/centos/7.5.1804/isos/x86_64/CentOS-7-x86_64-Everything-1804.iso
-[🇪🇺 Europe]: http://centos.mirrors.proxad.net/7.5.1804/isos/x86_64/CentOS-7-x86_64-Everything-1804.iso
+[🇺🇸 USA]: http://mirror.umd.edu/centos/7.6.1810/isos/x86_64/CentOS-7-x86_64-Everything-1810.iso
+[🇪🇺 Europe]: http://centos.mirrors.proxad.net/7.6.1810/isos/x86_64/CentOS-7-x86_64-Everything-1810.iso
 [lib/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/lib
 [src/libslapsegiii/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src/libslapsegiii
 [src/slapsegiii.h]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src/slapsegiii.h
