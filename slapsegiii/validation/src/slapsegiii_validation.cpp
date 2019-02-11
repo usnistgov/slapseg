@@ -29,6 +29,51 @@
 #include <slapsegiii_validation_validate.h>
 #include <slapsegiii_validation_utils.h>
 
+std::string
+SlapSegIII::Validation::determineOrientation(
+    const std::shared_ptr<Interface> impl,
+    const std::string &imageName,
+    const Validation::ImageMetadata &md,
+    const SlapImage::Kind kind)
+{
+	std::shared_ptr<SlapImage> si;
+	try {
+		si = std::make_shared<SlapImage>(md.width, md.height, md.ppi,
+		    kind, md.captureTechnology, SlapImage::Orientation{},
+		    readFile(IMAGE_DIR + '/' + imageName));
+	} catch (const std::exception &e) {
+		throw std::runtime_error("Error reading " + imageName + " (" +
+		    e.what() + ")");
+	}
+
+	std::tuple<ReturnStatus, SlapImage::Orientation> rv{};
+	std::chrono::steady_clock::time_point start{}, stop{};
+	try {
+		start = std::chrono::steady_clock::now();
+		rv = impl->determineOrientation(*si.get());
+		stop = std::chrono::steady_clock::now();
+	} catch (const std::exception &e) {
+		throw std::runtime_error("Exception while determining "
+		    "orientation of " + imageName + " (" + e.what() + ")");
+	} catch (...) {
+		throw std::runtime_error("Exception while determining "
+		    "orientation of " + imageName);
+	}
+
+	const auto elapsed = std::to_string(std::chrono::duration_cast<
+	    std::chrono::microseconds>(stop - start).count());
+
+	std::string logLine{imageName + ',' + elapsed + ',' +
+	    e2i2s(std::get<0>(rv).code) + ',' +
+	    sanitizeMessage(std::get<0>(rv).message) + ','};
+	if (std::get<0>(rv).code == ReturnStatus::Code::Success)
+		logLine += e2i2s(std::get<1>(rv)) + '\n';
+	else
+		logLine += "NA\n";
+
+	return (logLine);
+}
+
 void
 SlapSegIII::Validation::printUsage(
     const std::string &name)
@@ -37,6 +82,10 @@ SlapSegIII::Validation::printUsage(
 	std::cerr << "\t" << name << " -k(inds of images supported)\n";
 	std::cerr << "\t" << name << " -s(egment) [-r random_seed] "
 	    "[-f num_procs]\n";
+
+	const std::string blankName(name.size(), ' ');
+	std::cerr << "\t" << name << " -d(etermine orientation) "
+	    "[-r random_seed]\n\t" + blankName + " [-f num_procs]\n";
 }
 
 SlapSegIII::Validation::Arguments
@@ -44,7 +93,7 @@ SlapSegIII::Validation::parseArguments(
     int argc,
     char *argv[])
 {
-	static const char options[] {"ikr:sf:"};
+	static const char options[] {"ikr:sf:d"};
 
 	bool seenOperation{false};
 	Validation::Arguments args{};
@@ -85,7 +134,7 @@ SlapSegIII::Validation::parseArguments(
 				    std::string(optarg) + "\""};
 			}
 			break;
-		case 'f':	/* Number of processes */
+		case 'f': {	/* Number of processes */
 			try {
 				args.numProcs = std::stol(optarg);
 			} catch (std::exception) {
@@ -102,6 +151,16 @@ SlapSegIII::Validation::parseArguments(
 				    "processes (-f): Asked to spawn " +
 				    std::to_string(args.numProcs) + " "
 				    "processes, but refusing"};
+			break;
+		}
+		case 'd':
+			if (seenOperation)
+				throw std::logic_error{"Multiple operations "
+				    "specified"};
+			seenOperation = true;
+
+			args.operation = Operation::Orientation;
+			break;
 		}
 	}
 
@@ -126,8 +185,9 @@ SlapSegIII::Validation::printIdentification()
 void
 SlapSegIII::Validation::printSupported()
 {
-	const auto kinds = SlapSegIII::Interface::getImplementation()->
+	const auto rv = SlapSegIII::Interface::getImplementation()->
 	    getSupported();
+	const auto kinds = std::get<0>(rv);
 
 	std::cout << std::boolalpha <<
 	    "TwoInch = " <<
@@ -137,7 +197,30 @@ SlapSegIII::Validation::printSupported()
 	    "\nUpperPalm = " <<
 	    (kinds.find(SlapImage::Kind::UpperPalm) != kinds.cend()) <<
 	    "\nFullPalm = " <<
-	    (kinds.find(SlapImage::Kind::FullPalm) != kinds.cend()) << '\n';
+	    (kinds.find(SlapImage::Kind::FullPalm) != kinds.cend()) <<
+	    "\nDetermineOrientation = " << std::get<1>(rv) << '\n';
+}
+
+std::vector<uint8_t>
+SlapSegIII::Validation::readFile(
+    const std::string &pathName)
+{
+	std::ifstream file{pathName,
+	    std::ifstream::ate | std::ifstream::binary};
+	if (!file)
+		throw std::runtime_error{"Could not open " + pathName};
+	const auto size = file.tellg();
+	if (size == -1)
+		throw std::runtime_error{"Could not open " + pathName};
+
+	std::vector<uint8_t> buf{};
+	buf.reserve(size);
+
+	file.seekg(std::ifstream::beg);
+	buf.insert(buf.begin(), std::istream_iterator<uint8_t>(file),
+	    std::istream_iterator<uint8_t>());
+
+	return (buf);
 }
 
 void
@@ -172,55 +255,36 @@ SlapSegIII::Validation::runSegment(
 }
 
 void
-SlapSegIII::Validation::testSegmentation(
-    const Validation::Arguments &args)
+SlapSegIII::Validation::runDetermineOrientation(
+    std::shared_ptr<Interface> impl,
+    const SlapImage::Kind kind,
+    const std::vector<std::string> &keys)
 {
-        auto rng = std::mt19937_64(args.randomSeed);
+	/* Don't run if implementation does not claim support */
+	if (!std::get<1>(impl->getSupported()))
+		return;
 
-	const auto impl = SlapSegIII::Interface::getImplementation();
-	for (const auto &kind : impl->getSupported()) {
-		/* Shuffle images of each Kind */
-		std::vector<std::string> imageNames{};
-		imageNames.reserve(Validation::VALIDATION_DATA.at(kind).size());
-		for (const auto &i : Validation::VALIDATION_DATA.at(kind))
-			imageNames.push_back(i.first);
-		std::shuffle(imageNames.begin(), imageNames.end(), rng);
+	std::ofstream file("output/orientation-" + e2i2s(kind) + '-' +
+	    std::to_string(getpid()) + ".log");
+	if (!file) {
+		throw std::runtime_error(std::to_string(getpid()) + ": Error "
+		    "creating log file");
+	}
 
-		if (args.numProcs <= 1)
-			runSegment(impl, kind, imageNames);
-		else {
-			/* Split into multiple sets of images */
-			const auto sets = splitSet(imageNames, args.numProcs);
+	static const std::string header{"name,elapsed,rCode,\"rMessage\","
+	    "orientation"};
+	file << header << '\n';
+	if (!file)
+		throw std::runtime_error(std::to_string(getpid()) + ": Error "
+		    "writing to log");
 
-			/* Fork. */
-			for (const auto &set : sets) {
-				const auto pid = fork();
-				switch (pid) {
-				case 0:		/* Child */
-					try {
-						runSegment(impl, kind, set);
-					} catch (const std::exception &e) {
-						std::cerr << e.what() << '\n';
-						std::exit(1);
-					} catch (...) {
-						std::cerr << "Caught unknown "
-						    "exception\n";
-						std::exit(1);
-					}
-					std::exit(0);
+	for (const auto &imageName : keys) {
+		const auto md = VALIDATION_DATA.at(kind).at(imageName);
+		file << determineOrientation(impl, imageName, md, kind);
 
-					/* Not reached */
-					break;
-				case -1:	/* Error */
-					throw std::runtime_error("Error during "
-					    "fork()");
-				default:	/* Parent */
-					break;
-				}
-			}
-
-			waitForExit(args.numProcs);
-		}
+		if (!file)
+			throw std::runtime_error(std::to_string(getpid()) +
+			    ": Error writing to log");
 	}
 }
 
@@ -252,31 +316,6 @@ SlapSegIII::Validation::sanitizeMessage(
 		position += to.length();
 	}
 	return ('"' + sanitized + '"');
-}
-
-std::vector<std::vector<std::string>>
-SlapSegIII::Validation::splitSet(
-    const std::vector<std::string> &combinedSet,
-    uint8_t numSets)
-{
-	if (numSets == 0)
-		return {};
-	if (numSets == 1)
-		return {combinedSet};
-
-	const uint64_t size = static_cast<uint64_t>(
-	    std::ceil(combinedSet.size() / static_cast<float>(numSets)));
-	if (size < numSets)
-		throw std::invalid_argument("Too many sets.");
-
-	std::vector<std::vector<std::string>> sets{};
-	sets.reserve(numSets);
-	for (uint8_t i{0}; i < numSets; ++i)
-		sets.emplace_back(std::next(combinedSet.begin(), size * i),
-		    std::next(combinedSet.begin(), std::min(size * (i + 1),
-		    combinedSet.size())));
-
-	return (sets);
 }
 
 std::string
@@ -363,26 +402,109 @@ SlapSegIII::Validation::segment(
 	return (logLine);
 }
 
-std::vector<uint8_t>
-SlapSegIII::Validation::readFile(
-    const std::string &pathName)
+std::vector<std::vector<std::string>>
+SlapSegIII::Validation::splitSet(
+    const std::vector<std::string> &combinedSet,
+    uint8_t numSets)
 {
-	std::ifstream file{pathName,
-	    std::ifstream::ate | std::ifstream::binary};
-	if (!file)
-		throw std::runtime_error{"Could not open " + pathName};
-	const auto size = file.tellg();
-	if (size == -1)
-		throw std::runtime_error{"Could not open " + pathName};
+	if (numSets == 0)
+		return {};
+	if (numSets == 1)
+		return {combinedSet};
 
-	std::vector<uint8_t> buf{};
-	buf.reserve(size);
+	const std::vector<std::string>::size_type size = static_cast<
+	    std::vector<std::string>::size_type>(
+	    std::ceil(combinedSet.size() / static_cast<float>(numSets)));
+	if (size < numSets)
+		throw std::invalid_argument("Too many sets.");
 
-	file.seekg(std::ifstream::beg);
-	buf.insert(buf.begin(), std::istream_iterator<uint8_t>(file),
-	    std::istream_iterator<uint8_t>());
+	std::vector<std::vector<std::string>> sets{};
+	sets.reserve(numSets);
+	for (uint8_t i{0}; i < numSets; ++i)
+		sets.emplace_back(std::next(combinedSet.begin(), size * i),
+		    std::next(combinedSet.begin(), std::min(size * (i + 1),
+		    combinedSet.size())));
 
-	return (buf);
+	return (sets);
+}
+
+void
+SlapSegIII::Validation::testOperation(
+    const Validation::Arguments &args)
+{
+        auto rng = std::mt19937_64(args.randomSeed);
+
+	const auto impl = SlapSegIII::Interface::getImplementation();
+	const auto kinds = std::get<0>(impl->getSupported());
+	for (const auto &kind : kinds) {
+		/* Shuffle images of each Kind */
+		std::vector<std::string> imageNames{};
+		imageNames.reserve(Validation::VALIDATION_DATA.at(kind).size());
+		for (const auto &i : Validation::VALIDATION_DATA.at(kind))
+			imageNames.push_back(i.first);
+		std::shuffle(imageNames.begin(), imageNames.end(), rng);
+
+		if (args.numProcs <= 1) {
+			switch (args.operation) {
+			case Operation::Segment:
+				runSegment(impl, kind, imageNames);
+				break;
+			case Operation::Orientation:
+				runDetermineOrientation(impl, kind, imageNames);
+				break;
+			default:
+				throw std::runtime_error("Invalid operation "
+				    "sent to testOperation()");
+			}
+		} else {
+			/* Split into multiple sets of images */
+			const auto sets = splitSet(imageNames, args.numProcs);
+
+			/* Fork. */
+			for (const auto &set : sets) {
+				const auto pid = fork();
+				switch (pid) {
+				case 0:		/* Child */
+					try {
+						switch (args.operation) {
+						case Operation::Segment:
+							runSegment(impl, kind,
+							    set);
+							break;
+						case Operation::Orientation:
+							runDetermineOrientation(
+							    impl, kind, set);
+							break;
+						default:
+							throw std::
+							    runtime_error(
+							    "Invalid operation "
+							    "sent to test"
+							    "Operation()");
+						}
+					} catch (const std::exception &e) {
+						std::cerr << e.what() << '\n';
+						std::exit(1);
+					} catch (...) {
+						std::cerr << "Caught unknown "
+						    "exception\n";
+						std::exit(1);
+					}
+					std::exit(0);
+
+					/* Not reached */
+					break;
+				case -1:	/* Error */
+					throw std::runtime_error("Error during "
+					    "fork()");
+				default:	/* Parent */
+					break;
+				}
+			}
+
+			waitForExit(args.numProcs);
+		}
+	}
 }
 
 void
@@ -462,7 +584,7 @@ main(
 		break;
 	case SlapSegIII::Validation::Operation::Segment:
 		try {
-			SlapSegIII::Validation::testSegmentation(args);
+			SlapSegIII::Validation::testOperation(args);
 			rv = EXIT_SUCCESS;
 		} catch (const std::exception &e) {
 			std::cerr << "Interface::segment(): " <<
@@ -481,6 +603,19 @@ main(
 			    e.what() << '\n';
 		} catch (...) {
 			std::cerr << "Interface::getSupported(): "
+			    "Non-standard exception\n";
+		}
+		break;
+	case SlapSegIII::Validation::Operation::Orientation:
+		try {
+			SlapSegIII::Validation::testOperation(
+			    args);
+			rv = EXIT_SUCCESS;
+		} catch (const std::exception &e) {
+			std::cerr << "Interface::determineOrientation(): " <<
+			    e.what() << '\n';
+		} catch (...) {
+			std::cerr << "Interface::determineOrientation(): "
 			    "Non-standard exception\n";
 		}
 		break;

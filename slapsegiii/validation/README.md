@@ -3,7 +3,7 @@ SlapSeg III Validation
 
 We require exercising SlapSeg III [API] implementations with the SlapSeg III
 validation package. Validation is mutually-beneficial to NIST and SlapSeg III
-participants. The hope is that successful execution of validaiton ensures your
+participants. The hope is that successful execution of validation ensures your
 algorithm:
 
  * runs as expected at NIST;
@@ -86,6 +86,8 @@ Building... [OKAY]
 Checking that you have all necessary images... [OKAY]
 Running segmentation... [OKAY]
 Checking segmentation logs... [OKAY]
+Running orientation determination... [OKAY]
+Checking segmentation logs... [OKAY]
 Creating validation submission... (validation_nfseg_5001.tar.gz) [OKAY]
 
 ================================================================================
@@ -141,9 +143,14 @@ Submission Contents
    sizes. This is information derived from values compiled into the core library
    or passed to [validate].
  * lib: A copy of [lib/].
- * run.log: The command used to launch the validation executable.
- * segments-#.log: The output the validation executable containing segmentation
-   positions for each slap image provided.
+ * run-orientation.log: The command used to launch the validation executable
+   for orientation determination.
+ * run-segments.log: The command used to launch the validation executable for
+   segmentation
+ * orientation-#.log: The output from the validation executable containing
+   hypothesized orientations for each slap image provided.
+ * segments-#.log: The output from the validation executable containing
+   segmentation positions for each slap image provided.
 
 Checks Performed
 ----------------
@@ -153,7 +160,7 @@ Checks Performed
  * Appropriate operating system version installed.
  * Appropriately named SlapSeg III core software library is present.
  * Software library links properly against the validation driver.
- * Crashes do not occur when segmenting challenging images, such as:
+ * Crashes do not occur when handling challenging images, such as:
    - missing fingers;
    - touching fingers;
    - blank or gradient patterns.

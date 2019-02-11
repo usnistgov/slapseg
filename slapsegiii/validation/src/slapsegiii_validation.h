@@ -34,7 +34,9 @@ namespace SlapSegIII
 			/** Print supported information */
 			Supported,
 			/** Print usage */
-			Usage
+			Usage,
+			/** Determine orientation */
+			Orientation
 		};
 
 		/** Arguments passed on the command line */
@@ -50,6 +52,36 @@ namespace SlapSegIII
 		};
 		/** Convenience definition for struct Arguments. */
 		using Arguments = struct Arguments;
+
+		/**
+		 * @brief
+		 * Determine orientation for a single image.
+		 *
+		 * @param impl
+		 * Pointer to SlapSegIII implementation.
+		 * @param imageName
+		 * Name of the image on which to determine orientation.
+		 * @param md
+		 * Metadata regarding the image.
+		 * @param kind
+		 * Kind of image captured.
+		 *
+		 * @return
+		 * Entry for log file.
+		 *
+		 * @throw
+		 * Error reading image or error segmenting.
+		 *
+		 * @note
+		 * Note that md.orientation will be default-initialized before
+		 * being passed to the interface.
+		 */
+		std::string
+		determineOrientation(
+		    const std::shared_ptr<Interface> impl,
+		    const std::string &imageName,
+		    const ImageMetadata &md,
+		    const SlapImage::Kind kind);
 
 		/**
 		 * @brief
@@ -100,15 +132,20 @@ namespace SlapSegIII
 
 		/**
 		 * @brief
-		 * Test a SlapSegIII's implementation of segmentation for all
-		 * supported slap heights.
+		 * Run a set of orientation determinations.
 		 *
-		 * @param args
-		 * Arguments parsed from command line.
+		 * @param impl
+		 * Pointer to SlapSegIII API implementation.
+		 * @param kind
+		 * The kind of images in keys.
+		 * @param keys
+		 * The keys from VALIDATION_DATA to segment.
 		 */
 		void
-		testSegmentation(
-		    const Arguments &args);
+		runDetermineOrientation(
+		    std::shared_ptr<Interface> impl,
+		    const SlapImage::Kind kind,
+		    const std::vector<std::string> &keys);
 
 		/**
 		 * @brief
@@ -117,7 +154,7 @@ namespace SlapSegIII
 		 * @param impl
 		 * Pointer to SlapSegIII API implementation.
 		 * @param kind
-		 * The kind of segmentations in keys.
+		 * The kind of images in keys.
 		 * @param keys
 		 * The keys from VALIDATION_DATA to segment.
 		 */
@@ -205,6 +242,19 @@ namespace SlapSegIII
 		splitSet(
 		    const std::vector<std::string> &combinedSet,
 		    uint8_t numSets);
+
+		/**
+		 * @brief
+		 * Test a SlapSegIII's implementation of segmentation or
+		 * orientation determination (depending on `args`) for all
+		 * supported slap kinds.
+		 *
+		 * @param args
+		 * Arguments parsed from command line.
+		 */
+		void
+		testOperation(
+		    const Arguments &args);
 
 		/**
 		 * @brief

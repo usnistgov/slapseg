@@ -343,6 +343,8 @@ namespace SlapSegIII
 			UnsupportedResolution,
 			/** Failure: Slap type is not supported. */
 			UnsupportedSlapType,
+			/** Failure: This method is not implemented. */
+			NotImplemented,
 			/** Failure: Other reason. See error message. */
 			VendorDefined
 		};
@@ -469,19 +471,29 @@ namespace SlapSegIII
 
 		/**
 		 * @brief
-		 * Obtain slap image heights supported by this implementation.
+		 * Obtain features supported by this implementation.
 		 *
 		 * @return
-		 * Set of supported SlapImage::Kind.
+		 * A tuple whose first member is the set of supported
+		 * SlapImage::Kind and whose second member indicates the
+		 * presence of an implementation of
+		 * Interface::determineOrientation().
 		 *
 		 * @note
-		 * Returned set must include at least one SlapImage::Kind.
+		 * Returned set of SlapImage::Kind must include at least one
+		 * SlapImage::Kind.
 		 *
 		 * @note
 		 * This method shall return instantly.
+		 * @note
+		 * If an orientation determination algorithm is not present
+		 * (e.g., the second member of the return value from this
+		 * method is false), the implementation must still provide an
+		 * implementation for Interface::determineOrientation() that
+		 * returns ReturnStatus::Code::NotImplemented.
 		 */
 		virtual
-		std::set<SlapImage::Kind>
+		std::tuple<std::set<SlapImage::Kind>, bool>
 		getSupported()
 		    const = 0;
 
@@ -525,6 +537,38 @@ namespace SlapSegIII
 		virtual
 		std::tuple<ReturnStatus, std::vector<SegmentationPosition>>
 		segment(
+		    const SlapImage &image) = 0;
+
+		/**
+		 * @brief
+		 * Determine the hand orientation of a slap image.
+		 *
+		 * @param image
+		 * Image data and metadata.
+		 *
+		 * @return
+		 * A tuple whose first member is ReturnStatus (with
+		 * ReturnStatus.code set to ReturnStatus::Code::Success when
+		 * successful, or another ReturnStatus::Code and reason
+		 * ReturnStatus.message on failure) and whose second member is
+		 * the hypothesized SlapImage::Orientation of `image`.
+		 *
+		 * @warning
+		 * Do not consult the `orientation` member of `image`. It will
+		 * be default-initialized only.
+		 *
+		 * @note
+		 * Although this method must be implemented,
+		 * ReturnStatus::Code::NotImplemented can be set if no
+		 * orientation determination algorithm is available. A possible
+		 * implementation for participants who will not support this
+		 * method might be:
+		 * `return std::make_tuple(ReturnStatus::Code::NotImplemented,
+		 *      SlapImage::Orientation{});`
+		 */
+		virtual
+		std::tuple<ReturnStatus, SlapImage::Orientation>
+		determineOrientation(
 		    const SlapImage &image) = 0;
 
 		/** Destructor. */

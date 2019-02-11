@@ -23,13 +23,18 @@ namespace SlapSegIII
 		    const
 		    override;
 
-		std::set<SlapImage::Kind>
+		std::tuple<std::set<SlapImage::Kind>, bool>
 		getSupported()
 		    const
 		    override;
 
 		std::tuple<ReturnStatus, std::vector<SegmentationPosition>>
 		segment(
+		    const SlapImage &image)
+		    override;
+
+		std::tuple<ReturnStatus, SlapImage::Orientation>
+		determineOrientation(
 		    const SlapImage &image)
 		    override;
 

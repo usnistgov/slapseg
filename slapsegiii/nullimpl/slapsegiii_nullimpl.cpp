@@ -22,12 +22,14 @@ SlapSegIII::NullImplementation::getIdentification()
 	return {LibraryIdentifier, Version, MarketingIdentifier};
 }
 
-std::set<SlapSegIII::SlapImage::Kind>
+std::tuple<std::set<SlapSegIII::SlapImage::Kind>, bool>
 SlapSegIII::NullImplementation::getSupported()
     const
 {
-	return {SlapImage::Kind::TwoInch, SlapImage::Kind::ThreeInch,
+	const std::set<SlapSegIII::SlapImage::Kind> kinds{
+	    SlapImage::Kind::TwoInch, SlapImage::Kind::ThreeInch,
 	    SlapImage::Kind::UpperPalm, SlapImage::Kind::FullPalm};
+	return (std::make_tuple(kinds, false));
 }
 
 std::tuple<SlapSegIII::ReturnStatus,
@@ -36,7 +38,7 @@ SlapSegIII::NullImplementation::segment(
     const SlapImage &image)
 {
 	std::vector<SlapSegIII::SegmentationPosition> positions{};
-	const auto supportedSlaps = this->getSupported();
+	const auto supportedSlaps = std::get<0>(this->getSupported());
 	if (supportedSlaps.find(image.kind) == supportedSlaps.cend())
 		return std::make_tuple(
 		    ReturnStatus{ReturnStatus::Code::UnsupportedSlapType},
@@ -95,6 +97,14 @@ SlapSegIII::NullImplementation::segment(
 	}
 
 	return std::make_tuple(ReturnStatus{}, positions);
+}
+
+std::tuple<SlapSegIII::ReturnStatus, SlapSegIII::SlapImage::Orientation>
+SlapSegIII::NullImplementation::determineOrientation(
+    const SlapSegIII::SlapImage &image)
+{
+	return (std::make_tuple(ReturnStatus::Code::NotImplemented,
+	    SlapImage::Orientation{}));
 }
 
 std::shared_ptr<SlapSegIII::Interface>
