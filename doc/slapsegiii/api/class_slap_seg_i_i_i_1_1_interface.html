@@ -99,12 +99,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af61f49a5bedad84a1586e2d88d99abc5"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="struct_slap_seg_i_i_i_1_1_submission_identification.html">SubmissionIdentification</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#af61f49a5bedad84a1586e2d88d99abc5">getIdentification</a> () const =0</td></tr>
 <tr class="memdesc:af61f49a5bedad84a1586e2d88d99abc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain identification and version information for this submission.  <a href="#af61f49a5bedad84a1586e2d88d99abc5">More...</a><br /></td></tr>
 <tr class="separator:af61f49a5bedad84a1586e2d88d99abc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad67adb03a7223454e6708070ca18f178"><td class="memItemLeft" align="right" valign="top">virtual std::set&lt; <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#ac8aaacf4a6470b3e57c80838ac16bc55">SlapImage::Kind</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#ad67adb03a7223454e6708070ca18f178">getSupported</a> () const =0</td></tr>
-<tr class="memdesc:ad67adb03a7223454e6708070ca18f178"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain slap image heights supported by this implementation.  <a href="#ad67adb03a7223454e6708070ca18f178">More...</a><br /></td></tr>
-<tr class="separator:ad67adb03a7223454e6708070ca18f178"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab215f8de8818c55ed5882dcac7dedcfb"><td class="memItemLeft" align="right" valign="top">virtual std::tuple&lt; std::set&lt; <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#ac8aaacf4a6470b3e57c80838ac16bc55">SlapImage::Kind</a> &gt;, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#ab215f8de8818c55ed5882dcac7dedcfb">getSupported</a> () const =0</td></tr>
+<tr class="memdesc:ab215f8de8818c55ed5882dcac7dedcfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain features supported by this implementation.  <a href="#ab215f8de8818c55ed5882dcac7dedcfb">More...</a><br /></td></tr>
+<tr class="separator:ab215f8de8818c55ed5882dcac7dedcfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5daad9f7734ec5db411b1fbd68f7711"><td class="memItemLeft" align="right" valign="top">virtual std::tuple&lt; <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html">ReturnStatus</a>, std::vector&lt; <a class="el" href="struct_slap_seg_i_i_i_1_1_segmentation_position.html">SegmentationPosition</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#aa5daad9f7734ec5db411b1fbd68f7711">segment</a> (const <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html">SlapImage</a> &amp;image)=0</td></tr>
 <tr class="memdesc:aa5daad9f7734ec5db411b1fbd68f7711"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discover fingerprint segmentation positions within a slap image.  <a href="#aa5daad9f7734ec5db411b1fbd68f7711">More...</a><br /></td></tr>
 <tr class="separator:aa5daad9f7734ec5db411b1fbd68f7711"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92db535d9dd93185a5f876f99318bf8c"><td class="memItemLeft" align="right" valign="top">virtual std::tuple&lt; <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html">ReturnStatus</a>, <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a2dea14289897bbb563551792a6e9ebad">SlapImage::Orientation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#a92db535d9dd93185a5f876f99318bf8c">determineOrientation</a> (const <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html">SlapImage</a> &amp;image)=0</td></tr>
+<tr class="memdesc:a92db535d9dd93185a5f876f99318bf8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the hand orientation of a slap image.  <a href="#a92db535d9dd93185a5f876f99318bf8c">More...</a><br /></td></tr>
+<tr class="separator:a92db535d9dd93185a5f876f99318bf8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a7417a96441a101f85370a3521c8948"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#a8a7417a96441a101f85370a3521c8948">~Interface</a> ()=default</td></tr>
 <tr class="memdesc:a8a7417a96441a101f85370a3521c8948"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="#a8a7417a96441a101f85370a3521c8948">More...</a><br /></td></tr>
 <tr class="separator:a8a7417a96441a101f85370a3521c8948"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,7 +122,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Slap Fingerprint Segmentation III interface. </p>
 <p>Participants must inherit from this class and implement all methods. </p>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00450">450</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00452">452</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8a7417a96441a101f85370a3521c8948"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8a7417a96441a101f85370a3521c8948">&#9670;&nbsp;</a></span>~Interface()</h2>
@@ -178,8 +181,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad67adb03a7223454e6708070ca18f178"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad67adb03a7223454e6708070ca18f178">&#9670;&nbsp;</a></span>getSupported()</h2>
+<a id="ab215f8de8818c55ed5882dcac7dedcfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab215f8de8818c55ed5882dcac7dedcfb">&#9670;&nbsp;</a></span>getSupported()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -188,7 +191,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::set&lt;<a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#ac8aaacf4a6470b3e57c80838ac16bc55">SlapImage::Kind</a>&gt; SlapSegIII::Interface::getSupported </td>
+          <td class="memname">virtual std::tuple&lt;std::set&lt;<a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#ac8aaacf4a6470b3e57c80838ac16bc55">SlapImage::Kind</a>&gt;, bool&gt; SlapSegIII::Interface::getSupported </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -201,11 +204,13 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Obtain slap image heights supported by this implementation. </p>
-<dl class="section return"><dt>Returns</dt><dd>Set of supported <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#ac8aaacf4a6470b3e57c80838ac16bc55" title="Kind of slap image. ">SlapImage::Kind</a>.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>Returned set must include at least one <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#ac8aaacf4a6470b3e57c80838ac16bc55" title="Kind of slap image. ">SlapImage::Kind</a>.</dd>
+<p>Obtain features supported by this implementation. </p>
+<dl class="section return"><dt>Returns</dt><dd>A tuple whose first member is the set of supported <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#ac8aaacf4a6470b3e57c80838ac16bc55" title="Kind of slap image. ">SlapImage::Kind</a> and whose second member indicates the presence of an implementation of <a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#a92db535d9dd93185a5f876f99318bf8c" title="Determine the hand orientation of a slap image. ">Interface::determineOrientation()</a>.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Returned set of <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#ac8aaacf4a6470b3e57c80838ac16bc55" title="Kind of slap image. ">SlapImage::Kind</a> must include at least one <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#ac8aaacf4a6470b3e57c80838ac16bc55" title="Kind of slap image. ">SlapImage::Kind</a>.</dd>
 <dd>
-This method shall return instantly. </dd></dl>
+This method shall return instantly. </dd>
+<dd>
+If an orientation determination algorithm is not present (e.g., the second member of the return value from this method is false), the implementation must still provide an implementation for <a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#a92db535d9dd93185a5f876f99318bf8c" title="Determine the hand orientation of a slap image. ">Interface::determineOrientation()</a> that returns <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea997ca4ce119685f40f03a9a8a6c5346e" title="Failure: This method is not implemented. ">ReturnStatus::Code::NotImplemented</a>. </dd></dl>
 
 </div>
 </div>
@@ -246,6 +251,43 @@ This method shall return instantly. </dd></dl>
 This method shall return on average within the time limits specified in Table 8 of the SlapSegIII Test Plan.</dd>
 <dd>
 Be cognizant of semantics in returned <a class="el" href="struct_slap_seg_i_i_i_1_1_segmentation_position.html" title="Representation of a segmentation position. ">SegmentationPosition</a>. Fingers in TwoInch should be rotated identically while UpperPalm and FullPalm may be rotated independently. ThreeInch shall not be rotated. See Section 3 of the SlapSegIII Test Plan for more details. </dd></dl>
+
+</div>
+</div>
+<a id="a92db535d9dd93185a5f876f99318bf8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92db535d9dd93185a5f876f99318bf8c">&#9670;&nbsp;</a></span>determineOrientation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::tuple&lt;<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html">ReturnStatus</a>, <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a2dea14289897bbb563551792a6e9ebad">SlapImage::Orientation</a>&gt; SlapSegIII::Interface::determineOrientation </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html">SlapImage</a> &amp;&#160;</td>
+          <td class="paramname"><em>image</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determine the hand orientation of a slap image. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>Image data and metadata.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple whose first member is <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html" title="Information about the execution of an API method. ">ReturnStatus</a> (with <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ad065b5a9ee8510d82f58977a0c056a6e" title="Returned status code. ">ReturnStatus.code</a> set to <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea505a83f220c02df2f85c3810cd9ceb38" title="Success. ">ReturnStatus::Code::Success</a> when successful, or another <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28e" title="Possible exit status of a SlapSegIII API method. ">ReturnStatus::Code</a> and reason <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ad9f122fcf340cc1b8834b1e39a6b489b" title="Explanatory message (optional). ">ReturnStatus.message</a> on failure) and whose second member is the hypothesized <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a2dea14289897bbb563551792a6e9ebad" title="Hand orientation being segmented. ">SlapImage::Orientation</a> of <code>image</code>.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Do not consult the <code>orientation</code> member of <code>image</code>. It will be default-initialized only.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Although this method must be implemented, <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea997ca4ce119685f40f03a9a8a6c5346e" title="Failure: This method is not implemented. ">ReturnStatus::Code::NotImplemented</a> can be set if no orientation determination algorithm is available. A possible implementation for participants who will not support this method might be: <code>return std::make_tuple(<a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html#ac2866121d09b2e624ed5c99f654ad28ea997ca4ce119685f40f03a9a8a6c5346e" title="Failure: This method is not implemented. ">ReturnStatus::Code::NotImplemented</a>, <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a2dea14289897bbb563551792a6e9ebad" title="Hand orientation being segmented. ">SlapImage::Orientation</a>{});</code> </dd></dl>
 
 </div>
 </div>
