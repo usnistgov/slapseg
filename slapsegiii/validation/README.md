@@ -44,7 +44,7 @@ Requirements
      Vault] ([🇺🇸 USA], [🇪🇺 Europe]).
    - The [validate] script  requires these base CentOS packages:
       - `binutils`, `centos-release`, `coreutils`, `curl`, `file`, `gawk`,
-        `gcc`, `grep`, `iputils`, `make`, `sed`, `which`, `yum`
+        `gcc-c++`, `grep`, `iputils`, `make`, `sed`, `which`, `yum`
 
 It is **highly suggested** that you make sure your submission will build and run
 as expected on environments as close as possible to the NIST evaluation
