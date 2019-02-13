@@ -519,7 +519,7 @@ namespace SlapSegIII
 		 * content should cause an implementation to reject the image.
 		 * This is in support of an evaluation goal to determine if an
 		 * implementation can correctly determine when to issue a
-		 * request for recapture and specifiy the reasoning. If the
+		 * request for recapture and specify the reasoning. If the
 		 * implementation incorrectly determines a failure, the
 		 * best-effort segmentation positions can still be scored.
 		 *
@@ -610,11 +610,11 @@ namespace SlapSegIII
 	extern uint16_t API_PATCH_VERSION;
 	#else /* NIST_EXTERN_API_VERSION */
 	/** API major version number. */
-	uint16_t API_MAJOR_VERSION{0};
+	uint16_t API_MAJOR_VERSION{1};
 	/** API minor version number. */
 	uint16_t API_MINOR_VERSION{0};
 	/** API patch version number. */
-	uint16_t API_PATCH_VERSION{1};
+	uint16_t API_PATCH_VERSION{0};
 	#endif /* NIST_EXTERN_API_VERSION */
 }
 

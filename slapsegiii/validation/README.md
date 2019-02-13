@@ -23,8 +23,8 @@ Contents
    - [src/libslapsegiii/]: Code for the shared library implementing methods
      declared in [src/slapsegiii.h].
    - [src/slapsegiii.h]: The SlapSeg III [API].
-   - [validate]: (*coming soon*) Script that automates running the validation
-     and performing checks on the output.
+   - [validate]: Script that automates running the validation and performing
+     checks on the output.
  * Supporting Files
    - [README.md]: This file.
    - [src/]: Source code to build the validation executable.
@@ -36,8 +36,8 @@ Requirements
  * Fingerprint Imagery
    - Because organizations must agree to NIST Special Database terms and
      conditions, the required fingerprint imagery is not included in this GitHub
-     repository. Download the data (*coming soon*) by requesting it from our
-     website after agreeing to the terms.
+     repository. Download the data by requesting it from the SlapSeg III test
+     staff and [agreeing to the terms].
  * CentOS 7.6.1810
    - Even if this is not the latest version of CentOS, it will be the version
      used to run the evaluation. Direct downloads are available from the [CentOS
@@ -67,20 +67,24 @@ How to Run
 
 ```
 $ cp /path/to/libslapsegiii_nfseg_5001.so lib/
+$ cp /path/to/slapsegiii_validation_images_*.tar.gz .
 $ ./validate
 
-SlapSeg III Validation (201806141455) -- Thu Feb  7 11:56:41 EST 2019
+SlapSeg III Validation (201902131048) -- Wed Feb 13 10:51:55 EST 2019
 ================================================================================
 Checking for required packages... [OKAY]
 Checking for previous validation attempts... [OKAY]
-Checking validation version... (no Internet connection) [SKIP]
+Checking validation version... (201902131048) [OKAY]
 Checking OS and version... (7.6.1810) [OKAY]
+Checking for validation images... [DEFER]
+Expanding slapsegiii_validation_images_twoinch-201902130947.tar.gz... [OKAY]
+Expanding slapsegiii_validation_images_threeinch-201902130947.tar.gz... [OKAY]
 Checking for validation images... [OKAY]
 Checking validation image versions... [OKAY]
 Looking for core library... (libslapsegiii_nfseg_5001.so) [OKAY]
 Checking for known environment variables... [OKAY]
 Building... [OKAY]
-Checking that you have all necessary images... [OKAY]
+Checking that you have all necessary kinds of images... [OKAY]
 Running segmentation... [OKAY]
 Checking segmentation logs... [OKAY]
 Running orientation determination... [OKAY]
@@ -111,18 +115,7 @@ gpg --output nfseg_5001_public_key.asc --armor \
     --export jdoe@nfseg.com
 ================================================================================
 ********************************************************************************
-IMPORTANT: This script was unable to check, so please ensure that you are using
-the latest version of the SlapSegIII validation package before submitting. You
-are currently running with version 201806141455.
-
-Information:
-https://github.com/usnistgov/slapseg/tree/master/slapsegiii/validation
-Version:
-https://github.com/usnistgov/slapseg/tree/master/slapsegiii/validation/VERSION
-Download:
-https://github.com/usnistgov/slapseg/releases
-********************************************************************************
-Thu Feb  7 11:59:51 EST 2019
+Wed Feb 13 10:53:52 EST 2019
 ```
 </details>
 
@@ -185,7 +178,7 @@ License
 The items in this repository are released in the public domain. See the
 [LICENSE] for details.
 
-[API]: http://pages.nist.gov/slapseg/doc/slapsegiii/api/
+[API]: https://pages.nist.gov/slapseg/doc/slapsegiii/api/
 [CentOS Vault]: http://vault.centos.org/
 [🇺🇸 USA]: http://mirror.umd.edu/centos/7.6.1810/isos/x86_64/CentOS-7-x86_64-Everything-1810.iso
 [🇪🇺 Europe]: http://centos.mirrors.proxad.net/7.6.1810/isos/x86_64/CentOS-7-x86_64-Everything-1810.iso
@@ -202,4 +195,5 @@ The items in this repository are released in the public domain. See the
 [mailing list site]: https://groups.google.com/a/list.nist.gov/forum/#!forum/slapseg/join
 [RSS feed]: https://groups.google.com/a/list.nist.gov/forum/feed/slapseg/msgs/rss.xml
 [LICENSE]: https://github.com/usnistgov/slapseg/blob/master/LICENSE.md
-[test plan]: http://pages.nist.gov/slapseg/doc/slapsegiii/testplan.pdf
+[test plan]: https://pages.nist.gov/slapseg/doc/slapsegiii/testplan.pdf
+[agreeing to the terms]: https://pages.nist.gov/slapseg/doc/slapsegiii/validation_dataset_agreement.pdf

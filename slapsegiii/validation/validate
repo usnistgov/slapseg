@@ -1,0 +1,1088 @@
+#!/bin/bash
+################################################################################
+# Slap Fingerprint Segmentation III Validation                                 #
+#                                                                              #
+# Place your properly-named library in to lib/ and then execute this script.   #
+# If your implementation meets the tested requirements, an archive will be     #
+# created for you to send to NIST for evaluation. The output of your           #
+# implementation on your hardware must match the output generated at NIST      #
+# exactly, so "forcing" the creation of the archive will not speed along your  #
+# evaluation results.                                                          #
+#                                                                              #
+#  E-mail: slapseg@nist.gov                                                    #
+#     URL: https://github.com/usnistgov/slapseg                                #
+# License: This software was developed at the National Institute of Standards  #
+#          and Technology (NIST) by employees of the Federal Government in the #
+#          course of their official duties.  Pursuant to title 17 Section 105  #
+#          of the United States Code, this software is not subject to          #
+#          copyright protection and is in the public domain.  NIST assumes no  #
+#          responsibility whatsoever for its use by other parties, and makes   #
+#          no guarantees, expressed or implied, about its quality,             #
+#          reliability, or any other characteristic.                           #
+################################################################################
+
+################################################################################
+# Constants                                                                    #
+################################################################################
+
+# URL where the complete validation package can be downloaded
+validation_dl_url="https://github.com/usnistgov/slapseg/releases"
+# URL where the validation imagery is requested
+validation_image_request_url="mailto:slapseg@nist.gov"
+
+# Directory containing validation materials
+wd=$(readlink -f $(dirname $0))
+# Directory containing validation images
+validation_image_dir="images"
+# Directory where libraries go
+lib_dir="${wd}"/lib
+# Directory where validation driver sourcecode lives
+src_dir="${wd}"/src
+# Directory where validation driver is built
+bin_dir="${wd}"/bin
+# Output directory for validation driver logs
+output_dir="${wd}"/output
+# Path to the compiled validation driver binary
+binary="${bin_dir}"/"slapsegiii_validation"
+
+# Dimmed text color
+font_dim='\e[2m'
+# Green text color
+font_green='\e[32m'
+# Red text color
+font_red='\e[31m'
+# Light red text color
+font_lightred='\e[91m'
+# Yellow text color
+font_yellow='\e[33m'
+# Invert the current text color
+font_invert='\e[7m'
+# Underline the text
+font_underline='\e[4m'
+# Reset to default text color
+font_reset='\e[0m'
+
+# Version of this script
+read validation_version < "${wd}"/VERSION
+# Prefix for downloaded validation imagery tarballs
+validation_image_download_prefix=slapsegiii_validation_images_
+# Names for supported slap types
+slap_type_names="twoinch threeinch upperpalm fullpalm"
+# Numbers for supported slap types
+slap_type_numbers="2 3 5 8"
+
+# Make failing return codes persist across pipes
+set -o pipefail
+
+################################################################################
+# Functions                                                                    #
+################################################################################
+
+# Print the path of the argument relative to the current working directory
+rp()
+{
+	realpath --relative-to="${PWD}" "$1"
+}
+
+# Convenience function to print a failure method and exit
+# All params are echoed, one per line.
+fail()
+{
+	echo -e "${font_red}[FAIL]${font_reset}"
+	if [ $# -ne 0 ]; then
+		echo
+		printf '*%.0s' $(seq 1 80)
+		echo
+		for i in $(seq 1 $#); do
+			echo ${!i} | fold -s
+		done
+	fi
+	printf '*%.0s' $(seq 1 80)
+	echo
+	date
+	exit 1
+}
+
+# Print [WARN] with any arguments in parenthesis before.
+warn()
+{
+	if [ $# -ne 0 ]; then
+		for i in "$*"; do
+			echo -n -e "${font_dim}(${i})${font_reset} "
+		done
+	fi
+	echo -e "${font_lightred}[WARN]${font_reset}"
+}
+
+# Print [OKAY] with any arguments in parenthesis before.
+okay()
+{
+	if [ $# -ne 0 ]; then
+		for i in "$*"; do
+			echo -n -e "${font_dim}(${i})${font_reset} "
+		done
+	fi
+	echo -e "${font_green}[OKAY]${font_reset}"
+}
+
+# Check that images have been downloaded, placed in the correct spot, etc.
+check_for_images()
+{
+	# Check for data
+	echo -n "Checking for validation images... "
+	if ! [ -d "${wd}"/${validation_image_dir} ]; then
+		# If directory doesn't exist, maybe user didn't expand archive
+		local image_archive=$(ls -r \
+		    "${wd}"/${validation_image_download_prefix}* 2>&1 > \
+		    /dev/null)
+		if [ $? -eq 0 ]; then
+			echo -e "${font_yellow}[DEFER]${font_reset}"
+			for i in $(find "${wd}" -maxdepth 1 -name \
+			    "${validation_image_download_prefix}*"); do
+				echo -n "Expanding $(basename ${i})... "
+				tar xf "${i}" > /dev/null 2>&1
+
+				if [ $? -ne 0 ]; then
+					fail "Failed to expand ${i}"
+				else
+					okay
+				fi
+			done
+
+			echo -n "Checking for validation images... "
+		else
+			msg="Cannot find validation images. You must request "
+			msg+="them from NIST's website and place them within:"
+			fail "${msg}" "${wd}" "The URL is:" \
+			    ${validation_image_request_url}
+		fi
+	else
+		# If the directory does exist, check that every archive present
+		# has been expanded
+		local has_deferred=0
+		for i in $(find "${wd}" -maxdepth 1 -name \
+		    "${validation_image_download_prefix}*"); do
+		    	local regex=".*\/${validation_image_download_prefix}"
+		    	regex+="\(.*\)-.\+.tar.gz"
+			local kind=$(sed "s/${regex}/\1/" <<< ${i})
+			if ! [ -e \
+			    "${wd}"/${validation_image_dir}/VERSION-${kind} ];
+			    then
+			    	if [ $has_deferred -eq 0 ]; then
+	    				echo -n -e "${font_yellow}[DEFER]"
+	    				echo -e "${font_reset}"
+	    				has_deferred=1
+	    			fi
+
+				echo -n "Expanding $(basename ${i})... "
+				tar xf "${i}" > /dev/null 2>&1
+
+				if [ $? -ne 0 ]; then
+					fail "Failed to expand ${i}"
+				else
+					okay
+				fi
+			fi
+		done
+	fi
+
+	okay
+}
+
+# Ensure that the imagery versions downloaded are compatible with this
+# version of the validation script.
+check_image_versions()
+{
+	echo -n "Checking validation image versions... "
+
+	declare -A acceptable_versions
+	acceptable_versions["twoinch"]="201902130947"
+	acceptable_versions["threeinch"]="201902130947"
+	acceptable_versions["upperpalm"]="201902130947"
+	acceptable_versions["fullpalm"]="201902130947"
+
+	local found_some_images=0
+	for slapkind in $(echo ${slap_type_names}); do
+		if ! [ -e "${wd}"/${validation_image_dir}/VERSION-${slapkind} ];
+		    then
+		    	continue
+		else
+			found_some_images=1
+		fi
+
+		local image_version=UNKNOWN
+		read image_version < \
+		    "${wd}"/${validation_image_dir}/VERSION-${slapkind}
+		local image_version_okay=0
+		for v in $(echo ${acceptable_versions[$slapkind]}); do
+			if [ "${v}" == "${image_version}" ]; then
+				local image_version_okay=1
+				local found_version[${slapkind}]=${v}
+			fi
+		done
+		if [ $image_version_okay -ne 1 ]; then
+			msg="The version of ${slapkind} validation images "
+			msg+="within ${wd}/${validation_image_dir} "
+			msg+="(${image_version}) is not compatible with this "
+			msg+="version of the validation script "
+			msg+="(${validation_version}). Please request the "
+			msg+="latest version from the NIST website: "
+			fail "${msg}" ${validation_image_request_url}
+		fi
+	done
+
+	# Check that at least one type of image was found above
+	if [ ${found_some_images} -eq 0 ]; then
+		msg="No version information was found for the images you have "
+		msg+="within ${wd}/${validation_image_dir}.  Please request "
+		msg+="the latest versions from the NIST website: "
+		fail "${msg}" ${validation_image_request_url}
+	fi
+
+	okay
+}
+
+# Record MD5 of randomly-generated files to ensure that you truly have the
+# latest version of the validation imagery
+log_canaries()
+{
+	local canary_prefix="canary"
+	find "${wd}"/${validation_image_dir} -name "${canary_prefix}*" \
+	    -exec md5sum {} \; >> "${output_dir}"/canary.log
+}
+
+# Check that CentOS packages used in this file have been installed.
+check_required_packages()
+{
+	echo -n "Checking for required packages... "
+
+	# Packages required to run this script
+	local pkgs="binutils centos-release coreutils curl file gawk gcc-c++ "
+	local pkgs+="grep iputils make sed which yum"
+
+	which yum > /dev/null
+	if [ $? -ne 0 ]; then
+		fail "which and yum are required to be installed for validation"
+	fi
+
+	for pkg in ${pkgs}; do
+		yum -q list installed ${pkg} > /dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			msg="The required package \"${pkg}\" was not "
+			msg+="installed. Try \`yum install $pkg\` to install "
+			msg+="\"$pkg.\""
+			fail "${msg}"
+		fi
+	done
+
+	okay
+}
+
+# If the user has Internet access, check that this script is the latest version.
+# @return 1 if version could be checked, 0 if not.
+check_validation_version()
+{
+	# URL with the most recent version number of the validation package
+	local version_url="https://raw.githubusercontent.com/usnistgov/"
+	local version_url+="slapseg/master/slapsegiii/validation/VERSION"
+	# Confirm validation package version, if possible
+	local checked=0
+
+	echo -n "Checking validation version... "
+	# d.root-servers.net -> 199.7.91.13
+	ping -W 1 -c 1 199.7.91.13 > /dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		local internet_version=0
+		internet_version=$(curl -m 10 -f $version_url 2>/dev/null)
+		if [ $? -ne 0 ]; then
+			echo -e -n "${font_dim}(connection failure)"
+			echo -e -n "${font_reset} ${font_yellow}[SKIP]"
+			echo -e "${font_reset}"
+		else
+			if [ "${internet_version}" != "${validation_version}" ];
+			then
+				msg="You are running an old version of the "
+				msg+="validation package (${validation_version}"
+				msg+="). Please download ${internet_version} "
+				msg+="from:"
+				fail "${msg}" "${validation_dl_url}"
+			else
+				okay "${validation_version}"
+				checked=1
+			fi
+		fi
+	else
+		echo -e -n "${font_dim}(no Internet connection)${font_reset} "
+		echo -e "${font_yellow}[SKIP]${font_reset}"
+	fi
+
+	return ${checked}
+}
+
+# Check that the version of CentOS is the correct version.
+check_os()
+{
+	local expected="7.6.1810"
+	echo -n "Checking OS and version... "
+	if [ ! -e /etc/redhat-release ]; then
+		msg="You do not appear to be using the appropriate operating "
+		msg+="system. Please use ${expected}."
+		fail "${msg}"
+	fi
+	if [ "$(tr -C -d '[:digit:].' < /etc/redhat-release)" != \
+	    "${expected}" ]; then
+		msg="You do not appear to be using the appropriate version of "
+		msg+="CentOS. Please use ${expected}."
+		fail "${msg}"
+	fi
+	okay "${expected}"
+}
+
+# Check that a core library exists
+core_library_present()
+{
+	local lib_regex="libslapsegiii_[A-Za-z0-9]+_[0-9A-Fa-f]{4}.so"
+
+	if ! [ -d ${lib_dir} ]; then
+		return 1
+	fi
+
+	local count=$(ls "${lib_dir}" | grep -E ${lib_regex} | wc -l)
+	if [ ${count} -ne 1 ]; then
+		return 1
+	fi
+
+	return 0
+}
+
+# Get the name of the core library
+get_core_library_name()
+{
+	core_library_present
+	if [ $? -ne 0 ]; then
+		return 1
+	fi
+
+	local lib_regex="libslapsegiii_[A-Za-z0-9]+_[0-9A-Fa-f]{4}.so"
+
+	if ! [ -d ${lib_dir} ]; then
+		local msg="Library directory not found. Create it and place "
+		msg+="the core library inside."
+		fail "${msg}" "" "The library directory is:" "${lib_dir}"
+		return 1
+	fi
+
+	local core_lib=""
+	local count=$(ls "${lib_dir}" | grep -E ${lib_regex} | wc -l)
+	if [ ${count} -ne 1 ]; then
+		fail "More than one core library found in ${lib_dir}"
+		return 1
+	fi
+
+	core_lib=$(ls "${lib_dir}" | grep -E ${lib_regex} )
+	if [ "${core_lib}" == "" ]; then
+		local msg="No core library found in the library directory. "
+		msg+="Please review the SlapSegIII library naming conventions."
+		fail "${msg}" "" "The library directory is:" "${lib_dir}"
+		return 1
+	fi
+
+	echo ${core_lib}
+	return 0
+}
+
+# Get the name of the organization from the core library.
+get_organization_name()
+{
+	name=$(get_core_library_name)
+	if [ $? -ne 0 ]; then
+		return 1
+	fi
+
+	cut -f2 -d_ <<< $name
+}
+
+# Get the version of the library from the core library.
+get_lib_version()
+{
+	name=$(get_core_library_name)
+	if [ $? -ne 0 ]; then
+		return 1
+	fi
+
+	(cut -f3 -d_ <<< $name) | sed 's/\(.*\).so/\1/'
+}
+
+# Ensure that a library in the lib directory implements the required naming
+# convention.
+check_library()
+{
+	echo -n "Looking for core library... "
+
+	local core_lib=""
+	core_library_present
+	if [ $? -eq 0 ]; then
+		core_lib=$(get_core_library_name)
+		if [ $? -ne 0 ]; then
+			echo ${core_lib}
+			return 1
+		fi
+	else
+		get_core_library_name
+		return 1
+	fi
+
+	# If SONAME is present, check that it is the same as the lib name
+	local SONAME=$(objdump -p "${lib_dir}"/${core_lib} | grep SONAME | \
+	    awk '{print $2}')
+	if [ "$SONAME" != "" ]; then
+		if [ "$SONAME" != "${core_lib}" ]; then
+			local msg="The SONAME of ${core_lib} is not valid. "
+			msg+="${core_lib} was likely renamed after being "
+			msg+="built. The SONAME must be the same name as the "
+			msg+="core library."
+			fail "${msg}"
+		fi
+	fi
+
+	okay "${core_lib}"
+}
+
+# Check that you have all the images for all types of slaps you support
+check_for_image_completeness()
+{
+	echo -n "Checking that you have all necessary kinds of images... "
+
+	for type in $(echo ${slap_type_names}); do
+		support=$(${binary} -k | grep -i -e ${type} | grep -e true | \
+		    wc -l)
+		if [ ${support} -ne 0 ]; then
+			if ! [ -e images/VERSION-${type} ]; then
+				local msg="Your library supports segmenting "
+				msg+=" ${type} slaps, but you do not have the "
+				msg+="${type} validation imagery present in "
+				msg+="${validation_image_dir}."
+				fail "${msg}"
+			fi
+		fi
+	done
+
+	okay
+}
+
+# Check the environment for known variables, and echo them.
+check_environment()
+{
+	echo -n "Checking for known environment variables... "
+	okay
+}
+
+# Get a random number.
+random_number()
+{
+	od -A n -t uL -N 4 /dev/urandom | tr -d -C '[:digit:]'
+}
+
+# Check and warn if files from a previous validation attempt are still present
+# in the current working directory.
+check_for_previous_attempts()
+{
+	echo -n "Checking for previous validation attempts... "
+	local output_found=$(find "${wd}" -maxdepth 1 -type d -name \
+	    "$(basename ${output_dir})*" -print -quit)
+	if [ "$output_found" != "" ]; then
+		fail "Previous attempt at validation found:" \
+		    $(rp ${output_found}) "" \
+		    "You can remove it by running: '$0 clean'"
+	fi
+	output_found=$(find "${wd}" -maxdepth 1 -name "validation_*" -print \
+	    -quit)
+	if [ "$output_found" != "" ]; then
+		fail "Previous attempt at validation found:" \
+		    $(rp ${output_found}) "" \
+		    "You can remove it by running: '$0 clean'"
+	fi
+
+	okay
+}
+
+# Compile the validation driver.
+compile()
+{
+	echo -n "Building... "
+
+	if [ $# -ne 1 ]; then
+		fail "Usage: $FUNCNAME <random_seed>"
+	fi
+
+	local expected_lib_md5="caadf2a91f5c3892de1ada72abf1ca6d"
+	local actual_lib_md5=$(md5sum \
+	    "${src_dir}"/libslapsegiii/libslapsegiii.cpp | cut -f 1 -d ' ')
+	if [ "${expected_lib_md5}" != "${actual_lib_md5}" ]; then
+		local msg="Your copy of libslapsegiii.cpp appears to be "
+		msg+="modified. Please restore the original copy. Making "
+		msg+="changes will almost certainly cause errors."
+		fail "${msg}"
+	fi
+
+	local expected_h_md5="bb67858ff1659e61534aa507538984a9"
+	local actual_h_md5=$(md5sum "${src_dir}"/slapsegiii.h | cut -f 1 -d ' ')
+	if [ "${expected_h_md5}" != "${actual_h_md5}" ]; then
+		local msg="Your copy of slapsegiii.h appears to be "
+		msg+="modified. Please restore the original copy. Making "
+		msg+="changes will almost certainly cause errors."
+		fail "${msg}"
+	fi
+
+	if [ -e "${lib_dir}"/libslapsegiii.so ]; then
+		local msg="The library 'libslapsegiii.so' is in the directory "
+		msg+="$(rp ${lib_dir}). This script will build its own copy of "
+		msg+="the library to ensure that modifications have not been "
+		msg+="made, since doing so may cause during the evaluation."
+		fail "${msg}"
+	fi
+
+	# Compile
+	local log="${output_dir}/compile.log"
+	make -C "${src_dir}" 2>&1 | tee "${log}" > /dev/null
+	if [ $? -ne 0 ]; then
+		fail "An error occurred during compilation. Please review:" \
+		    "${log}"
+	fi
+
+	# Check that binary shows a dependency on the core library
+	local core_lib="$(get_core_library_name)"
+	ldd "${binary}" | \
+	    grep "${lib_dir}"/$(get_core_library_name) 2>&1 > /dev/null
+	if [ $? -ne 0 ]; then
+		msg="${core_lib} is not a dependency of the compiled binary. "
+		msg+="${core_lib} was either renamed after being built, or the "
+		msg+="binary is linking against a version of ${core_lib} from "
+		msg+="a directory outside of the validation package. "
+		msg+="Please review:"
+		fail "${msg}" "${log}"
+	fi
+
+	# Log some extra compilation information that may be useful in helping
+	# to debug future issues
+	find "${lib_dir}" -type f -exec md5sum {} \; >> ${log}
+	cat /etc/redhat-release >> ${log}
+	ldd "${binary}" >> ${log}
+	echo "Validation Version = ${validation_version}" >> ${log}
+	echo "Random Seed = $1" >> ${log}
+
+	okay
+}
+
+# Remove files from previous validation attempts.
+clean_previous_attempts()
+{
+	echo -n "Removing output directories... "
+	rm -rf "${bin_dir}"
+	if [ -d "${bin_dir}" ]; then
+		fail "Failed to remove" "${bin_dir}"
+		return 1
+	fi
+
+	rm -rf "${output_dir}"
+	if [ -d "${output_dir}" ]; then
+		fail "Failed to remove" "${output_dir}"
+		return 1
+	fi
+
+ 	rm -rf "${wd}"/validation_$(get_organization_name)_*
+	if [ $(find "${wd}" -name \
+	    "validation_$(get_organization_name)_*" | wc -l) -ne 0 ]; then
+	    	fail "Failed to remove some output. Please delete it manually."
+		return 1
+	fi
+
+	okay
+
+	core_library_present
+	if [ $? -ne 0 ]; then
+		return 0
+	fi
+
+	echo -n "Cleaning compilation... "
+	make -j -C "${src_dir}" clean > /dev/null
+	if [ $? -ne 0 ]; then
+		fail "Unable to `make clean` in" "$(rp ${src_dir})"
+		return 1
+	fi
+
+	okay
+}
+
+# Log identification information to a log file.
+record_identification_information()
+{
+	local log="${output_dir}"/id.log
+
+	echo "Core Library = $(get_core_library_name)" >> ${log}
+	${binary} -i >> ${log}
+	${binary} -k >> ${log}
+}
+
+# Run the validation driver for all supported slap types.
+run_segmentation()
+{
+	echo -n "Running segmentation... "
+
+	if [ $# -ne 1 ]; then
+		fail "Usage: $FUNCNAME <random_seed>"
+	fi
+
+	# We want to fork regardless to be sure that implementations can handle
+	# forking, but we don't need to spawn a ton of processes either.
+	forks=$(( $(nproc --all) > 4 ? 4 : 2 ))
+
+	local log="${output_dir}"/run-segment.log
+	local command="$binary -s -r $1 -f ${forks}"
+	echo $command >> ${log}
+	$(${command} >> ${log} 2>&1)
+	if [ $? -ne 0 ]; then
+		msg="An error occurred during segmentation. Please investigate:"
+		fail "${msg}" "${log}"
+	fi
+
+	# Check for runtime error messages
+	if [ $(wc -l < ${log}) -ne 1 ]; then
+		msg="Unexpected output  was logged during segmentation. Please "
+		msg+="review:"
+		fail "${msg}" $(rp ${log})
+	fi
+	okay
+}
+
+# Run the validation driver to test calls to determineOrientation
+run_determine_orientation()
+{
+	echo -n "Running orientation determination... "
+
+	if [ $# -ne 1 ]; then
+		fail "Usage: $FUNCNAME <random_seed>"
+	fi
+
+	# Check if determine orientation is supported
+	if [ "$($binary -k | grep DetermineOrientation | cut -f3 -d' ')" != \
+	    "true" ]; then
+	    	echo -e -n "${font_dim}(not implemented)${font_reset} "
+		echo -e "${font_yellow}[SKIP]${font_reset}"
+		return
+	fi
+
+	# We want to fork regardless to be sure that implementations can handle
+	# forking, but we don't need to spawn a ton of processes either.
+	forks=$(( $(nproc --all) > 4 ? 4 : 2 ))
+
+	local log="${output_dir}"/run-determineOrientation.log
+	local command="$binary -d -r $1 -f ${forks}"
+	echo $command >> ${log}
+	$(${command} >> ${log} 2>&1)
+	if [ $? -ne 0 ]; then
+		local msg="An error occurred during orientation determination. "
+		msg+="Please investigate:"
+		fail "${msg}" "${log}"
+	fi
+
+	# Check for runtime error messages
+	if [ $(wc -l < ${log}) -ne 1 ]; then
+		local msg="Unexpected output  was logged during orientation "
+		msg+="determination. Please review:"
+		fail "${msg}" $(rp ${log})
+	fi
+	okay
+}
+
+# Check segmentation logs for errors.
+check_segmentation_logs()
+{
+	echo -n "Checking segmentation logs... "
+	merge_logs "segments"
+	check_segment_log_counts
+
+	check_log_errors
+	if [ $? -ne 0 ]; then
+		okay 'non-zero return values present'
+	else
+		okay
+	fi
+}
+
+# Check the segmentation logs for the appropriate number of lines.
+check_segment_log_counts()
+{
+	declare -A log_lines
+	log_lines[2]=481
+	log_lines[3]=553
+	log_lines[5]=457
+	log_lines[8]=413
+
+	declare -A expected_logs
+	expected_logs[2]=$($binary -k | grep TwoInch | cut -f3 -d' ')
+	expected_logs[3]=$($binary -k | grep ThreeInch | cut -f3 -d' ')
+	expected_logs[5]=$($binary -k | grep UpperPalm | cut -f3 -d' ')
+	expected_logs[8]=$($binary -k | grep FullPalm | cut -f3 -d' ')
+
+	for type in $(echo "${!log_lines[@]}"); do
+		local log="${output_dir}"/segments-${type}.log
+		if ! [ -e "${log}" ]; then
+			if [ ${expected_logs[$type]} == "false" ]; then
+				continue
+			else
+				fail "An expected log was not generated." \
+				    "${log}"
+			fi
+		fi
+
+		if [ $(wc -l < "${log}") -ne ${log_lines[$type]} ]; then
+			msg="A segmentation log does not have the expected "
+			msg+="number of lines inside. Please review:"
+			fail "${msg}" $(rp "${log}")
+		fi
+	done
+}
+
+# Check segmentation logs for errors.
+check_orientation_logs()
+{
+	echo -n "Checking segmentation logs... "
+
+	# Check if determine orientation is supported
+	if [ "$($binary -k | grep DetermineOrientation | cut -f3 -d' ')" != \
+	    "true" ]; then
+	    	echo -e -n "${font_dim}(not implemented)${font_reset} "
+		echo -e "${font_yellow}[SKIP]${font_reset}"
+		return
+	fi
+
+	merge_logs "orientation"
+	check_orientation_log_counts
+
+	check_log_errors
+	if [ $? -ne 0 ]; then
+		okay 'non-zero return values present'
+	else
+		okay
+	fi
+}
+
+check_orientation_log_counts()
+{
+	declare -A log_lines
+	log_lines[2]=121
+	log_lines[3]=164
+	log_lines[5]=115
+	log_lines[8]=104
+
+	declare -A expected_logs
+	expected_logs[2]=$($binary -k | grep TwoInch | cut -f3 -d' ')
+	expected_logs[3]=$($binary -k | grep ThreeInch | cut -f3 -d' ')
+	expected_logs[5]=$($binary -k | grep UpperPalm | cut -f3 -d' ')
+	expected_logs[8]=$($binary -k | grep FullPalm | cut -f3 -d' ')
+
+	for type in $(echo "${!log_lines[@]}"); do
+		local log="${output_dir}"/orientation-${type}.log
+		if ! [ -e "${log}" ]; then
+			if [ ${expected_logs[$type]} == "false" ]; then
+				continue
+			else
+				fail "An expected log was not generated." \
+				    "${log}"
+			fi
+		fi
+
+		if [ $(wc -l < "${log}") -ne ${log_lines[$type]} ]; then
+			local msg="An orientation determination log does not "
+			msg+="have the expected number of lines inside. Please "
+			msg+="review:"
+			fail "${msg}" $(rp "${log}")
+		fi
+	done
+}
+
+# Check that there were no coordinate errors or nonzero return values logged
+# during segmentation.
+# @return 1 if there are non-zero return values
+# @note Non-zero return values are okay, but we want to warn the user, since
+#       they might not expect this from an otherwise robust implementation.
+check_log_errors()
+{
+	local has_nonzero_rv=0
+	local error_message=""
+	for type in ${slap_type_numbers}; do
+		if ! [ -e "${output_dir}"/segments-${type}.log ]; then
+			continue
+		fi
+
+		local has_quantity_error=0
+		local has_outside_coordinates=0
+		local is_rotated=0
+		local has_nonrectangular_coordiantes=0
+		local has_irregular_coordinates=0
+
+		{
+		read # Read header line
+		while read line; do
+			read rv errors quantity <<< \
+			    $(awk -F, '{print $3,$16,$18}' <<< $line)
+
+			if [ ${rv} -ne 0 ]; then
+				has_nonzero_rv=1
+			fi
+
+			if [ ${quantity} -eq 0 ]; then
+				has_quantity_error=1
+			fi
+
+			local errors=$(tr -d '"' <<< ${errors})
+			if [ $(cut -c 1 <<< ${errors}) -eq 1 ]; then
+				has_outside_coordinates=1
+			fi
+			if [ $(cut -c 2 <<< ${errors}) -eq 1 ]; then
+				is_rotated=1
+			fi
+			if [ $(cut -c 3 <<< ${errors}) -eq 1 ]; then
+				has_nonrectangular_coordiantes=1
+			fi
+			if [ $(cut -c 4 <<< ${errors}) -eq 1 ]; then
+				has_irregular_coordinates=1
+			fi
+		done
+		} < "${output_dir}"/segments-${type}.log
+
+		if [ ${has_quantity_error} -eq 1 ] || \
+		    [ ${has_outside_coordinates} -eq 1 ] || \
+		    [ ${is_rotated} -eq 1 ] || \
+		    [ ${has_nonrectangular_coordiantes} -eq 1 ] || \
+		    [ ${has_irregular_coordinates} -eq 1 ] ; then
+		    	local p="${output_dir}"/segments-${type}.log
+		    	if [ "${error_message}" != "" ]; then
+		    		error_message+="\n"
+		    	fi
+			error_message+="\nIn "$(rp "${p}")
+			error_message+=', at least one segment:'
+		fi
+
+		if [ ${has_quantity_error} -eq 1 ]; then
+			error_message+='\n \x2A has less than the appropriate '
+			error_message+='number of segments.'
+		fi
+
+		if [ ${has_outside_coordinates} -eq 1 ]; then
+			error_message+='\n \x2A has coordinates outside the '
+			error_message+='image.'
+		fi
+
+		if [ ${is_rotated} -eq 1 ]; then
+			error_message+='\n \x2A is rotated.'
+		fi
+
+		if [ ${has_nonrectangular_coordiantes} -eq 1 ]; then
+			error_message+='\n \x2A has non-rectangular '
+			error_message+='coordinates.'
+		fi
+
+		if [ ${has_irregular_coordinates} -eq 1 ]; then
+			error_message+='\n \x2A has irregular coordinates.'
+		fi
+	done
+
+	if [ "${error_message}" != "" ]; then
+		echo -e "${font_red}[FAIL]${font_reset}"
+		echo
+		printf '*%.0s' $(seq 1 80)
+		echo -e -n "${error_message}" | fold -s
+		echo
+		printf '*%.0s' $(seq 1 80)
+		echo
+		date
+		exit 1
+	fi
+
+	return ${has_nonzero_rv}
+}
+
+# Merge forked logs into a single file.
+merge_logs()
+{
+	if [ $# -ne 1 ]; then
+		fail "Usage: $FUNCNAME <log_prefix>"
+	fi
+
+	local log_prefix="${1}"
+
+	for type in ${slap_type_numbers}; do
+		exists=$(find "${output_dir}" -type f -name \
+		    "${log_prefix}-${type}-*" -print -quit)
+
+		if [ "${exists}" == "" ]; then
+			continue
+		fi
+
+		# Get the header
+		local log="${output_dir}"/${log_prefix}-${type}.log
+		head -n 1 ${exists} >> ${log}
+
+		# Merge the logs, minus the header
+		for f in $(find "${output_dir}" -type f -name \
+		    "${log_prefix}-${type}-*"); do
+			tail -n +2 $f >> ${log}
+		    rm ${f}
+		done
+
+		# Sort, ignoring the header
+		(head -n 1 ${log} && tail -n +2 ${log} | sort) > ${log}.sort
+		rm ${log}
+		mv ${log}.sort ${log}
+	done
+}
+
+# Generate the name of the validation tarball.
+get_tarball_name()
+{
+	echo "validation_$(get_organization_name)_$(get_lib_version).tar.gz"
+}
+
+# Make a tarball of all libraries and logfiles to send to NIST.
+make_tarball()
+{
+	echo -n "Creating validation submission... "
+
+	local tar_file=$(get_tarball_name)
+	local new_name="${wd}"/$(basename $(get_tarball_name) .tar.gz)
+
+	mv "${output_dir}" "${new_name}"
+	cp -pr "${lib_dir}" "${new_name}"
+
+	# We will build a fewsh libslapsegiii.so at NIST
+	rm "${new_name}"/$(basename "${lib_dir}")/libslapsegiii.so
+
+	if [ $? -ne 0 ]; then
+		local msg="An error occurred while copying libraries. Check "
+		msg+="file permissions."
+		fail "${msg}"
+	fi
+	cd "${wd}" && \
+	    tar czf "${tar_file}" $(basename "${new_name}") > /dev/null && \
+	    cd - > /dev/null
+	if [ $? -ne 0 ]; then
+		fail "There was an issue creating the validation submission."
+	fi
+
+	okay "${tar_file}"
+}
+
+# Print success message.
+print_final_success()
+{
+	local tar_file=$(get_tarball_name)
+
+	echo
+	printf '=%.0s' $(seq 1 80)
+	echo
+
+	local msg="You have successfully completed the first step in "
+	msg+="SlapSegIII validation. Please sign and encrypt this file, send "
+	msg+="it to slapseg@nist.gov, and await a notification.\n\n"
+	msg+=$(rp "${wd}"/"${tar_file}")
+	msg+="\n\nExample encryption:\n"
+	msg+="gpg --output ${tar_file}.asc \\\\\n"
+	msg+="    --default-key jdoe@$(get_organization_name).com \\\\\n"
+	msg+="    --recipient slapseg@nist.gov \\\\\n"
+	msg+="    --recipient jdoe@$(get_organization_name).com \\\\\n"
+	msg+="    --armor --sign --encrypt \\\\\n"
+	msg+="    $(rp ${wd}/${tar_file})\n\n"
+	msg+="Additionally, be sure to include the public key of the identity "
+	msg+="that signed the validation package. This key must be the key "
+	msg+="whose key fingerprint was printed on the SlapSegIII application."
+	msg+="\n\nExample public key extraction:\n"
+	msg+="gpg --output $(get_organization_name)_$(get_lib_version)_public_"
+	msg+="key.asc --armor \\\\\n"
+	msg+="    --export jdoe@$(get_organization_name).com"
+
+	echo -e "${msg}" | fold -s
+	printf '=%.0s' $(seq 1 80)
+	echo
+}
+
+# Print validation script header message
+print_header()
+{
+	echo -n "SlapSeg III Validation (${validation_version}) -- "
+	date
+	printf '=%.0s' $(seq 1 80)
+	echo
+}
+
+# Print message when validation version couldn't be checked
+print_couldnt_check_version()
+{
+	# URL where information about the validation package can be found
+	local info_url="https://github.com/usnistgov/slapseg/tree/master/"
+	info_url+="slapsegiii/validation"
+
+	# URL where the version of the validation driver can be found
+	local vers_url="https://github.com/usnistgov/slapseg/tree/master/"
+	vers_url+="slapsegiii/validation/VERSION"
+
+	local msg="IMPORTANT: This script was unable to check, so please "
+	msg+="ensure that you are using the latest version of the SlapSegIII "
+	msg+="validation package before submitting. You are currently running "
+	msg+="with version ${font_underline}${validation_version}${font_reset}."
+	msg+="\n\nInformation:\n${info_url}\n"
+	msg+="Version:\n${vers_url}\n"
+	msg+="Download:\n${validation_dl_url}\n"
+
+	echo
+	printf '*%.0s' $(seq 1 80)
+	echo
+	echo -e -n ${msg} | fold -s
+	printf '*%.0s' $(seq 1 80)
+	echo
+}
+
+###############################################################################
+###############################################################################
+###############################################################################
+
+print_header
+
+if [ $# -ne 0 ]; then
+	if [ "$1" == "clean" ]; then
+		clean_previous_attempts
+		printf '=%.0s' $(seq 1 80)
+		echo
+		exit
+	else
+		echo "Usage: $0 [clean]"
+		exit 1
+	fi
+fi
+
+check_required_packages
+check_for_previous_attempts
+check_validation_version; validation_version_checked=$?
+check_os
+check_for_images
+check_image_versions
+check_library
+check_environment
+mkdir -p "${output_dir}"
+log_canaries
+seed=$(random_number)
+compile ${seed}
+check_for_image_completeness
+record_identification_information
+run_segmentation ${seed}
+check_segmentation_logs
+run_determine_orientation ${seed}
+check_orientation_logs
+make_tarball
+print_final_success
+
+if [ ${validation_version_checked} -eq 0 ]; then
+	print_couldnt_check_version
+fi
+date
