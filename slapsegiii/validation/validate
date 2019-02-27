@@ -196,10 +196,10 @@ check_image_versions()
 	echo -n "Checking validation image versions... "
 
 	declare -A acceptable_versions
-	acceptable_versions["twoinch"]="201902130947"
-	acceptable_versions["threeinch"]="201902130947"
-	acceptable_versions["upperpalm"]="201902130947"
-	acceptable_versions["fullpalm"]="201902130947"
+	acceptable_versions["twoinch"]="201902271132"
+	acceptable_versions["threeinch"]="201902271132"
+	acceptable_versions["upperpalm"]="201902271132"
+	acceptable_versions["fullpalm"]="201902271132"
 
 	local found_some_images=0
 	for slapkind in $(echo ${slap_type_names}); do
