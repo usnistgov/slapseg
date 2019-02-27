@@ -209,6 +209,8 @@ SlapSegIII::Validation::readFile(
 	    std::ifstream::ate | std::ifstream::binary};
 	if (!file)
 		throw std::runtime_error{"Could not open " + pathName};
+	file.unsetf(std::ifstream::skipws);
+
 	const auto size = file.tellg();
 	if (size == -1)
 		throw std::runtime_error{"Could not open " + pathName};
