@@ -70,11 +70,11 @@ $ cp /path/to/libslapsegiii_nfseg_5001.so lib/
 $ cp /path/to/slapsegiii_validation_images_*.tar.gz .
 $ ./validate
 
-SlapSeg III Validation (201902131048) -- Wed Feb 13 10:51:55 EST 2019
+SlapSeg III Validation (201904051243) -- Fri Apr  5 12:44:04 EDT 2019
 ================================================================================
 Checking for required packages... [OKAY]
 Checking for previous validation attempts... [OKAY]
-Checking validation version... (201902131048) [OKAY]
+Checking validation version... (201904051243) [OKAY]
 Checking OS and version... (CentOS 7.6.1810) [OKAY]
 Checking for validation images... [DEFER]
 Expanding slapsegiii_validation_images_twoinch-201902130947.tar.gz... [OKAY]
@@ -116,7 +116,7 @@ gpg --output nfseg_5001_public_key.asc --armor \
     --export jdoe@nfseg.com
 ================================================================================
 ********************************************************************************
-Wed Feb 13 10:53:52 EST 2019
+Fri Apr  5 12:50:11 EDT 2019
 ```
 </details>
 
