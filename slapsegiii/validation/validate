@@ -133,9 +133,8 @@ check_for_images()
 	if ! [ -d "${wd}"/${validation_image_dir} ]; then
 		# If directory doesn't exist, maybe user didn't expand archive
 		local image_archive=$(ls -r \
-		    "${wd}"/${validation_image_download_prefix}* 2>&1 > \
-		    /dev/null)
-		if [ $? -eq 0 ]; then
+		    "${wd}"/${validation_image_download_prefix}* 2> /dev/null)
+		if [ "${image_archive}" != "" ]; then
 			echo -e "${font_yellow}[DEFER]${font_reset}"
 			for i in $(find "${wd}" -maxdepth 1 -name \
 			    "${validation_image_download_prefix}*"); do
@@ -149,7 +148,8 @@ check_for_images()
 				fi
 			done
 
-			echo -n "Checking for validation images... "
+			check_for_images
+			return
 		else
 			msg="Cannot find validation images. You must request "
 			msg+="them from NIST's website and place them within:"
@@ -179,8 +179,10 @@ check_for_images()
 
 				if [ $? -ne 0 ]; then
 					fail "Failed to expand ${i}"
+					return
 				else
 					okay
+					return
 				fi
 			fi
 		done
@@ -233,9 +235,10 @@ check_image_versions()
 
 	# Check that at least one type of image was found above
 	if [ ${found_some_images} -eq 0 ]; then
-		msg="No version information was found for the images you have "
-		msg+="within ${wd}/${validation_image_dir}.  Please request "
-		msg+="the latest versions from the NIST website: "
+		msg="No images were found within within ${wd}/"
+		msg+="${validation_image_dir}.  If you have images, please "
+		msg+="move them to the appropriate location. If you don't have "
+		msg+="images, please request the latest versions from NIST: "
 		fail "${msg}" ${validation_image_request_url}
 	fi
 
