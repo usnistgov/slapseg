@@ -577,6 +577,24 @@ compile()
 	okay
 }
 
+check_api_level()
+{
+	echo -n "Checking API version... "
+
+	# If API level is incorrect, text is printed to stderr on execution
+	local tempfile=$(mktemp)
+	local output=$(${binary} 2> ${tempfile})
+	if [ $(grep -c "Incompatible " ${tempfile}) -ne 0 ]; then
+		output=$(<${tempfile})
+		rm ${tempfile}
+		fail "${output}"
+		return 1
+	fi
+
+	rm ${tempfile}
+	okay
+}
+
 # Remove files from previous validation attempts.
 clean_previous_attempts()
 {
@@ -1076,6 +1094,7 @@ mkdir -p "${output_dir}"
 log_canaries
 seed=$(random_number)
 compile ${seed}
+check_api_level
 check_for_image_completeness
 record_identification_information
 run_segmentation ${seed}
