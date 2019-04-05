@@ -108,9 +108,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a92db535d9dd93185a5f876f99318bf8c"><td class="memItemLeft" align="right" valign="top">virtual std::tuple&lt; <a class="el" href="struct_slap_seg_i_i_i_1_1_return_status.html">ReturnStatus</a>, <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html#a2dea14289897bbb563551792a6e9ebad">SlapImage::Orientation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#a92db535d9dd93185a5f876f99318bf8c">determineOrientation</a> (const <a class="el" href="struct_slap_seg_i_i_i_1_1_slap_image.html">SlapImage</a> &amp;image)=0</td></tr>
 <tr class="memdesc:a92db535d9dd93185a5f876f99318bf8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the hand orientation of a slap image.  <a href="#a92db535d9dd93185a5f876f99318bf8c">More...</a><br /></td></tr>
 <tr class="separator:a92db535d9dd93185a5f876f99318bf8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a7417a96441a101f85370a3521c8948"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#a8a7417a96441a101f85370a3521c8948">~Interface</a> ()=default</td></tr>
-<tr class="memdesc:a8a7417a96441a101f85370a3521c8948"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="#a8a7417a96441a101f85370a3521c8948">More...</a><br /></td></tr>
-<tr class="separator:a8a7417a96441a101f85370a3521c8948"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77e7378dd2a3dbd15a0c8cdf82774df6"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slap_seg_i_i_i_1_1_interface.html#a77e7378dd2a3dbd15a0c8cdf82774df6">~Interface</a> ()</td></tr>
+<tr class="memdesc:a77e7378dd2a3dbd15a0c8cdf82774df6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="#a77e7378dd2a3dbd15a0c8cdf82774df6">More...</a><br /></td></tr>
+<tr class="separator:a77e7378dd2a3dbd15a0c8cdf82774df6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -122,10 +122,10 @@ Static Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Slap Fingerprint Segmentation III interface. </p>
 <p>Participants must inherit from this class and implement all methods. </p>
 
-<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00452">452</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="slapsegiii_8h_source.html#l00440">440</a> of file <a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a8a7417a96441a101f85370a3521c8948"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a7417a96441a101f85370a3521c8948">&#9670;&nbsp;</a></span>~Interface()</h2>
+<a id="a77e7378dd2a3dbd15a0c8cdf82774df6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77e7378dd2a3dbd15a0c8cdf82774df6">&#9670;&nbsp;</a></span>~Interface()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -134,7 +134,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual SlapSegIII::Interface::~Interface </td>
+          <td class="memname">SlapSegIII::Interface::~Interface </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -142,12 +142,14 @@ Static Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Destructor. </p>
+
+<p class="definition">Definition at line <a class="el" href="libslapsegiii_8cpp_source.html#l00105">105</a> of file <a class="el" href="libslapsegiii_8cpp_source.html">libslapsegiii.cpp</a>.</p>
 
 </div>
 </div>
@@ -322,8 +324,9 @@ This method shall return in &lt;= 10 seconds. </dd></dl>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="slapsegiii_8h_source.html">slapsegiii.h</a></li>
+<li><a class="el" href="libslapsegiii_8cpp_source.html">libslapsegiii.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.14-->
