@@ -154,7 +154,7 @@ namespace SlapSegIII
 		};
 
 		/** Default SlapImage constructor. */
-		SlapImage() = default;
+		SlapImage();
 
 		/**
 		 * @brief
@@ -256,7 +256,7 @@ namespace SlapSegIII
 		using Result = struct Result;
 
 		/** Default SegmentationPosition constructor. */
-		SegmentationPosition() = default;
+		SegmentationPosition();
 
 		/**
 		 * @brief
@@ -389,7 +389,7 @@ namespace SlapSegIII
 	struct SubmissionIdentification
 	{
 		/** Default constructor. */
-		SubmissionIdentification() = default;
+		SubmissionIdentification();
 
 		/**
 		 * @brief
@@ -572,7 +572,7 @@ namespace SlapSegIII
 		    const SlapImage &image) = 0;
 
 		/** Destructor. */
-		virtual ~Interface() = default;
+		virtual ~Interface();
 
 		/**
 		 * @brief
