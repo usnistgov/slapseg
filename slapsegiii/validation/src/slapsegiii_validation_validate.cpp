@@ -15,6 +15,10 @@ SlapSegIII::Validation::Validate::validateSegmentationPosition(
     const SegmentationPosition &position,
     std::shared_ptr<SlapImage> slapImage)
 {
+	/* Don't validate coordinates if position was not set. */
+	if (position.result.code != SegmentationPosition::Result::Code::Success)
+		return (Errors{});
+
 	Errors errors{};
 
 	if (hasIrregularCoordinates(position))

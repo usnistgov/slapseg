@@ -376,20 +376,39 @@ SlapSegIII::Validation::segment(
 		    Validate::hasCorrectQuantity(std::get<1>(rv),
 		    md.orientation));
 
-		for (const auto &pos : std::get<1>(rv))
-			logLine += imageName + ',' + elapsed + ',' +
-			    e2i2s(std::get<0>(rv).code) + ',' +
-			    sanitizeMessage(std::get<0>(rv).message) + ',' +
-			    e2i2s(pos.frgp) + ',' + ts(pos.tl.x) + ',' +
-			    ts(pos.tl.y) + ',' + ts(pos.tr.x) + ',' +
-			    ts(pos.tr.y) + ',' + ts(pos.bl.x) + ',' +
-			    ts(pos.bl.y) + ',' + ts(pos.br.x) + ',' +
-			    ts(pos.br.y) + ',' + e2i2s(pos.result.code) + ',' +
-			    sanitizeMessage(pos.result.message) + ",\"" +
-			    Validate::validateSegmentationPosition(pos, si).
-			    to_string() + "\",\"" + Validate::
-			    gatherDeficiencies(std::get<0>(rv)).to_string() +
-			    "\"," + correctQuantity + '\n';
+		for (const auto &pos : std::get<1>(rv)) {
+			if (pos.result.code ==
+			    SegmentationPosition::Result::Code::Success) {
+				logLine += imageName + ',' + elapsed + ',' +
+				    e2i2s(std::get<0>(rv).code) + ',' +
+				    sanitizeMessage(std::get<0>(rv).message) +
+				    ',' + e2i2s(pos.frgp) + ',' + ts(pos.tl.x) +
+				    ',' + ts(pos.tl.y) + ',' + ts(pos.tr.x) +
+				    ',' + ts(pos.tr.y) + ',' + ts(pos.bl.x) +
+				    ',' + ts(pos.bl.y) + ',' + ts(pos.br.x) +
+				    ',' + ts(pos.br.y) + ',' + e2i2s(
+				    pos.result.code) + ',' +
+				    sanitizeMessage(pos.result.message) + ",\"" +
+				    Validate::validateSegmentationPosition(pos,
+				    si).to_string() + "\",\"" +
+				    Validate::gatherDeficiencies(
+				    std::get<0>(rv)).to_string() + "\"," +
+				    correctQuantity + '\n';
+			} else {
+				logLine += imageName + ',' + elapsed + ',' +
+				    e2i2s(std::get<0>(rv).code) + ',' +
+				    sanitizeMessage(std::get<0>(rv).message) +
+				    ',' + e2i2s(pos.frgp) + ",NA,NA,NA,NA,NA,NA,"
+				    "NA,NA," + e2i2s(
+				    pos.result.code) + ',' +
+				    sanitizeMessage(pos.result.message) + ",\"" +
+				    Validate::validateSegmentationPosition(pos,
+				    si).to_string() + "\",\"" +
+				    Validate::gatherDeficiencies(
+				    std::get<0>(rv)).to_string() + "\"," +
+				    correctQuantity + '\n';
+			}
+		}
 	} else {
 		for (const auto &frgp :
 		    Validate::getExpectedFrictionRidgeGeneralizedPositions(

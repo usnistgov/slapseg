@@ -846,8 +846,8 @@ check_log_errors()
 		{
 		read # Read header line
 		while read line; do
-			read rv errors quantity <<< \
-			    $(awk -F, '{print $3,$16,$18}' <<< $line)
+			read rv errors scode quantity <<< \
+			    $(awk -F, '{print $3,$16,$14,$18}' <<< $line)
 
 			# Only check for position errors with "Success" or
 			# "RequestRecaptureWithAttempt"
@@ -858,6 +858,12 @@ check_log_errors()
 
 			if [ ${quantity} -eq 0 ]; then
 				has_quantity_error=1
+			fi
+
+			# Don't check coordinates unless segmentation position
+			# code is "Success"
+			if [ ${scode} -ne 0 ]; then
+				continue
 			fi
 
 			local errors=$(tr -d '"' <<< ${errors})
