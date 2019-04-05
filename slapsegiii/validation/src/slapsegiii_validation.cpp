@@ -572,13 +572,15 @@ main(
 {
 	int rv = EXIT_FAILURE;
 
-	if ((SlapSegIII::API_MAJOR_VERSION != 1) ||
-	    (SlapSegIII::API_MINOR_VERSION != 0)) {
+	if (!((SlapSegIII::API_MAJOR_VERSION == 1) &&
+	    (SlapSegIII::API_MINOR_VERSION == 1))) {
 		std::cerr << "Incompatible API version encountered.\n "
-		    "- Validation: 1.0.*\n - Participant: " <<
+		    "- Validation: 1.1.*\n - Participant: " <<
 		    SlapSegIII::API_MAJOR_VERSION << '.' <<
 		    SlapSegIII::API_MINOR_VERSION << '.' <<
 		    SlapSegIII::API_PATCH_VERSION << '\n';
+		std::cerr << "Rebuild your core library with the latest "
+		    "slapsegiii.h\n";
 		return (rv);
 	}
 

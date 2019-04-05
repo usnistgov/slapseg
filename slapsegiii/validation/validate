@@ -518,7 +518,7 @@ compile()
 		fail "Usage: $FUNCNAME <random_seed>"
 	fi
 
-	local expected_lib_md5="caadf2a91f5c3892de1ada72abf1ca6d"
+	local expected_lib_md5="11311d92e4edfc07e13351c1f1694d37"
 	local actual_lib_md5=$(md5sum \
 	    "${src_dir}"/libslapsegiii/libslapsegiii.cpp | cut -f 1 -d ' ')
 	if [ "${expected_lib_md5}" != "${actual_lib_md5}" ]; then
@@ -528,7 +528,7 @@ compile()
 		fail "${msg}"
 	fi
 
-	local expected_h_md5="bb67858ff1659e61534aa507538984a9"
+	local expected_h_md5="16e1e8debada90d4b89fa8e51822d9b0"
 	local actual_h_md5=$(md5sum "${src_dir}"/slapsegiii.h | cut -f 1 -d ' ')
 	if [ "${expected_h_md5}" != "${actual_h_md5}" ]; then
 		local msg="Your copy of slapsegiii.h appears to be "
