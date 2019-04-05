@@ -432,7 +432,14 @@ check_library()
 		fi
 	else
 		get_core_library_name
-		return 1
+		if [ $? -ne 0 ]; then
+                	local msg="No core library found in the library "
+			msg+="directory. Please review the SlapSeg III "
+			msg+="library naming conventions."
+                	fail "${msg}" "" "The library directory is:" \
+			    "${lib_dir}"
+			return 1
+		fi
 	fi
 
 	# If SONAME is present, check that it is the same as the lib name
