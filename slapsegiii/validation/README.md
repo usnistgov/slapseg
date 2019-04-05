@@ -88,7 +88,7 @@ Checking that you have all necessary kinds of images... [OKAY]
 Running segmentation... [OKAY]
 Checking segmentation logs... [OKAY]
 Running orientation determination... [OKAY]
-Checking segmentation logs... [OKAY]
+Checking orientation logs... [OKAY]
 Creating validation submission... (validation_nfseg_5001.tar.gz) [OKAY]
 
 ================================================================================

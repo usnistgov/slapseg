@@ -750,7 +750,7 @@ check_segment_log_counts()
 # Check segmentation logs for errors.
 check_orientation_logs()
 {
-	echo -n "Checking segmentation logs... "
+	echo -n "Checking orientation logs... "
 
 	# Check if determine orientation is supported
 	if [ "$($binary -k | grep DetermineOrientation | cut -f3 -d' ')" != \
