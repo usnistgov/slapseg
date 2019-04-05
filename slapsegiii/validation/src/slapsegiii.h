@@ -89,8 +89,6 @@ namespace SlapSegIII
 		/** Y coordinate */
 		int32_t y{};
 	};
-	/** Convenience definition for struct Coordinate. */
-	using Coordinate = struct Coordinate;
 
 	/** Data and metadata of an image containing multiple fingerprints. */
 	struct SlapImage
@@ -213,8 +211,6 @@ namespace SlapSegIII
 		 */
 		std::vector<uint8_t> pixels{};
 	};
-	/** Convenience definition for struct SlapImage. */
-	using SlapImage = struct SlapImage;
 
 	/** Representation of a segmentation position. */
 	struct SegmentationPosition
@@ -252,8 +248,6 @@ namespace SlapSegIII
 			/** Message providing insight into code's value. */
 			std::string message{};
 		};
-		/** Convenience definition for struct Result. */
-		using Result = struct Result;
 
 		/** Default SegmentationPosition constructor. */
 		SegmentationPosition();
@@ -312,8 +306,6 @@ namespace SlapSegIII
 		/** Result of segmentation position discovery. */
 		Result result{};
 	};
-	/** Convenience definition for struct FingerSegment. */
-	using FingerSegment = struct FingerSegment;
 
 	/** Information about the execution of an API method. */
 	struct ReturnStatus
@@ -382,8 +374,6 @@ namespace SlapSegIII
 		/** Explanatory message (optional). */
 		std::string message{};
 	};
-	/** Convenience definition for struct ReturnStatus. */
-	using ReturnStatus = struct ReturnStatus;
 
 	/** Information identifying this submission. */
 	struct SubmissionIdentification
@@ -439,8 +429,6 @@ namespace SlapSegIII
 		std::string marketingIdentifier{};
 
 	};
-	/** Convenience definition for struct SubmissionIdentification. */
-	using SubmissionIdentification = struct SubmissionIdentification;
 
 	/**
 	 * @brief
