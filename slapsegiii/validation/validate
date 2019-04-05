@@ -725,7 +725,7 @@ check_segmentation_logs()
 
 	check_log_errors
 	if [ $? -ne 0 ]; then
-		okay 'non-zero return values present'
+		okay 'failure return values present'
 	else
 		okay
 	fi
@@ -783,7 +783,7 @@ check_orientation_logs()
 
 	check_log_errors
 	if [ $? -ne 0 ]; then
-		okay 'non-zero return values present'
+		okay 'failure return values present'
 	else
 		okay
 	fi
@@ -825,12 +825,12 @@ check_orientation_log_counts()
 
 # Check that there were no coordinate errors or nonzero return values logged
 # during segmentation.
-# @return 1 if there are non-zero return values
+# @return 1 if there are failure return values
 # @note Non-zero return values are okay, but we want to warn the user, since
 #       they might not expect this from an otherwise robust implementation.
 check_log_errors()
 {
-	local has_nonzero_rv=0
+	local has_failure_rv=0
 	local error_message=""
 	for type in ${slap_type_numbers}; do
 		if ! [ -e "${output_dir}"/segments-${type}.log ]; then
@@ -849,8 +849,11 @@ check_log_errors()
 			read rv errors quantity <<< \
 			    $(awk -F, '{print $3,$16,$18}' <<< $line)
 
-			if [ ${rv} -ne 0 ]; then
-				has_nonzero_rv=1
+			# Only check for position errors with "Success" or
+			# "RequestRecaptureWithAttempt"
+			if [ ${rv} -ne 0 ] && [ ${rv} -ne 3 ]; then
+				has_failure_rv=1
+				continue
 			fi
 
 			if [ ${quantity} -eq 0 ]; then
@@ -922,7 +925,7 @@ check_log_errors()
 		exit 1
 	fi
 
-	return ${has_nonzero_rv}
+	return ${has_failure_rv}
 }
 
 # Merge forked logs into a single file.
