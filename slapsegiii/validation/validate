@@ -329,7 +329,7 @@ check_os()
 	echo -n "Checking OS and version... "
 	if [ ! -e /etc/redhat-release ]; then
 		msg="You do not appear to be using the appropriate operating "
-		msg+="system. Please use ${expected}."
+		msg+="system. Please use CentOS ${expected}."
 		fail "${msg}"
 	fi
 	if [ "$(tr -C -d '[:digit:].' < /etc/redhat-release)" != \
@@ -338,7 +338,7 @@ check_os()
 		msg+="CentOS. Please use ${expected}."
 		fail "${msg}"
 	fi
-	okay "${expected}"
+	okay "CentOS ${expected}"
 }
 
 # Check that a core library exists

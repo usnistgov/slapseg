@@ -75,7 +75,7 @@ SlapSeg III Validation (201902131048) -- Wed Feb 13 10:51:55 EST 2019
 Checking for required packages... [OKAY]
 Checking for previous validation attempts... [OKAY]
 Checking validation version... (201902131048) [OKAY]
-Checking OS and version... (7.6.1810) [OKAY]
+Checking OS and version... (CentOS 7.6.1810) [OKAY]
 Checking for validation images... [DEFER]
 Expanding slapsegiii_validation_images_twoinch-201902130947.tar.gz... [OKAY]
 Expanding slapsegiii_validation_images_threeinch-201902130947.tar.gz... [OKAY]
