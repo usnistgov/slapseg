@@ -730,7 +730,7 @@ check_segmentation_logs()
 	merge_logs "segments"
 	check_segment_log_counts
 
-	check_log_errors
+	check_segmentation_log_errors
 	if [ $? -ne 0 ]; then
 		okay 'failure return values present'
 	else
@@ -788,7 +788,7 @@ check_orientation_logs()
 	merge_logs "orientation"
 	check_orientation_log_counts
 
-	check_log_errors
+	check_orientation_log_errors
 	if [ $? -ne 0 ]; then
 		okay 'failure return values present'
 	else
@@ -830,12 +830,116 @@ check_orientation_log_counts()
 	done
 }
 
+# Check that there were no odd scenarios encountered during orientation
+# determination
+# @return 1 if there are failure return values
+# @note Non-zero return values are okay, but we want to warn the user, since
+#       they might not expect this from an otherwise robust implementation, and
+#       will ultimately be an incorrect answer.
+check_orientation_log_errors()
+{
+	local has_failure_rv=0
+	local error_message=""
+	for type in ${slap_type_numbers}; do
+		if ! [ -e "${output_dir}"/orientation-${type}.log ]; then
+			continue
+		fi
+
+		local has_invalid_rv=0
+		local supported_but_ni=0
+		local has_invalid_hand=0
+
+		{
+		read # Read header line
+		while read line; do
+			read rv orientation <<< \
+			    $(awk -F, '{print $3,$5}' <<< $line)
+
+			if [ ${rv} != 0 ]; then
+				has_failure_rv=1
+			fi
+
+			# RequestRecapture and RequestRecaptureWithAttempt are
+			# not suitable for orientation determination.
+			if [ ${rv} -eq 2 ] || [ ${rv} -eq 3 ]; then
+				has_invalid_rv=1
+				continue
+			fi
+
+			# We only check orientation logs if they are supported,
+			# therefore NotImplemented is not permitted.
+			if [ ${rv} -eq 6 ]; then
+				supported_but_ni=1
+				continue
+			fi
+
+			# The only valid hand positions
+			if [ ${rv} -eq 0 ]; then
+				if [ ${orientation} -ne 0 ] && \
+				    [ ${orientation} -ne 1 ]; then
+					has_invalid_hand=1
+					continue
+				fi
+			else
+				if [ ${orientation} != "NA" ]; then
+					has_invalid_hand=1
+					continue
+				fi
+			fi
+		done
+		} < "${output_dir}"/orientation-${type}.log
+
+		if [ ${has_invalid_rv} -eq 1 ] || \
+		    [ ${supported_but_ni} -eq 1 ] || \
+		    [ ${has_invalid_hand} -eq 1 ]; then
+		    	local p="${output_dir}"/orientation-${type}.log
+		    	if [ "${error_message}" != "" ]; then
+		    		error_message+="\n"
+		    	fi
+			error_message+="\nIn "$(rp "${p}")
+			error_message+=', at least one orientation '
+			error_message+='determination:'
+		fi
+
+		if [ ${has_invalid_rv} -eq 1 ]; then
+			error_message+='\n \x2A specifies a return value of '
+			error_message+='RequestRecapture or '
+			error_message+='RequestRecaptureWithAttempt.'
+		fi
+
+		if [ ${supported_but_ni} -eq 1 ]; then
+			error_message+='\n \x2A returned NotImplemented, but '
+			error_message+='specified the opposite in '
+			error_message+='getSupported().'
+		fi
+
+		if [ ${has_invalid_hand} -eq 1 ]; then
+			error_message+='\n \x2A specified an orientation other '
+			error_message+='than left or right.'
+		fi
+	done
+
+	if [ "${error_message}" != "" ]; then
+		echo -e "${font_red}[FAIL]${font_reset}"
+		echo
+		printf '*%.0s' $(seq 1 80)
+		echo -e -n "${error_message}" | fold -s
+		echo
+		printf '*%.0s' $(seq 1 80)
+		echo
+		date
+		exit 1
+	fi
+
+	return ${has_failure_rv}
+}
+
 # Check that there were no coordinate errors or nonzero return values logged
 # during segmentation.
 # @return 1 if there are failure return values
 # @note Non-zero return values are okay, but we want to warn the user, since
 #       they might not expect this from an otherwise robust implementation.
-check_log_errors()
+check_segmentation_log_errors()
 {
 	local has_failure_rv=0
 	local error_message=""
