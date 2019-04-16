@@ -17,6 +17,9 @@ Contents
    - Library containing required implementations of methods from the
      [SlapSeg III API]. Submitted libraries must link against **but not
      include** this library
+- [nullimpl]
+   - A stub library compliant with the [SlapSeg III API] that can be used as a
+     starting point for development.
 
 Communication
 -------------
@@ -36,6 +39,7 @@ The items in this repository are released in the public domain. See the
 
 [Validation]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/
 [`libslapsegiii`]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src/libslapsegiii
+[nullimpl]: https://github.com/usnistgov/slapseg/tree/master/slapsegiii/nullimpl
 [SlapSeg III API]: https://pages.nist.gov/slapseg/doc/slapsegiii/api
 [open an issue]: https://github.com/usnistgov/slapseg/issues
 [mailing list site]: https://groups.google.com/a/list.nist.gov/forum/#!forum/slapseg/join
