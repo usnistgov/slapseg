@@ -205,13 +205,17 @@ namespace SlapSegIII
 			 *
 			 * @param p
 			 * SegmentationPosition in question.
+			 * @param kind
+			 * The kind of image being segmented.
 			 *
 			 * @return
-			 * Whether or not the shape formed by p is rectangular.
+			 * Whether or not the shape formed by p is rectangular,
+			 * within an acceptable tolerance.
 			 */
 			bool
 			isRectangular(
-			    const SegmentationPosition &p);
+			    const SegmentationPosition &p,
+			    const SlapImage::Kind kind);
 
 			/**
 			 * @brief
@@ -222,10 +226,8 @@ namespace SlapSegIII
 			 * SegmentationPosition in question.
 			 *
 			 * @return
-			 * Whether or not the shape formed p is rotated.
-			 *
-			 * @note
-			 * Assumes the shape is rectangular.
+			 * Whether or not the quadrilateral formed by p is
+			 * rotated.
 			 */
 			bool
 			isRotated(

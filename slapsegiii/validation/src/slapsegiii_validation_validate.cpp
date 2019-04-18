@@ -8,6 +8,8 @@
  * about its quality, reliability, or any other characteristic.
  */
 
+#include <cmath>
+
 #include <slapsegiii_validation_validate.h>
 
 SlapSegIII::Validation::Validate::Errors
@@ -25,7 +27,7 @@ SlapSegIII::Validation::Validate::validateSegmentationPosition(
 		errors.set(
 		    static_cast<typename std::underlying_type<ErrorCode>::type>(
 		    ErrorCode::IrregularCoordinates));
-	if (!isRectangular(position))
+	if (!isRectangular(position, slapImage->kind))
 		errors.set(
 		    static_cast<typename std::underlying_type<ErrorCode>::type>(
 		    ErrorCode::NonRectangularCoordinates));
@@ -154,29 +156,68 @@ SlapSegIII::Validation::Validate::isOutsideImage(
 
 bool
 SlapSegIII::Validation::Validate::isRectangular(
-    const SegmentationPosition &p)
+    const SegmentationPosition &p,
+    const SlapImage::Kind kind)
 {
-	const auto topLen = ((p.tr.x - p.tl.x) * (p.tr.x - p.tl.x)) +
-	    ((p.tr.y - p.tl.y) * (p.tr.y - p.tl.y));
-	const auto bottomLen = ((p.br.x - p.bl.x) * (p.br.x - p.bl.x)) +
-	    ((p.br.y - p.bl.y) * (p.br.y - p.bl.y));
+	const int64_t topLen{((p.tr.x - p.tl.x) * (p.tr.x - p.tl.x)) +
+	    ((p.tr.y - p.tl.y) * (p.tr.y - p.tl.y))};
+	const int64_t bottomLen{((p.br.x - p.bl.x) * (p.br.x - p.bl.x)) +
+	    ((p.br.y - p.bl.y) * (p.br.y - p.bl.y))};
+	const int64_t leftLen{((p.tl.x - p.bl.x) * (p.tl.x - p.bl.x)) +
+	    ((p.tl.y - p.bl.y) * (p.tl.y - p.bl.y))};
+	const int64_t rightLen{((p.tr.x - p.br.x) * (p.tr.x - p.br.x)) +
+	    ((p.tr.y - p.br.y) * (p.tr.y - p.br.y))};
 
-	if (topLen != bottomLen)
-		return (false);
+	if (!canBeRotated(kind))
+		/* Perfect rectangle */
+		return ((topLen == bottomLen) && (leftLen == rightLen));
 
-	const auto leftLen = ((p.tl.x - p.bl.x) * (p.tl.x - p.bl.x)) +
-	    ((p.tl.y - p.bl.y) * (p.tl.y - p.bl.y));
-	const auto rightLen = ((p.tr.x - p.br.x) * (p.tr.x - p.br.x)) +
-	    ((p.tr.y - p.br.y) * (p.tr.y - p.br.y));
+	/*
+	 * Implementations might store coordinates as floating point, which
+	 * could produce slightly imperfect rectangles due to loss of precision
+	 * when converting to integer coordinates.
+	 *
+	 * We'll allow a certain tolerance for rotated segmentation positions.
+	 */
 
-	return (leftLen == rightLen);
+	static const double angleTolerance{0.3};
+	static const double rad2deg{180.0 / M_PI};
+
+	/* Compute precise side lengths */
+	const double realTopLen{std::sqrt(topLen)};
+	const double realBottomLen{std::sqrt(bottomLen)};
+	const double realLeftLen{std::sqrt(leftLen)};
+	const double realRightLen{std::sqrt(rightLen)};
+
+	/* Determine angles of the two triangles comprising the quadrilateral */
+	const double t1a1{std::atan2(realBottomLen, realLeftLen) * rad2deg};
+	const double t1a2{std::atan2(realLeftLen, realBottomLen) * rad2deg};
+	const double t2a1{std::atan2(realRightLen, realTopLen) * rad2deg};
+	const double t2a2{std::atan2(realTopLen, realRightLen) * rad2deg};
+
+	/* The four angles of the segmentation position quadrilateral */
+	const double a1{t1a1 + t2a1};
+	const double a2{t1a2 + t2a2};
+	const double a3{180.0 - t1a1 - t1a2};
+	const double a4{180.0 - t2a1 - t2a2};
+
+	/* Let no angle be more than angleTolerance different than perfect */
+	return (
+	    (std::abs(90.0 - a1) <= angleTolerance) &&
+	    (std::abs(90.0 - a2) <= angleTolerance) &&
+	    (std::abs(90.0 - a3) <= angleTolerance) &&
+	    (std::abs(90.0 - a4) <= angleTolerance));
 }
 
 bool
 SlapSegIII::Validation::Validate::isRotated(
     const SegmentationPosition &p)
 {
-	return (p.tl.x != p.bl.x);
+	return (
+	    (p.tl.x != p.bl.x) ||
+	    (p.tr.x != p.br.x) ||
+	    (p.tl.y != p.tr.y) ||
+	    (p.bl.y != p.br.y));
 }
 
 bool
