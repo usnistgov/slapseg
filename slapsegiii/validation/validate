@@ -873,12 +873,21 @@ check_orientation_log_errors()
 				continue
 			fi
 
-			# The only valid hand positions
+			# The only valid hand positions.
 			if [ ${rv} -eq 0 ]; then
-				if [ ${orientation} -ne 0 ] && \
-				    [ ${orientation} -ne 1 ]; then
-					has_invalid_hand=1
-					continue
+				if [ ${type} -eq 3 ]; then
+					if [ ${orientation} -ne 0 ] && \
+					    [ ${orientation} -ne 1 ] && \
+					    [ ${orientation} -ne 2 ]; then
+						has_invalid_hand=1
+						continue
+					fi
+				else
+					if [ ${orientation} -ne 0 ] && \
+					    [ ${orientation} -ne 1 ]; then
+						has_invalid_hand=1
+						continue
+					fi
 				fi
 			else
 				if [ ${orientation} != "NA" ]; then
@@ -915,7 +924,12 @@ check_orientation_log_errors()
 
 		if [ ${has_invalid_hand} -eq 1 ]; then
 			error_message+='\n \x2A specified an orientation other '
-			error_message+='than left or right.'
+			error_message+='than '
+			if [ ${type} -eq 3 ]; then
+				error_message+='Left, Right, or Thumbs.'
+			else
+				error_message+='Left or Right.'
+			fi
 		fi
 	done
 
