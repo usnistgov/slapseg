@@ -100,17 +100,8 @@ uint8_t
 SlapSegIII::Validation::Validate::getCorrectQuantity(
     const SlapImage::Orientation orientation)
 {
-	switch (orientation) {
-	case SlapImage::Orientation::Thumbs:
-		return (2);
-	case SlapImage::Orientation::Left:
-		/* FALLTHROUGH */
-	case SlapImage::Orientation::Right:
-		return (4);
-	}
-
-	/* Not reached */
-	return (0);
+	return (getExpectedFrictionRidgeGeneralizedPositions(
+	    orientation).size());
 }
 
 std::set<SlapSegIII::FrictionRidgeGeneralizedPosition>
