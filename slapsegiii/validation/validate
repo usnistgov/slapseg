@@ -845,7 +845,6 @@ check_orientation_log_errors()
 			continue
 		fi
 
-		local has_invalid_rv=0
 		local supported_but_ni=0
 		local has_invalid_hand=0
 
@@ -857,13 +856,6 @@ check_orientation_log_errors()
 
 			if [ ${rv} != 0 ]; then
 				has_failure_rv=1
-			fi
-
-			# RequestRecapture and RequestRecaptureWithAttempt are
-			# not suitable for orientation determination.
-			if [ ${rv} -eq 2 ] || [ ${rv} -eq 3 ]; then
-				has_invalid_rv=1
-				continue
 			fi
 
 			# We only check orientation logs if they are supported,
@@ -898,9 +890,8 @@ check_orientation_log_errors()
 		done
 		} < "${output_dir}"/orientation-${type}.log
 
-		if [ ${has_invalid_rv} -eq 1 ] || \
-		    [ ${supported_but_ni} -eq 1 ] || \
-		    [ ${has_invalid_hand} -eq 1 ]; then
+		if [ ${has_invalid_hand} -eq 1 ] || \
+		    [ ${supported_but_ni} -eq 1 ]; then
 		    	local p="${output_dir}"/orientation-${type}.log
 		    	if [ "${error_message}" != "" ]; then
 		    		error_message+="\n"
@@ -908,12 +899,6 @@ check_orientation_log_errors()
 			error_message+="\nIn "$(rp "${p}")
 			error_message+=', at least one orientation '
 			error_message+='determination:'
-		fi
-
-		if [ ${has_invalid_rv} -eq 1 ]; then
-			error_message+='\n \x2A specifies a return value of '
-			error_message+='RequestRecapture or '
-			error_message+='RequestRecaptureWithAttempt.'
 		fi
 
 		if [ ${supported_but_ni} -eq 1 ]; then
