@@ -1,0 +1,14 @@
+# Compilation
+*.o
+*.so
+
+# Temp files
+.DS_Store
+._*
+
+# Validation cruft
+slapsegiii/validation/bin
+slapsegiii/validation/*.tar.gz
+slapsegiii/validation/images
+slapsegiii/validation/validation_*
+slapsegiii/validation/output
