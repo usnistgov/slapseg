@@ -989,7 +989,6 @@ check_segmentation_log_errors()
 				    0 ]; then
 					has_failure_rv=1
 				fi
-				continue
 			fi
 
 			if [ ${quantity} -eq 0 ]; then
@@ -998,7 +997,7 @@ check_segmentation_log_errors()
 
 			# Don't check coordinates unless segmentation position
 			# code is "Success"
-			if [ ${scode} -ne 0 ]; then
+			if [ "${scode}" == "NA" ] || [ ${scode} -ne 0 ]; then
 				continue
 			fi
 
