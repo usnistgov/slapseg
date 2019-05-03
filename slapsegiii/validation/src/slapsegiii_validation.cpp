@@ -442,7 +442,7 @@ SlapSegIII::Validation::segment(
 			    sanitizeMessage(std::get<0>(rv).message) + ',' +
 			    e2i2s(frgp) + ",NA,NA,NA,NA,NA,NA,NA,NA,NA,\"\","
 			    "\"\"," + Validate::gatherDeficiencies(std::get<0>(
-			    rv)).to_string() + ",NA\n";
+			    rv)).to_string() + ",1\n";
 	/* Only record ReturnStatus information */
 	} else {
 		for (const auto &frgp :
@@ -452,7 +452,7 @@ SlapSegIII::Validation::segment(
 			    e2i2s(std::get<0>(rv).code) + ',' +
 			    sanitizeMessage(std::get<0>(rv).message) + ',' +
 			    e2i2s(frgp) + ",NA,NA,NA,NA,NA,NA,NA,NA,NA,\"\","
-			    "\"\",\"\",NA\n";
+			    "\"\",\"\",1\n";
 	}
 
 	return (logLine);
