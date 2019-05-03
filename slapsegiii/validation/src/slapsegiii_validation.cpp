@@ -369,6 +369,7 @@ SlapSegIII::Validation::segment(
 	    std::chrono::microseconds>(stop - start).count());
 
 	std::string logLine{};
+	/* Record all information for successful ReturnStatus values */
 	if (std::get<0>(rv).code == ReturnStatus::Code::Success ||
 	    std::get<0>(rv).code ==
 	    ReturnStatus::Code::RequestRecaptureWithAttempt) {
@@ -430,6 +431,19 @@ SlapSegIII::Validation::segment(
 				}
 			}
 		}
+	/* Don't record SegmentationPositions, but do record Deficiency */
+	} else if (std::get<0>(rv).code ==
+	    ReturnStatus::Code::RequestRecapture) {
+	    	for (const auto &frgp :
+		    Validate::getExpectedFrictionRidgeGeneralizedPositions(
+		    md.orientation))
+			logLine += imageName + ',' + elapsed + ',' +
+			    e2i2s(std::get<0>(rv).code) + ',' +
+			    sanitizeMessage(std::get<0>(rv).message) + ',' +
+			    e2i2s(frgp) + ",NA,NA,NA,NA,NA,NA,NA,NA,NA,\"\","
+			    "\"\"," + Validate::gatherDeficiencies(std::get<0>(
+			    rv)).to_string() + ",NA\n";
+	/* Only record ReturnStatus information */
 	} else {
 		for (const auto &frgp :
 		    Validate::getExpectedFrictionRidgeGeneralizedPositions(
