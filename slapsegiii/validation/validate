@@ -548,7 +548,8 @@ compile()
 		local msg="The library 'libslapsegiii.so' is in the directory "
 		msg+="$(rp ${lib_dir}). This script will build its own copy of "
 		msg+="the library to ensure that modifications have not been "
-		msg+="made, since doing so may cause during the evaluation."
+		msg+="made, since doing so may cause issues during the "
+		msg+="evaluation."
 		fail "${msg}"
 	fi
 
