@@ -967,12 +967,28 @@ check_segmentation_log_errors()
 		local is_rotated=0
 		local has_nonrectangular_coordiantes=0
 		local has_irregular_coordinates=0
+		local missing_deficiencies=0
+		local has_deficiencies=0
 
 		{
 		read # Read header line
 		while read line; do
-			read rv errors scode quantity <<< \
-			    $(awk -F, '{print $3,$16,$14,$18}' <<< $line)
+			read rv errors scode deficiencies quantity <<< \
+			    $(awk -F, '{print $3,$16,$14,$17,$18}' <<< $line)
+
+			# Ensure that a deficiency is set when returning
+			# RequestRecapture and RequestRecaptureWithAttempt
+			if [ ${rv} -eq 2 ] || [ ${rv} -eq 3 ]; then
+				if [ "$(tr -d '\"' <<< ${deficiencies})" == \
+				    "0000" ]; then
+					missing_deficiencies=1
+				fi
+			elif [ ${rv} -eq 0 ]; then
+				if [ "$(tr -d '\"' <<< ${deficiencies})" != \
+				    "0000" ]; then
+					has_deficiencies=1
+				fi
+			fi
 
 			# Only check for position errors with "Success" or
 			# "RequestRecaptureWithAttempt"
@@ -1011,7 +1027,9 @@ check_segmentation_log_errors()
 		    [ ${has_outside_coordinates} -eq 1 ] || \
 		    [ ${is_rotated} -eq 1 ] || \
 		    [ ${has_nonrectangular_coordiantes} -eq 1 ] || \
-		    [ ${has_irregular_coordinates} -eq 1 ] ; then
+		    [ ${has_irregular_coordinates} -eq 1 ] || \
+		    [ ${has_deficiencies} -eq 1 ] || \
+		    [ ${missing_deficiencies} -eq 1 ]; then
 		    	local p="${output_dir}"/segments-${type}.log
 		    	if [ "${error_message}" != "" ]; then
 		    		error_message+="\n"
@@ -1037,6 +1055,16 @@ check_segmentation_log_errors()
 		if [ ${has_nonrectangular_coordiantes} -eq 1 ]; then
 			error_message+='\n \x2A has non-rectangular '
 			error_message+='coordinates.'
+		fi
+
+		if [ ${missing_deficiencies} -eq 1 ]; then
+			error_message+='\n \x2A returned RequestRecapture[With'
+			error_message+='Attempt] but did not set a Deficiency.'
+		fi
+
+		if [ ${has_deficiencies} -eq 1 ]; then
+			error_message+='\n \x2A returned Success but set a '
+			error_message+='Deficiency.'
 		fi
 
 		if [ ${has_irregular_coordinates} -eq 1 ]; then
