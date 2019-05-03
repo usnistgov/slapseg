@@ -733,7 +733,7 @@ check_segmentation_logs()
 
 	check_segmentation_log_errors
 	if [ $? -ne 0 ]; then
-		okay 'failure return values present'
+		warn 'failure return values present'
 	else
 		okay
 	fi
@@ -791,7 +791,7 @@ check_orientation_logs()
 
 	check_orientation_log_errors
 	if [ $? -ne 0 ]; then
-		okay 'failure return values present'
+		warn 'failure return values present'
 	else
 		okay
 	fi
