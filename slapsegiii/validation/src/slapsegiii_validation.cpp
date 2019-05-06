@@ -405,8 +405,8 @@ SlapSegIII::Validation::segment(
 					    ',' + ts(pos.bl.y) + ',' +
 					    ts(pos.br.x) + ',' + ts(pos.br.y) +
 					    ',' + e2i2s(pos.result.code) + ',' +
-					    sanitizeMessage(pos.result.message) +
-					    ",\"" + Validate::
+					    sanitizeMessage(pos.result.
+					    message) + ",\"" + Validate::
 					    validateSegmentationPosition(pos,
 					    si).to_string() + "\",\"" +
 					    Validate::gatherDeficiencies(
@@ -421,8 +421,8 @@ SlapSegIII::Validation::segment(
 					    ',' + e2i2s(pos.frgp) + ",NA,NA,NA,"
 					    "NA,NA,NA,NA,NA," + e2i2s(
 					    pos.result.code) + ',' +
-					    sanitizeMessage(pos.result.message) +
-					    ",\"" + Validate::
+					    sanitizeMessage(pos.result.
+					    message) + ",\"" + Validate::
 					    validateSegmentationPosition(pos,
 					    si).to_string() + "\",\"" +
 					    Validate::gatherDeficiencies(
@@ -434,7 +434,7 @@ SlapSegIII::Validation::segment(
 	/* Don't record SegmentationPositions, but do record Deficiency */
 	} else if (std::get<0>(rv).code ==
 	    ReturnStatus::Code::RequestRecapture) {
-	    	for (const auto &frgp :
+		for (const auto &frgp :
 		    Validate::getExpectedFrictionRidgeGeneralizedPositions(
 		    md.orientation))
 			logLine += imageName + ',' + elapsed + ',' +

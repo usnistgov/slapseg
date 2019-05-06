@@ -1612,7 +1612,7 @@ namespace SlapSegIII
 		    }},
 
 		    {SlapImage::Kind::TwoInch, {
-		    	/* Two inch slaps at 500 PPI */
+			/* Two inch slaps at 500 PPI */
 			{"00001000_plain_500_13_1598x945.gray",
 			    {1598, 945, 500,
 			    SlapImage::CaptureTechnology::ScannedInkOnPaper,
