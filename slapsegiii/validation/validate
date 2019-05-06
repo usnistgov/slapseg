@@ -62,8 +62,6 @@ font_underline='\e[4m'
 # Reset to default text color
 font_reset='\e[0m'
 
-# Version of this script
-read validation_version < "${wd}"/VERSION
 # Prefix for downloaded validation imagery tarballs
 validation_image_download_prefix=slapsegiii_validation_images_
 # Names for supported slap types
@@ -1221,10 +1219,24 @@ print_couldnt_check_version()
 	echo
 }
 
+# Prevent against possible issues when not using GNU readlink
+check_wd()
+{
+	if [ "${wd}" == "" ]; then 
+		msg="The directory containing \"validate\" could not be found, "
+		msg+="possibly because you are not using GNU readlink under "
+		msg+="CentOS. If you are, please report an issue on the "
+		msg+="SlapSeg GitHub repository."
+		fail "${msg}"
+	fi
+}
+
 ###############################################################################
 ###############################################################################
 ###############################################################################
 
+check_wd
+read validation_version < "${wd}"/VERSION
 print_header
 
 if [ $# -ne 0 ]; then
