@@ -9,6 +9,7 @@
 # Validation cruft
 slapsegiii/validation/bin
 slapsegiii/validation/*.tar.gz
-slapsegiii/validation/images
+slapsegiii/validation/images/VERSION-*
+slapsegiii/validation/images/*gray
 slapsegiii/validation/validation_*
 slapsegiii/validation/output
