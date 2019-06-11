@@ -1,0 +1,208 @@
+#!/usr/bin/perl
+#
+#This software was developed at the National Institute of Standards and Technology (NIST) by employees of the Federal Government in the course of their office duties.  
+#Pursuant to title 17 Section 105 of the United States Code, this software is not subject to copyright protection and is in the public domain.
+# NIST assumes no responsibility whatsoever for its use by other parties, and makes no guarantees, expressed or implied, about it quality, reliability or any other characteristic.
+#
+use Getopt::Long;
+use File::Basename;
+#use warnings;
+my $size = "40%";
+my $view = "b";
+my $save = "";
+my $dir_path = "";
+my $img_name = "";
+
+GetOptions ('size=s' => \$size, #string
+            'view=s' => \$view, #string
+	    'save=s' => \$save, #string
+            'img_name=s' => \$img_name, #string
+	    'dir_path=s' => \$dir_path, #string
+	)
+		 or die ("Error in command line arguments\n");
+my $count = @ARGV;
+	if (( $dir_path eq "" ) || ($img_name eq "")) 
+	{
+	print "Usage: $0 [options] --img_name --dir_path \n
+         
+	\ MANDATORY:
+
+	\ --img_name	Image file whose segmentation positions are to be visualized. example: 00001000_plain_1000_13_3196x1890.gray
+	\ --dir_path	Path to the root of the validation directory. This is the directory containing the directory `output`
+	\		   example: /mnt/c/slapsegiii/validation/company/0001
+			
+	\ OPTIONS:
+
+	\ --size 	Resizing percentage for viewing display (The default for this option is 40%) \ 
+	
+	
+	 Image with segmentation boxes is viewed by default but will not be saved. 
+
+	\ --view [b|n|p]             Customize which segmentation positions to draw. Defaults to `b`.\
+	\				options b - view NIST and participant segmentation boxes in image   \ 
+	\		        	        n - view only NIST segmentation boxes in image  \
+        \                         	        p - view only participant segmentation boxes in image \
+	
+
+        \ Save the image as a PNG to the specified location. Image will not be displayed if this option is provided. \
+	\	
+	\ --save 	Put the dirname/filename to where you want your new file to be saved. 
+			\n";
+	exit;}
+	@chckcon = `which convert `;
+	chomp @chckcon;
+	$cc = @chckcon;
+	if ( $cc eq 0 ){
+	print "Convert needs to be installed for this program to work.\n";
+	exit;
+	} 
+	@chckdis = `which display `;
+        chomp @chckdis;
+	$cd = @chckdis;
+	 if ( $cd eq  0 ){
+        print  "Display needs to be installed for this program to work.\n";
+	exit;
+        }
+	@check = `ls -l $dir_path | grep "^d" | grep validation`;
+	chomp @check;
+	@vdir = $check[0];
+	$check[0] =~ /\w*\s\w*\s*\w*\s\w*\s+\w*\s*\w*\s*\w*\s*\S*\s*(\w*)/;
+	$dirv = $1;
+	$chk = @check;
+	if ($chk eq 0){
+	 @check = `ls -l $dir_path | grep "^d" | grep output `;
+	 $check[0] =~ /\w*\s\w*\s*\w*\s\w*\s+\w*\s*\w*\s*\w*\s*\S*\s*(\w*)/;
+        $dirv = $1;
+        chomp @check;
+        $chk = @check;
+	if ($chk eq 0){
+	print "Verify the directory is named either \"output\" or is named as validation_{name of vendor}_{version number}\n";
+	exit;
+	}
+	}
+my $part_file = "$dir_path/$dirv\/segments-*.log";
+	@pcount = `ls $part_file`;
+	chomp @pcount;
+	$pc = @pcount;
+# Display an image with superimposed segmentation bounding boxes
+(my $id, my $t, my $ppi, my $fng, my $end) = split /_/, $img_name;
+(my $wh, my $ext) = split /\./, $end;
+(my $w, my $h) = split /x/, $wh;
+  my $nist_file = "$dir_path/images\/segments-*.csv";
+  my $image_dir = "$dir_path\/images";
+	$checknfile = `ls $nist_file  2> /dev/null `;
+	chomp $checknfile;
+	if ($checknfile eq ""){
+	print "\n\nIncorrect validation path to NIST coordinates file. \nDIRECTORY INPUT: $dir_path\nPlease check validation directory \n";
+	exit;
+	}
+	my $draw_rec = "-draw 'polygon";
+my $s_ucolor = "-fill 'rgba(0, 0, 255, 0.3)' -stroke blue -strokewidth 3 " ;
+my $v_ucolor = "-fill  'rgba(255, 129, 80, 0.4)' -stroke red -strokewidth 3";
+	&view_program;
+
+sub view_program {
+	if ($view eq "b"){	
+	&part_call;
+	&nist_call;
+	}elsif ($view eq "n"){
+	 &nist_call;
+	}elsif ($view eq "p"){
+	 &part_call;
+	}else {
+	print "\n\n The view option must be \"b\" for both (NIST & participant's) sets of segmentation boxes, \"n\" to only view NIST segmentation boxes or \"p\" to only view participant's segmentation boxes \n\n";
+	exit;
+	}
+	 if ($save ne ""){
+	      &save_yes;
+ 	   }elsif ($save eq ""){
+                   &save_no;
+	}
+}	
+
+sub part_call {
+	@part_draw = ();
+	 my @part_image_coordinate = `grep "^$img_name" $part_file `;
+chomp @part_image_coordinate;
+	$checkp = @part_image_coordinate;
+	if ($checkp < 1 ){
+	print "\n\nthis Image Name $img_name not in participant's coordinates file.  Please check image name. \n";
+	exit;}
+foreach my $part_line (@part_image_coordinate){
+	if ($pc > 1){
+	($f, $p_line) = split /:/, $part_line;
+	chomp $p_line;
+(my $filename,my $dge,my $dg,my $df,my $frgp,my $tlx,my $tly,my $trx, my $try,my $blx,my $bly,my $brx,my $bry,my $theta,my $ab,my $ac,my $ad,my $ag) = split /,/, $p_line;
+	chomp $p_line;
+         if ($img_name ne $filename){
+        print "\n\nImage Name $img_name not in participant's coordinates file.  Please check image name. \n";
+        exit;}
+	 $n = $frgp;
+        $p_text = " -font Courier -pointsize 60 -draw \"text $blx,$bly '$n'\"";
+ if ($tlx eq "NA"){next;}
+my $draw_line = "$draw_rec $tlx,$tly,$trx,$try,$brx,$bry,$blx,$bly' $p_text";
+ push @part_draw, $draw_line;
+	}elsif ($pc == 1) {
+(my $filename ,my $dge,my $dg,my $df,my $frgp,my $tlx,my $tly,my $trx, my $try,my $blx,my $bly,my $brx,my $bry,my $theta,my $ab,my $ac,my $ad,my $ag) = split /,/, $part_line;
+	 if ($img_name ne $filename){
+        print "\n\nImage Name $img_name not in participant's coordinates file.  Please check image name. \n";
+        exit;}
+        $n = $frgp;
+	$newblx = ($blx - 40);
+	$newbly = ($bly - 100);
+        $p_text = " -font Courier -pointsize 60 -draw \"text $newblx,$bly '$n'\"";
+ if ($tlx eq "NA"){next;}
+my $draw_line = "$draw_rec $tlx,$tly,$trx,$try,$brx,$bry,$blx,$bly' $p_text";
+ push @part_draw, $draw_line;
+	}
+	}	
+}
+
+
+sub nist_call {
+	$slap_draw = ();
+	  my @image_coordinates_val = `grep $img_name $nist_file`;
+chomp @image_coordinates_val;
+	$checkn = @image_coordinates_val;
+	if ( $checkn eq " "){
+	print "Image name $img_name not found in NIST coordinates file.  Please check image name on command line. \n";
+	exit;}
+	 foreach my $nist_line (@image_coordinates_val){
+	 ($f, $val_line) = split /:/, $nist_line;
+(my $filename,my $frgp,my $tlx,my $tly,my $trx,my $try,my $blx,my $bly,my $brx,my $bry,my $theta) = split /,/, $val_line;
+	$g = $frgp;
+	$n_text = " -font Courier -pointsize 60  -draw \"text $brx,$bry '$g'\"";
+	if ($img_name ne $filename){
+	 print "Image name $img_name not found in NIST coordinates file.  Please verify image name on command line. \n";
+        exit;}
+ if ($tlx eq "NA"){next;}
+my $draw_line = "$draw_rec $tlx,$tly,$trx,$try,$brx,$bry,$blx,$bly' $n_text";
+ push @slap_draw, $draw_line;
+	}	
+}
+
+sub exit_image {
+                $image_name = "png:-";
+                $display = "| display -resize $size -  ";
+                `convert -size $wh -depth 8 $s_ucolor @slap_draw $v_ucolor @part_draw $image_dir/$img_name $image_name $display `;
+	}
+
+sub save_no {
+	&exit_image;
+	}
+sub save_yes {
+	if ($save ne "") {
+	$path = $save;
+ ($filename, $dirs, $suffix) = fileparse($path);
+	if ($filename eq ""){
+	print "Please use for the output dirname/filename (ex. ..test/thisfile.png)\n";
+	exit;
+	}else{
+	 $new_image = "$path";
+        $display =  "display -resize $size $new_image ";
+             `convert -size $wh -depth 8 $s_ucolor @slap_draw $v_ucolor @part_draw $image_dir/$img_name $new_image `;
+#	` $display `;
+	}
+	}
+	}
+ 
