@@ -34,10 +34,7 @@ Requirements
 ------------
 
  * Fingerprint Imagery
-   - Because organizations must agree to NIST Special Database terms and
-     conditions, the required fingerprint imagery is not included in this GitHub
-     repository. Download the data by requesting it from the SlapSeg III test
-     staff and [agreeing to the terms].
+   - Because organizations must agree to NIST Special Database terms and conditions, the required fingerprint imagery is not included in this GitHub repository. Request and download the data from our requests website. Download the data by requesting it from the SlapSeg III test staff and [agreeing to the terms].
  * CentOS 7.6.1810
    - Even if this is not the latest version of CentOS, it will be the version
      used to run the evaluation. Direct downloads are available from the [CentOS
@@ -197,4 +194,4 @@ The items in this repository are released in the public domain. See the
 [RSS feed]: https://groups.google.com/a/list.nist.gov/forum/feed/slapseg/msgs/rss.xml
 [LICENSE]: https://github.com/usnistgov/slapseg/blob/master/LICENSE.md
 [test plan]: https://pages.nist.gov/slapseg/doc/slapsegiii/testplan.pdf
-[agreeing to the terms]: https://pages.nist.gov/slapseg/doc/slapsegiii/validation_dataset_agreement.pdf
+[agreeing to the terms]: https://nigos.nist.gov/datasets/slapsegiii_validation/request,
