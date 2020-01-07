@@ -194,4 +194,4 @@ The items in this repository are released in the public domain. See the
 [RSS feed]: https://groups.google.com/a/list.nist.gov/forum/feed/slapseg/msgs/rss.xml
 [LICENSE]: https://github.com/usnistgov/slapseg/blob/master/LICENSE.md
 [test plan]: https://pages.nist.gov/slapseg/doc/slapsegiii/testplan.pdf
-[agreeing to the terms]: https://nigos.nist.gov/datasets/slapsegiii_validation/request,
+[agreeing to the terms]: https://nigos.nist.gov/datasets/slapsegiii_validation/request
