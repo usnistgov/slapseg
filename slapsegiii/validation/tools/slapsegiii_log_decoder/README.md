@@ -1,7 +1,7 @@
 ﻿slapsegiii_log_decoder
 --------------------------------------
 
-Decode into plain english the segments and orientation logs outputted from Slapseg III algorithms.
+Decode into plain language the segments and orientation logs outputted from Slapseg III algorithms.
 
 ## Requirements
 
