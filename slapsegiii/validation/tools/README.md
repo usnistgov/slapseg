@@ -12,6 +12,8 @@ Validation Tools
  * [Orientation Accuracy]
    * Parse the orientation determination validation logs and print the image
      names that were incorrectly identified for further investigation. 
+ * [Log Decoder]
+   * Decode into plain language the segments and orientation logs outputted from Slapseg III alogorithms.
 
 ## Communication
 If you found a bug and can provide steps to reliably reproduce it, or if you
