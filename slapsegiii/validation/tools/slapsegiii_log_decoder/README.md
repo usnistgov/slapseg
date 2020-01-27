@@ -25,7 +25,7 @@ Decode into plain english the segments and orientation logs outputted from Slaps
 
 ## Examples
 
-###Print in plain language the two-inch segments log results.
+### Print in plain language the two-inch segments log results.
 
 ```bash
 $ slapsegiii_log_decoder  /mnt/slapsegiii/validation/segments-2.log
@@ -43,7 +43,7 @@ $ slapsegiii_log_decoder  /mnt/slapsegiii/validation/segments-2.log
   * Finger 5 failed to segment
 ```
 
-###Print in plain language the three-inch orientation log results.   
+### Print in plain language the three-inch orientation log results.   
 
 ```bash
 $ slapsegiii_log_decoder  /mnt/slapsegiii/validation/orientation-3.log
@@ -58,7 +58,7 @@ $ slapsegiii_log_decoder  /mnt/slapsegiii/validation/orientation-3.log
   * Image orientation is right hand
 ```
 
-###Print in plain language only the images where the orientation value recorded does not agree with the image.        
+### Print in plain language only the images where the orientation value recorded does not agree with the image.        
 
 ```bash
 $ slapsegiii_log_decoder /mnt/slapsegiii/validation/orientation-3.log -o=u
