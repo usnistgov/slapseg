@@ -26,6 +26,7 @@ The items in this repository are released in the public domain. See the
 
 [Show Boxes]: https://github.com/usnistgov/slapseg/tree/master/slapsegiii/validation/tools/slapsegiii_validation_show_boxes
 [Orientation Accuracy]: https://github.com/usnistgov/slapseg/tree/master/slapsegiii/validation/tools/slapsegiii_check_orientation_accuracy
+[Log Decoder]: https://github.com/usnistgov/slapseg/tree/master/slapsegiii/validation/tools/slapsegiii_log_decoder
 [open an issue]: https://github.com/usnistgov/slapseg/issues
 [LICENSE]: https://github.com/usnistgov/slapseg/blob/master/LICENSE.md
 [NIST SlapSeg team]: mailto:slapseg@nist.gov
