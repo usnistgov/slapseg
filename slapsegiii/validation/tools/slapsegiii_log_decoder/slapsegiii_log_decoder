@@ -187,7 +187,6 @@ def getOrientation(dict4):
 				#this means orientation value is not correct, and does not agree with type of image/image name.
 				oCodeFlag = True
 				oList.append("right hand - incorrect")
-                #oList.append("right hand")
         if dict4["orientation"] == "1":
                 if "canary" in nameStr:
                         oCodeflag = False
@@ -204,7 +203,6 @@ def getOrientation(dict4):
                                 #this means orientation value is not correct, and does not agree with type of image/image name.
                                 oCodeFlag = True
 				oList.append("left hand - incorrect")
-                #oList.append("left hand")
         if dict4["orientation"] == "NA":
                 oCodeFlag = True
                 oList.append("NA - incorrect")
@@ -224,7 +222,6 @@ def getOrientation(dict4):
                                 #this means orientation value is not correct, and does not agree with type of image/image name.
                                 oCodeFlag = True
 				oList.append("thumbs - incorrect")
-                #oList.append("thumbs")
         oRetMessage = ''.join(oList)
         return oRetMessage, oCodeFlag
 #in above incorrects are image files/lines with NA and those where orientation recorded doesn't agree with the type of image, correct/full prints all.  
