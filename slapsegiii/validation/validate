@@ -198,7 +198,7 @@ check_image_versions()
 	declare -A acceptable_versions
 	acceptable_versions["twoinch"]="201902271132"
 	acceptable_versions["threeinch"]="201902271132"
-	acceptable_versions["upperpalm"]="201902271132"
+	acceptable_versions["upperpalm"]="202006111448"
 	acceptable_versions["fullpalm"]="201902271132"
 
 	local found_some_images=0
