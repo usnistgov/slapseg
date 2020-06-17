@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>nec+0002</title>
+  <meta name="description" content="nec+0002">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="nec+0002" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="nec+0002" />
+  
+  
+  
+
+<meta name="author" content="Slap Fingerprint Segmentation Evaluation III">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+
+<link rel="next" href="tenprint-cards-twoinch-data.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css">
+<script src="https://pages.nist.gov/nist-header-footer/js/nist-header-footer.js" type="text/javascript" defer="defer"></script>
+<script async id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIST&subagency=github&pua=UA-66610693-1&yt=true&exts=ppsx,pps,f90,sch,rtf,wrl,txz,m1v,xlsm,msi,xsd,f,tif,eps,mpg,xml,pl,xlt,c"></script>
+
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="participation-information.html"><a href="participation-information.html"><i class="fa fa-check"></i><b>1</b> Participation Information</a><ul>
+<li class="chapter" data-level="1.1" data-path="participation-information.html"><a href="participation-information.html#names-and-dates"><i class="fa fa-check"></i><b>1.1</b> Names and Dates</a></li>
+<li class="chapter" data-level="1.2" data-path="participation-information.html"><a href="participation-information.html#libraries"><i class="fa fa-check"></i><b>1.2</b> Libraries</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html"><i class="fa fa-check"></i><b>2</b> Tenprint Cards (“TwoInch” Data)</a><ul>
+<li class="chapter" data-level="2.1" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#segmentation-timing"><i class="fa fa-check"></i><b>2.1</b> Segmentation Timing</a></li>
+<li class="chapter" data-level="2.2" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#segmentation-centers-and-dimensions"><i class="fa fa-check"></i><b>2.2</b> Segmentation Centers and Dimensions</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#segmentation-centers"><i class="fa fa-check"></i><b>2.2.1</b> Segmentation Centers</a></li>
+<li class="chapter" data-level="2.2.2" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#segmentation-dimensions"><i class="fa fa-check"></i><b>2.2.2</b> Segmentation Dimensions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#subsec-twoinch-stats"><i class="fa fa-check"></i><b>2.3</b> Detailed Segmentation Statistics</a></li>
+<li class="chapter" data-level="2.4" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#sec-twoinch-troublesome"><i class="fa fa-check"></i><b>2.4</b> Handling Troublesome Images</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#twoinch-troublesome-capture-failures"><i class="fa fa-check"></i><b>2.4.1</b> Capture Failures</a></li>
+<li class="chapter" data-level="2.4.2" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#twoinch-segmentation-failure"><i class="fa fa-check"></i><b>2.4.2</b> Segmentation Failures</a></li>
+<li class="chapter" data-level="2.4.3" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#twoinch-troublesome-missing"><i class="fa fa-check"></i><b>2.4.3</b> Identifying Missing Fingers</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#sec-twoinch-orientation"><i class="fa fa-check"></i><b>2.5</b> Determining Orientation</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html"><i class="fa fa-check"></i><b>3</b> Identification Flats (“ThreeInch” Data)</a><ul>
+<li class="chapter" data-level="3.1" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#segmentation-timing-1"><i class="fa fa-check"></i><b>3.1</b> Segmentation Timing</a></li>
+<li class="chapter" data-level="3.2" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#segmentation-centers-and-dimensions-1"><i class="fa fa-check"></i><b>3.2</b> Segmentation Centers and Dimensions</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#segmentation-centers-1"><i class="fa fa-check"></i><b>3.2.1</b> Segmentation Centers</a></li>
+<li class="chapter" data-level="3.2.2" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#segmentation-dimensions-1"><i class="fa fa-check"></i><b>3.2.2</b> Segmentation Dimensions</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#subsec-threeinch-stats"><i class="fa fa-check"></i><b>3.3</b> Detailed Segmentation Statistics</a></li>
+<li class="chapter" data-level="3.4" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#sec-threeinch-troublesome"><i class="fa fa-check"></i><b>3.4</b> Handling Troublesome Images</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#threeinch-troublesome-capture-failures"><i class="fa fa-check"></i><b>3.4.1</b> Capture Failures</a></li>
+<li class="chapter" data-level="3.4.2" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#threeinch-segmentation-failure"><i class="fa fa-check"></i><b>3.4.2</b> Segmentation Failures</a></li>
+<li class="chapter" data-level="3.4.3" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#threeinch-troublesome-missing"><i class="fa fa-check"></i><b>3.4.3</b> Identifying Missing Fingers</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#sec-threeinch-orientation"><i class="fa fa-check"></i><b>3.5</b> Determining Orientation</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html"><i class="fa fa-check"></i><b>4</b> Upper Palm (“FiveInch” Data)</a><ul>
+<li class="chapter" data-level="4.1" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#segmentation-timing-2"><i class="fa fa-check"></i><b>4.1</b> Segmentation Timing</a></li>
+<li class="chapter" data-level="4.2" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#segmentation-centers-and-dimensions-2"><i class="fa fa-check"></i><b>4.2</b> Segmentation Centers and Dimensions</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#segmentation-centers-2"><i class="fa fa-check"></i><b>4.2.1</b> Segmentation Centers</a></li>
+<li class="chapter" data-level="4.2.2" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#segmentation-dimensions-2"><i class="fa fa-check"></i><b>4.2.2</b> Segmentation Dimensions</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#subsec-fiveinch-stats"><i class="fa fa-check"></i><b>4.3</b> Detailed Segmentation Statistics</a></li>
+<li class="chapter" data-level="4.4" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#sec-fiveinch-troublesome"><i class="fa fa-check"></i><b>4.4</b> Handling Troublesome Images</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#fiveinch-troublesome-capture-failures"><i class="fa fa-check"></i><b>4.4.1</b> Capture Failures</a></li>
+<li class="chapter" data-level="4.4.2" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#fiveinch-segmentation-failure"><i class="fa fa-check"></i><b>4.4.2</b> Segmentation Failures</a></li>
+<li class="chapter" data-level="4.4.3" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#fiveinch-troublesome-missing"><i class="fa fa-check"></i><b>4.4.3</b> Identifying Missing Fingers</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#sec-upperpalm-orientation"><i class="fa fa-check"></i><b>4.5</b> Determining Orientation</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="tenprint-cards-twoinch-data-1.html"><a href="tenprint-cards-twoinch-data-1.html"><i class="fa fa-check"></i><b>A</b> Tenprint Cards (“TwoInch” Data)</a><ul>
+<li class="chapter" data-level="A.1" data-path="tenprint-cards-twoinch-data-1.html"><a href="tenprint-cards-twoinch-data-1.html#bootstrap-confidence-for-segmentation-statistics"><i class="fa fa-check"></i><b>A.1</b> Bootstrap Confidence for Segmentation Statistics</a></li>
+<li class="chapter" data-level="A.2" data-path="tenprint-cards-twoinch-data-1.html"><a href="tenprint-cards-twoinch-data-1.html#jaccard-index"><i class="fa fa-check"></i><b>A.2</b> Jaccard Index</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="identification-flats-threeinch-data-1.html"><a href="identification-flats-threeinch-data-1.html"><i class="fa fa-check"></i><b>B</b> Identification Flats (“ThreeInch” Data)</a><ul>
+<li class="chapter" data-level="B.1" data-path="identification-flats-threeinch-data-1.html"><a href="identification-flats-threeinch-data-1.html#bootstrap-confidence-for-segmentation-statistics-1"><i class="fa fa-check"></i><b>B.1</b> Bootstrap Confidence for Segmentation Statistics</a></li>
+<li class="chapter" data-level="B.2" data-path="identification-flats-threeinch-data-1.html"><a href="identification-flats-threeinch-data-1.html#jaccard-index-1"><i class="fa fa-check"></i><b>B.2</b> Jaccard Index</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="upper-palm-fiveinch-data-1.html"><a href="upper-palm-fiveinch-data-1.html"><i class="fa fa-check"></i><b>C</b> Upper Palm (“FiveInch” Data)</a><ul>
+<li class="chapter" data-level="C.1" data-path="upper-palm-fiveinch-data-1.html"><a href="upper-palm-fiveinch-data-1.html#bootstrap-confidence-for-segmentation-statistics-2"><i class="fa fa-check"></i><b>C.1</b> Bootstrap Confidence for Segmentation Statistics</a></li>
+<li class="chapter" data-level="C.2" data-path="upper-palm-fiveinch-data-1.html"><a href="upper-palm-fiveinch-data-1.html#jaccard-index-2"><i class="fa fa-check"></i><b>C.2</b> Jaccard Index</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><code>nec+0002</code></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title"><code>nec+0002</code></h1>
+<h2 class="subtitle"><em>NEC</em></h2>
+<p class="author"><em>Slap Fingerprint Segmentation Evaluation III</em></p>
+<p class="date"><em>Last Updated: 17 June 2020</em></p>
+</div>
+<div id="participation-information" class="section level1">
+<h1><span class="header-section-number">1</span> Participation Information</h1>
+<div id="names-and-dates" class="section level2">
+<h2><span class="header-section-number">1.1</span> Names and Dates</h2>
+<ul>
+<li><strong>Organization Name:</strong> NEC</li>
+<li><p><strong>SlapSeg III Identifier:</strong> <code>nec+0002</code></p></li>
+<li><strong>Application Date:</strong> 12 June 2019</li>
+<li><strong>First Submission Date:</strong> 08 June 2020 (as version <code>0001</code>)</li>
+<li><strong>Validation Date:</strong> 15 June 2020</li>
+<li><p><strong>Completion Date:</strong> 17 June 2020</p></li>
+</ul>
+</div>
+<div id="libraries" class="section level2">
+<h2><span class="header-section-number">1.2</span> Libraries</h2>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Filename
+</th>
+<th style="text-align:left;">
+MD5 Checksum
+</th>
+<th style="text-align:left;">
+Size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<span style="     ">libslapsegiii_nec_0002.so</span>
+</td>
+<td style="text-align:left;">
+<span style="   font-family: monospace;  ">64aa743ea15f30dc9a8665906fafee83</span>
+</td>
+<td style="text-align:left;">
+31.9 Mb
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="tenprint-cards-twoinch-data.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["nec+0002.pdf"],
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>
