@@ -81,6 +81,7 @@
 <li class="chapter" data-level="2.4.1" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#twoinch-troublesome-capture-failures"><i class="fa fa-check"></i><b>2.4.1</b> Capture Failures</a></li>
 <li class="chapter" data-level="2.4.2" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#twoinch-segmentation-failure"><i class="fa fa-check"></i><b>2.4.2</b> Segmentation Failures</a></li>
 <li class="chapter" data-level="2.4.3" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#twoinch-troublesome-missing"><i class="fa fa-check"></i><b>2.4.3</b> Identifying Missing Fingers</a></li>
+<li class="chapter" data-level="2.4.4" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#twoinch-sequence-error"><i class="fa fa-check"></i><b>2.4.4</b> Sequence Error</a></li>
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#sec-twoinch-orientation"><i class="fa fa-check"></i><b>2.5</b> Determining Orientation</a></li>
 </ul></li>
@@ -95,6 +96,7 @@
 <li class="chapter" data-level="3.4.1" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#threeinch-troublesome-capture-failures"><i class="fa fa-check"></i><b>3.4.1</b> Capture Failures</a></li>
 <li class="chapter" data-level="3.4.2" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#threeinch-segmentation-failure"><i class="fa fa-check"></i><b>3.4.2</b> Segmentation Failures</a></li>
 <li class="chapter" data-level="3.4.3" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#threeinch-troublesome-missing"><i class="fa fa-check"></i><b>3.4.3</b> Identifying Missing Fingers</a></li>
+<li class="chapter" data-level="3.4.4" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#threeinch-sequence-error"><i class="fa fa-check"></i><b>3.4.4</b> Sequence Error</a></li>
 </ul></li>
 <li class="chapter" data-level="3.5" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#sec-threeinch-orientation"><i class="fa fa-check"></i><b>3.5</b> Determining Orientation</a></li>
 </ul></li>
@@ -205,7 +207,7 @@ Ignoring Bottom X and Y
 99.1 [98.9, 99.3]
 </td>
 <td style="text-align:left;">
-99.2 [99.1, 99.4]
+99.2 [99.0, 99.4]
 </td>
 </tr>
 <tr>
@@ -213,7 +215,7 @@ Ignoring Bottom X and Y
 5
 </td>
 <td style="text-align:left;">
-94.9 [94.5, 95.3]
+94.9 [94.6, 95.3]
 </td>
 <td style="text-align:left;">
 95.0 [94.6, 95.4]
@@ -227,10 +229,10 @@ Ignoring Bottom X and Y
 6
 </td>
 <td style="text-align:left;">
-94.2 [93.7, 94.6]
+94.2 [93.8, 94.6]
 </td>
 <td style="text-align:left;">
-94.4 [93.9, 94.7]
+94.4 [94.0, 94.8]
 </td>
 <td style="text-align:left;">
 95.0 [94.6, 95.4]
@@ -303,7 +305,7 @@ Index
 97.5 [97.3, 97.7]
 </td>
 <td style="text-align:left;">
-97.8 [97.6, 98.0]
+97.8 [97.6, 97.9]
 </td>
 </tr>
 <tr>
@@ -311,13 +313,13 @@ Index
 Middle
 </td>
 <td style="text-align:left;">
-97.4 [97.2, 97.6]
+97.4 [97.2, 97.7]
 </td>
 <td style="text-align:left;">
 98.0 [97.8, 98.2]
 </td>
 <td style="text-align:left;">
-98.2 [98.0, 98.4]
+98.2 [98.1, 98.4]
 </td>
 </tr>
 <tr>
@@ -345,7 +347,7 @@ Little
 98.6 [98.5, 98.8]
 </td>
 <td style="text-align:left;">
-98.9 [98.8, 99.0]
+98.9 [98.8, 99.1]
 </td>
 </tr>
 <tr grouplength="4">
@@ -358,10 +360,10 @@ Little
 Index
 </td>
 <td style="text-align:left;">
-96.9 [96.6, 97.1]
+96.9 [96.7, 97.1]
 </td>
 <td style="text-align:left;">
-97.4 [97.2, 97.6]
+97.4 [97.2, 97.7]
 </td>
 <td style="text-align:left;">
 98.1 [97.9, 98.3]
@@ -386,7 +388,7 @@ Middle
 Ring
 </td>
 <td style="text-align:left;">
-96.9 [96.7, 97.1]
+96.9 [96.6, 97.1]
 </td>
 <td style="text-align:left;">
 98.0 [97.8, 98.2]
@@ -475,10 +477,10 @@ Both
 Either
 </td>
 <td style="text-align:left;">
-99.3 [99.2, 99.4]
+99.3 [99.1, 99.4]
 </td>
 <td style="text-align:left;">
-99.5 [99.4, 99.7]
+99.5 [99.4, 99.6]
 </td>
 <td style="text-align:left;">
 99.7 [99.6, 99.8]
@@ -489,13 +491,13 @@ Either
 Both
 </td>
 <td style="text-align:left;">
-90.7 [90.2, 91.1]
+90.7 [90.1, 91.1]
 </td>
 <td style="text-align:left;">
 92.0 [91.5, 92.5]
 </td>
 <td style="text-align:left;">
-93.0 [92.5, 93.4]
+93.0 [92.6, 93.5]
 </td>
 </tr>
 <tr grouplength="2">
@@ -525,7 +527,7 @@ Both
 91.3 [90.8, 91.8]
 </td>
 <td style="text-align:left;">
-92.7 [92.2, 93.2]
+92.7 [92.3, 93.1]
 </td>
 <td style="text-align:left;">
 93.6 [93.1, 94.0]
@@ -555,7 +557,7 @@ Either
 Both
 </td>
 <td style="text-align:left;">
-92.4 [91.9, 92.8]
+92.4 [91.9, 92.9]
 </td>
 <td style="text-align:left;">
 93.1 [92.7, 93.6]
@@ -759,10 +761,10 @@ Both Index and Middle
 95.1 [94.7, 95.1]
 </td>
 <td style="text-align:left;">
-96.3 [96.0, 96.4]
+96.3 [96.0, 96.3]
 </td>
 <td style="text-align:left;">
-96.6 [96.6, 97.0]
+96.6 [96.7, 97.0]
 </td>
 </tr>
 <tr grouplength="2">
@@ -792,10 +794,10 @@ Both Index and Middle
 94.7 [94.7, 95.1]
 </td>
 <td style="text-align:left;">
-96.0 [96.0, 96.4]
+96.0 [96.0, 96.3]
 </td>
 <td style="text-align:left;">
-97.1 [96.6, 97.0]
+97.1 [96.7, 97.0]
 </td>
 </tr>
 </tbody>
@@ -834,7 +836,7 @@ Any
 99.4 [99.3, 99.4]
 </td>
 <td style="text-align:left;">
-99.4 [99.3, 99.4]
+99.4 [99.3, 99.5]
 </td>
 <td style="text-align:left;">
 99.7 [99.6, 99.7]
@@ -881,7 +883,7 @@ Any
 99.3 [99.3, 99.4]
 </td>
 <td style="text-align:left;">
-99.3 [99.3, 99.4]
+99.3 [99.3, 99.5]
 </td>
 <td style="text-align:left;">
 99.7 [99.6, 99.7]
