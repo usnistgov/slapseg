@@ -21,8 +21,7 @@ to the [NIST SlapSeg team].
 
 The SlapSeg team sends updates about the SlapSeg tests to their mailing list.
 Enter your e-mail address on the [mailing list site], or send a blank e-mail to
-SlapSeg+subscribe@list.nist.gov to be automatically subscribed. Posts to the
-list are mirrored on an [RSS feed].
+SlapSeg+subscribe@list.nist.gov to be automatically subscribed.
 
 License
 -------
@@ -34,5 +33,4 @@ The items in this repository are released in the public domain. See the
 [NIST SlapSeg team]: mailto:slapseg@nist.gov
 [open an issue]: https://github.com/usnistgov/slapseg/issues
 [mailing list site]: https://groups.google.com/a/list.nist.gov/forum/#!forum/slapseg/join
-[RSS feed]: https://groups.google.com/a/list.nist.gov/forum/feed/slapseg/msgs/rss.xml
 [LICENSE]: https://github.com/usnistgov/slapseg/blob/master/LICENSE.md
