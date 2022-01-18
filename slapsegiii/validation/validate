@@ -478,14 +478,17 @@ check_validation_version()
 
 	echo -n "Checking validation version... "
 	# d.root-servers.net -> 199.7.91.13
-	ping -W 1 -c 1 199.7.91.13 > /dev/null 2>&1
-	if [ $? -eq 0 ]; then
+	if ping -W 1 -c 1 199.7.91.13 > /dev/null 2>&1; then
 		local internet_version=0
-		internet_version=$(curl -m 10 -f $version_url 2>/dev/null)
-		if [ $? -ne 0 ]; then
-			echo -e -n "${font_dim}(connection failure)"
-			echo -e -n "${font_reset} ${font_yellow}[SKIP]"
-			echo -e "${font_reset}"
+		if ! internet_version=$(curl -m 10 -f "${version_url}" \
+		    2>/dev/null)
+		then
+			font_dim
+			echo -n "(connection failure) "
+			font_reset
+			font_yellow
+			echo -n "[SKIP]"
+			font_reset
 		else
 			if [ "${internet_version}" != "${validation_version}" ];
 			then
@@ -500,8 +503,12 @@ check_validation_version()
 			fi
 		fi
 	else
-		echo -e -n "${font_dim}(no Internet connection)${font_reset} "
-		echo -e "${font_yellow}[SKIP]${font_reset}"
+		font_dim
+		echo -n "(no Internet connection) "
+		font_reset
+		font_yellow
+		echo "[SKIP]"
+		font_reset
 	fi
 
 	return ${checked}
