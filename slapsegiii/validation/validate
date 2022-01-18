@@ -536,14 +536,16 @@ check_os()
 # Check that a core library exists
 core_library_present()
 {
-	local lib_regex="libslapsegiii_[A-Za-z0-9]+_[0-9A-Fa-f]{4}.so"
+	local lib_regex="libslapsegiii_[A-Za-z0-9]+_[0-9A-F]{4}.so"
 
-	if ! [ -d ${lib_dir} ]; then
+	if ! [ -d "${lib_dir}" ]; then
 		return 1
 	fi
 
-	local count=$(ls "${lib_dir}" | grep -E ${lib_regex} | wc -l)
-	if [ ${count} -ne 1 ]; then
+	local count
+	count=$(find "${lib_dir}" -type f -regextype posix-extended \
+	    -regex "${lib_dir}/${lib_regex}" -printf "%P\n" | wc -l)
+	if [ "${count}" != "1" ]; then
 		return 1
 	fi
 
