@@ -76,51 +76,238 @@ set -o pipefail
 # Functions                                                                    #
 ################################################################################
 
+# Dimmed text color
+font_dim() { if [ -t 1 ]; then tput dim; fi }
+# Green text color
+font_green() { if [ -t 1 ]; then tput setaf 2; fi }
+# Red text color
+font_red() { if [ -t 1 ]; then tput setaf 1; fi }
+# Light red text color
+font_lightred() { if [ -t 1 ]; then tput setaf 5; fi }
+# Yellow text color
+font_yellow() { if [ -t 1 ]; then tput setaf 3; fi }
+# Underline the text
+font_underline() { if [ -t 1 ]; then tput smul; fi }
+# Reset to default text color
+font_reset() { if [ -t 1 ]; then tput sgr0; fi }
+
+
 # Print the path of the argument relative to the current working directory
 rp()
 {
-	realpath --relative-to="${PWD}" "$1"
+	realpath=realpath
+	if [ "$(uname)" == "Darwin" ]; then
+		realpath="/opt/local/bin/grealpath"
+	fi
+
+	${realpath} --relative-to="${PWD}" "${1}"
+}
+
+# Output string in a box
+box()
+{
+	if [ "${#}" -lt 1 ] || [ "${#}" -gt 7 ] ; then
+		echo -n "Usage: ${FUNCNAME[0]} <msg> [width=80] "
+		echo "[tb_symbol='='] [lr_symbol='|'] [align=[a|l|c|r]] "
+		echo "[header=0|1] [footer=0|1]"
+		return 1
+	fi
+	local msg="${1}"
+	local width=80
+	if [ "${#}" -ge 2 ]; then
+		width="${2}"
+	fi
+	local tb_symbol='='
+	if [ "${#}" -ge 3 ]; then
+		tb_symbol="${3}"
+		if [ "${#tb_symbol}" -ne 1 ]; then
+			echo "tb_symbol not a single character"
+			return 1
+		fi
+	fi
+	local lr_symbol='|'
+	if [ "${#}" -ge 4 ]; then
+		lr_symbol="${4}"
+		if [ "${#lr_symbol}" -ne 1 ]; then
+			echo "lr_symbol not a single character"
+			return 1
+		fi
+	fi
+	local align="a"
+	if [ "${#}" -ge 5 ]; then
+		align="${5}"
+		if [ "${align}" != "c" ] && [ "${align}" != "a" ] && \
+		    [ "${align}" != "l" ] && [ "${align}" != "r" ]; then
+			echo "Invalid alignment value"
+			return 1
+		fi
+	fi
+	local print_header=1
+	if [ "${#}" -ge 6 ]; then
+		print_header="${6}"
+		if [ "${print_header}" -ne 0 ] && [ "${print_header}" -ne 1 ]
+		then
+			echo "Invalid print_header value"
+		fi
+	fi
+	local print_footer=1
+	if [ "${#}" -eq 7 ]; then
+		print_footer="${7}"
+		if [ "${print_footer}" -ne 0 ] && [ "${print_footer}" -ne 1 ]
+		then
+			echo "Invalid print_footer value"
+		fi
+	fi
+
+	if [ "${print_header}" -eq 1 ]; then
+		printline "${tb_symbol}" "${width}" && echo
+	fi
+
+	local max_width=$(( width - 4 ))
+
+	# Center align if a single line and alignment is auto
+	if [ "${align}" == "a" ]; then
+		if [ "${#msg}" -le "${max_width}" ]; then
+			align="c"
+		else
+			align="l"
+		fi
+	fi
+
+	local num_chars
+	local indent_count
+	local indent_pre
+	local indent_post
+	while read -r line; do
+		num_chars="${#line}"
+		indent_count=$(( (max_width + 2) - num_chars ))
+
+		if [ "${align}" == "c" ]; then
+			indent_pre=$(( indent_count / 2 ))
+			indent_post=$(( (indent_count + 2 - 1) / 2 ))
+		elif [ "${align}" == "l" ]; then
+			indent_pre=1
+			indent_post=$(( indent_count - 1 ))
+		elif [ "${align}" == "r" ]; then
+			indent_pre=$(( indent_count - 1 ))
+			indent_post=1
+		fi
+
+		# Left (floor)
+		echo -n "${lr_symbol}"
+		for i in $(seq 1 "${indent_pre}"); do
+			echo -n ' '
+		done
+
+		# Message
+		echo -n "${line}"
+
+		# Right (ceiling)
+		for i in $(seq 1 "${indent_post}"); do
+			echo -n ' '
+		done
+
+		echo "${lr_symbol}"
+	done < <(echo "${msg}" | fold -s -w "${max_width}")
+
+	if [ "${print_footer}" -eq 1 ]; then
+		printline "${tb_symbol}" "${width}" && echo
+	fi
+}
+
+# Convenience for a middle line with 80 char left align standard box
+boxline()
+{
+	if [ "${#}" -eq 0 ]; then
+		box "" 80 '=' '|' 'l' 0 0
+	else
+		for i in "${@}"; do
+			box "${i}" 80 '=' '|' 'l' 0 0
+		done
+	fi
+}
+
+# Print a repeated line
+printline()
+{
+	if [ $# -ne 2 ]; then
+		echo "Usage: ${FUNCNAME[0]} <char> <times>"
+		return 1
+	fi
+
+	printf "${1}%.0s" $(seq 1 "${2}")
 }
 
 # Convenience function to print a failure method and exit
-# All params are echoed, one per line.
+# All params are echoed in a box with newlines in between.
 fail()
 {
-	echo -e "${font_red}[FAIL]${font_reset}"
-	if [ $# -ne 0 ]; then
-		echo
-		printf '*%.0s' $(seq 1 80)
-		echo
-		for i in $(seq 1 $#); do
-			echo ${!i} | fold -s
+	font_red
+	echo "[FAIL]"
+	echo
+
+	if [ "${#}" -eq 1 ]; then
+		box "${1}" 80 '!' '!'
+	elif [ "${#}" -gt 1 ]; then
+		for i in $(seq 1 "${#}"); do
+			if [ "${i}" -eq 1 ]; then
+				box "${!i}" 80 '!' '!' 'l' 1 0
+			elif [ "${i}" -eq "${#}" ]; then
+				box "${!i}" 80 '!' '!' 'l' 0 1
+			else
+				box "${!i}" 80 '!' '!' 'l' 0 0
+			fi
 		done
 	fi
-	printf '*%.0s' $(seq 1 80)
-	echo
-	date
+
+	font_reset
+
+	print_footer "${start_sec}"
+
+	# Exit from here
 	exit 1
 }
 
-# Print [WARN] with any arguments in parenthesis before.
+# Print [WARN] with any arguments in a box after.
+# All params are echoed in a box with newlines in between.
 warn()
 {
-	if [ $# -ne 0 ]; then
-		for i in "$*"; do
-			echo -n -e "${font_dim}(${i})${font_reset} "
+	font_lightred
+	echo "[WARN]"
+
+
+	if [ "${#}" -eq 1 ]; then
+		echo
+		box "${1}"
+	elif [ "${#}" -gt 1 ]; then
+		echo
+		for i in $(seq 1 "${#}"); do
+			if [ "${i}" -eq 1 ]; then
+				box "${!i}" 80 '=' '|' 'l' 1 0
+			elif [ "${i}" -eq "${#}" ]; then
+				box "${!i}" 80 '=' '|' 'l' 0 1
+			else
+				box "${!i}" 80 '=' '|' 'l' 0 0
+			fi
 		done
 	fi
-	echo -e "${font_lightred}[WARN]${font_reset}"
+
+	font_reset
 }
 
 # Print [OKAY] with any arguments in parenthesis before.
 okay()
 {
 	if [ $# -ne 0 ]; then
-		for i in "$*"; do
-			echo -n -e "${font_dim}(${i})${font_reset} "
+		for i in "${@}"; do
+			font_dim
+			echo -n "(${i}) "
+			font_reset
 		done
 	fi
-	echo -e "${font_green}[OKAY]${font_reset}"
+	font_green
+	echo "[OKAY]"
+	font_reset
 }
 
 # Check that images have been downloaded, placed in the correct spot, etc.
@@ -1237,7 +1424,7 @@ print_couldnt_check_version()
 # Prevent against possible issues when not using GNU readlink
 check_wd()
 {
-	if [ "${wd}" == "" ]; then 
+	if [ "${wd}" == "" ]; then
 		msg="The directory containing \"validate\" could not be found, "
 		msg+="possibly because you are not using GNU readlink under "
 		msg+="CentOS. If you are, please report an issue on the "
