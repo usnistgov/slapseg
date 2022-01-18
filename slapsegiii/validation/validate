@@ -439,26 +439,26 @@ log_canaries()
 	    -exec md5sum {} \; >> "${output_dir}"/canary.log
 }
 
-# Check that CentOS packages used in this file have been installed.
+# Check that Ubuntu packages used in this file have been installed.
 check_required_packages()
 {
 	echo -n "Checking for required packages... "
 
 	# Packages required to run this script
-	local pkgs="binutils centos-release coreutils curl file gawk gcc-c++ "
-	local pkgs+="grep iputils make sed which yum"
+	local pkgs="base-files binutils cmake coreutils curl file findutils "
+	pkgs+="g++ gawk grep libc-bin make sed tar xz-utils"
 
-	which yum > /dev/null
-	if [ $? -ne 0 ]; then
-		fail "which and yum are required to be installed for validation"
+	if ! command -v dpkg-query > /dev/null; then
+		local msg="\`dpkg-query' is required to be installed for "
+		msg+="validation. Try \`apt install dpkg' to install."
+		fail "${msg}"
 	fi
 
 	for pkg in ${pkgs}; do
-		yum -q list installed ${pkg} > /dev/null 2>&1
-		if [ $? -ne 0 ]; then
+		if ! dpkg-query -l "${pkg}" > /dev/null 2>&1; then
 			msg="The required package \"${pkg}\" was not "
-			msg+="installed. Try \`yum install $pkg\` to install "
-			msg+="\"$pkg.\""
+			msg+="installed. Try \`apt install ${pkg}\` to install "
+			msg+="\"${pkg}.\""
 			fail "${msg}"
 		fi
 	done
@@ -514,23 +514,23 @@ check_validation_version()
 	return ${checked}
 }
 
-# Check that the version of CentOS is the correct version.
+# Check that the version of Ubuntu is the correct version.
 check_os()
 {
-	local expected="7.6.1810"
+	local expected="20.04.3 LTS (Focal Fossa)"
 	echo -n "Checking OS and version... "
-	if [ ! -e /etc/redhat-release ]; then
-		msg="You do not appear to be using the appropriate operating "
-		msg+="system. Please use CentOS ${expected}."
+	if [ ! -e /etc/os-release ]; then
+		local msg="You do not appear to be using the appropriate "
+		msg+="operating system. Please use Ubuntu Server ${expected}."
 		fail "${msg}"
 	fi
-	if [ "$(tr -C -d '[:digit:].' < /etc/redhat-release)" != \
-	    "${expected}" ]; then
-		msg="You do not appear to be using the appropriate version of "
-		msg+="CentOS. Please use ${expected}."
+	if [ "$(grep "VERSION=" /etc/os-release | cut -f 2 -d '=' | \
+	    tr -d '"')" != "${expected}" ]; then
+		local msg="You do not appear to be using the appropriate "
+		msg+="version of Ubuntu Server. Please use ${expected}."
 		fail "${msg}"
 	fi
-	okay "CentOS ${expected}"
+	okay "Ubuntu Server ${expected}"
 }
 
 # Check that a core library exists
