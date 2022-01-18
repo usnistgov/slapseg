@@ -52,9 +52,6 @@ slap_type_names="twoinch threeinch upperpalm fullpalm"
 # Numbers for supported slap types
 slap_type_numbers="2 3 5 8"
 
-# Make failing return codes persist across pipes
-set -o pipefail
-
 ################################################################################
 # Functions                                                                    #
 ################################################################################
