@@ -13,15 +13,17 @@ in [`slapsegiii.h`].
 
 Building
 --------
-Execute `make` in this directory and `libslapsegiii.so` will be created. It will
-additionally be copied into the [validation] `lib` directory.
+```
+mkdir build && cd build
+cmake .. && make
+```
 
 Linking
 -------
 When building a core SlapSeg III library, use these example compiler flags (from
-`g++`) to properly link against this library.
+`g++`/`ld`) to properly link against this library.
 
-> `-L/path/to/libslapsegiii -lslapsegiii`
+> `-L/path/to/libslapsegiii -lslapsegiii -Wl,-rpath,/path/to/libslapsegiii -Wl,--enable-new-dtags`
 
 Communication
 -------------
