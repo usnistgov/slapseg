@@ -45,23 +45,6 @@ output_dir="${wd}"/output
 # Path to the compiled validation driver binary
 binary="${bin_dir}"/"slapsegiii_validation"
 
-# Dimmed text color
-font_dim='\e[2m'
-# Green text color
-font_green='\e[32m'
-# Red text color
-font_red='\e[31m'
-# Light red text color
-font_lightred='\e[91m'
-# Yellow text color
-font_yellow='\e[33m'
-# Invert the current text color
-font_invert='\e[7m'
-# Underline the text
-font_underline='\e[4m'
-# Reset to default text color
-font_reset='\e[0m'
-
 # Prefix for downloaded validation imagery tarballs
 validation_image_download_prefix=slapsegiii_validation_images_
 # Names for supported slap types
@@ -320,7 +303,9 @@ check_for_images()
 		local image_archive=$(ls -r \
 		    "${wd}"/${validation_image_download_prefix}* 2> /dev/null)
 		if [ "${image_archive}" != "" ]; then
-			echo -e "${font_yellow}[DEFER]${font_reset}"
+			font_yellow
+			echo "[DEFER]"
+			font_reset
 			for i in $(find "${wd}" -maxdepth 1 -name \
 			    "${validation_image_download_prefix}*"); do
 				echo -n "Expanding $(basename ${i})... "
@@ -354,8 +339,9 @@ check_for_images()
 			    "${wd}"/${validation_image_dir}/VERSION-${kind} ];
 			    then
 			    	if [ $has_deferred -eq 0 ]; then
-	    				echo -n -e "${font_yellow}[DEFER]"
-	    				echo -e "${font_reset}"
+			    		font_yellow
+	    				echo "[DEFER]"
+	    				font_reset
 	    				has_deferred=1
 	    			fi
 
@@ -905,8 +891,12 @@ run_determine_orientation()
 	# Check if determine orientation is supported
 	if [ "$($binary -k | grep DetermineOrientation | cut -f3 -d' ')" != \
 	    "true" ]; then
-	    	echo -e -n "${font_dim}(not implemented)${font_reset} "
-		echo -e "${font_yellow}[SKIP]${font_reset}"
+	    	font_dim
+	    	echo -n "(not implemented) "
+	    	font_reset
+	    	font_yellow
+		echo "[SKIP]"
+		font_reset
 		return
 	fi
 
@@ -990,8 +980,12 @@ check_orientation_logs()
 	# Check if determine orientation is supported
 	if [ "$($binary -k | grep DetermineOrientation | cut -f3 -d' ')" != \
 	    "true" ]; then
-	    	echo -e -n "${font_dim}(not implemented)${font_reset} "
-		echo -e "${font_yellow}[SKIP]${font_reset}"
+	    	font_dim
+	    	echo -n "$(not implemented) "
+	    	font_reset
+	    	font_yellow
+		echo "[SKIP]"
+		font_reset
 		return
 	fi
 
@@ -1134,15 +1128,7 @@ check_orientation_log_errors()
 	done
 
 	if [ "${error_message}" != "" ]; then
-		echo -e "${font_red}[FAIL]${font_reset}"
-		echo
-		printf '*%.0s' $(seq 1 80)
-		echo -e -n "${error_message}" | fold -s
-		echo
-		printf '*%.0s' $(seq 1 80)
-		echo
-		date
-		exit 1
+		fail "${error_message}"
 	fi
 
 	return ${has_failure_rv}
@@ -1277,15 +1263,7 @@ check_segmentation_log_errors()
 	done
 
 	if [ "${error_message}" != "" ]; then
-		echo -e "${font_red}[FAIL]${font_reset}"
-		echo
-		printf '*%.0s' $(seq 1 80)
-		echo -e -n "${error_message}" | fold -s
-		echo
-		printf '*%.0s' $(seq 1 80)
-		echo
-		date
-		exit 1
+		fail "${error_message}"
 	fi
 
 	return ${has_failure_rv}
@@ -1417,7 +1395,7 @@ print_couldnt_check_version()
 	local msg="IMPORTANT: This script was unable to check, so please "
 	msg+="ensure that you are using the latest version of the SlapSegIII "
 	msg+="validation package before submitting. You are currently running "
-	msg+="with version ${font_underline}${validation_version}${font_reset}."
+	msg+="with version ${validation_version}."
 	msg+="\n\nInformation:\n${info_url}\n"
 	msg+="Version:\n${vers_url}\n"
 	msg+="Download:\n${validation_dl_url}\n"
@@ -1436,7 +1414,7 @@ check_wd()
 	if [ "${wd}" == "" ]; then
 		msg="The directory containing \"validate\" could not be found, "
 		msg+="possibly because you are not using GNU readlink under "
-		msg+="CentOS. If you are, please report an issue on the "
+		msg+="Ubuntu. If you are, please report an issue on the "
 		msg+="SlapSeg GitHub repository."
 		fail "${msg}"
 	fi
