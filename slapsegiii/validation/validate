@@ -25,6 +25,9 @@
 # Constants                                                                    #
 ################################################################################
 
+# Time in seconds when this script was launched
+start_sec="$(date +%s)"
+
 # URL where the complete validation package can be downloaded
 validation_dl_url="https://github.com/usnistgov/slapseg/releases"
 # URL where the validation imagery is requested
@@ -195,6 +198,7 @@ box()
 }
 
 # Convenience for a middle line with 80 char left align standard box
+# shellcheck disable=SC2120
 boxline()
 {
 	if [ "${#}" -eq 0 ]; then
@@ -294,25 +298,24 @@ check_for_images()
 {
 	# Check for data
 	echo -n "Checking for validation images... "
-	if ! [ -d "${wd}"/${validation_image_dir} ]; then
+	if ! [ -d "${wd}/${validation_image_dir}" ]; then
 		# If directory doesn't exist, maybe user didn't expand archive
-		local image_archive=$(ls -r \
+		local image_archive
+		image_archive=$(ls -r \
 		    "${wd}"/${validation_image_download_prefix}* 2> /dev/null)
 		if [ "${image_archive}" != "" ]; then
 			font_yellow
 			echo "[DEFER]"
 			font_reset
-			for i in $(find "${wd}" -maxdepth 1 -name \
-			    "${validation_image_download_prefix}*"); do
-				echo -n "Expanding $(basename ${i})... "
-				tar xf "${i}" > /dev/null 2>&1
-
-				if [ $? -ne 0 ]; then
+			while read -r i; do
+				echo -n "Expanding $(basename "${i}")... "
+				if ! tar xf "${i}" > /dev/null 2>&1; then
 					fail "Failed to expand ${i}"
 				else
 					okay
 				fi
-			done
+			done < <(find "${wd}" -maxdepth 1 -name \
+			    "${validation_image_download_prefix}*")
 
 			check_for_images
 			return
@@ -326,25 +329,24 @@ check_for_images()
 		# If the directory does exist, check that every archive present
 		# has been expanded
 		local has_deferred=0
-		for i in $(find "${wd}" -maxdepth 1 -name \
-		    "${validation_image_download_prefix}*"); do
+		while read -r i; do
 		    	local regex=".*\/${validation_image_download_prefix}"
 		    	regex+="\(.*\)-.\+.tar.gz"
-			local kind=$(sed "s/${regex}/\1/" <<< ${i})
+			local kind
+			# shellcheck disable=SC2001
+			kind=$(sed "s/${regex}/\1/" <<< "${i}")
 			if ! [ -e \
-			    "${wd}"/${validation_image_dir}/VERSION-${kind} ];
+			    "${wd}/${validation_image_dir}/VERSION-${kind}" ];
 			    then
-			    	if [ $has_deferred -eq 0 ]; then
+			    	if [ ${has_deferred} -eq 0 ]; then
 			    		font_yellow
 	    				echo "[DEFER]"
 	    				font_reset
 	    				has_deferred=1
 	    			fi
 
-				echo -n "Expanding $(basename ${i})... "
-				tar xf "${i}" > /dev/null 2>&1
-
-				if [ $? -ne 0 ]; then
+				echo -n "Expanding $(basename "${i}")... "
+				if ! tar xf "${i}" > /dev/null 2>&1; then
 					fail "Failed to expand ${i}"
 					return
 				else
@@ -352,7 +354,8 @@ check_for_images()
 					return
 				fi
 			fi
-		done
+		done < <(find "${wd}" -maxdepth 1 -name \
+		    "${validation_image_download_prefix}*")
 	fi
 
 	okay
@@ -371,8 +374,8 @@ check_image_versions()
 	acceptable_versions["fullpalm"]="201902271132"
 
 	local found_some_images=0
-	for slapkind in $(echo ${slap_type_names}); do
-		if ! [ -e "${wd}"/${validation_image_dir}/VERSION-${slapkind} ];
+	for slapkind in ${slap_type_names}; do
+		if ! [ -e "${wd}/${validation_image_dir}/VERSION-${slapkind}" ];
 		    then
 		    	continue
 		else
@@ -380,13 +383,12 @@ check_image_versions()
 		fi
 
 		local image_version=UNKNOWN
-		read image_version < \
-		    "${wd}"/${validation_image_dir}/VERSION-${slapkind}
+		read -r image_version < \
+		    "${wd}/${validation_image_dir}/VERSION-${slapkind}"
 		local image_version_okay=0
-		for v in $(echo ${acceptable_versions[$slapkind]}); do
+		for v in ${acceptable_versions[$slapkind]}; do
 			if [ "${v}" == "${image_version}" ]; then
 				local image_version_okay=1
-				local found_version[${slapkind}]=${v}
 			fi
 		done
 		if [ $image_version_okay -ne 1 ]; then
@@ -537,14 +539,13 @@ core_library_present()
 # Get the name of the core library
 get_core_library_name()
 {
-	core_library_present
-	if [ $? -ne 0 ]; then
+	if ! core_library_present; then
 		return 1
 	fi
 
-	local lib_regex="libslapsegiii_[A-Za-z0-9]+_[0-9A-Fa-f]{4}.so"
+	local lib_regex="libpftiii_[A-Za-z0-9]+_[0-9A-F]{4}.so"
 
-	if ! [ -d ${lib_dir} ]; then
+	if ! [ -d "${lib_dir}" ]; then
 		local msg="Library directory not found. Create it and place "
 		msg+="the core library inside."
 		fail "${msg}" "" "The library directory is:" "${lib_dir}"
@@ -552,22 +553,25 @@ get_core_library_name()
 	fi
 
 	local core_lib=""
-	local count=$(ls "${lib_dir}" | grep -E ${lib_regex} | wc -l)
-	if [ ${count} -ne 1 ]; then
+	local count
+	count=$(find "${lib_dir}" -type f -regextype posix-extended \
+	    -regex "${lib_dir}/${lib_regex}" -printf "%P\n" | wc -l)
+	if [ "${count}" != "1" ]; then
 		fail "More than one core library found in ${lib_dir}"
 		return 1
 	fi
 
-	core_lib=$(ls "${lib_dir}" | grep -E ${lib_regex} )
+	local core_lib
+	core_lib=$(find "${lib_dir}" -type f -regextype posix-extended \
+	    -regex "${lib_dir}/${lib_regex}" -printf "%P\n")
 	if [ "${core_lib}" == "" ]; then
 		local msg="No core library found in the library directory. "
-		msg+="Please review the SlapSegIII library naming conventions."
+		msg+="Please review the SlapSeg III library naming conventions."
 		fail "${msg}" "" "The library directory is:" "${lib_dir}"
 		return 1
 	fi
 
-	echo ${core_lib}
-	return 0
+	echo "${core_lib}"
 }
 
 # Get the name of the organization from the core library.
@@ -656,11 +660,11 @@ check_for_image_completeness()
 {
 	echo -n "Checking that you have all necessary kinds of images... "
 
-	for type in $(echo ${slap_type_names}); do
-		support=$(${binary} -k | grep -i -e ${type} | grep -e true | \
-		    wc -l)
-		if [ ${support} -ne 0 ]; then
-			if ! [ -e images/VERSION-${type} ]; then
+	for type in ${slap_type_names}; do
+		support=$("${binary}" -k | grep -i -e "${type}" | \
+		    grep -c -e true)
+		if [ "${support}" != "0" ]; then
+			if ! [ -e "images/VERSION-${type}" ]; then
 				local msg="Your library supports segmenting "
 				msg+=" ${type} slaps, but you do not have the "
 				msg+="${type} validation imagery present in "
@@ -691,18 +695,20 @@ random_number()
 check_for_previous_attempts()
 {
 	echo -n "Checking for previous validation attempts... "
-	local output_found=$(find "${wd}" -maxdepth 1 -type d -name \
-	    "$(basename ${output_dir})*" -print -quit)
+	local output_found
+	output_found=$(find "${wd}" -maxdepth 1 -type d -name \
+	    "$(basename "${output_dir}")*" -print -quit)
 	if [ "$output_found" != "" ]; then
 		fail "Previous attempt at validation found:" \
-		    $(rp ${output_found}) "" \
+		    "$(rp "${output_found}")" \
 		    "You can remove it by running: '$0 clean'"
 	fi
-	output_found=$(find "${wd}" -maxdepth 1 -name "validation_*" -print \
-	    -quit)
-	if [ "$output_found" != "" ]; then
+	output_found=$(find "${wd}" -maxdepth 1 -name \
+	    "slapsegiii_validation_*" -a \! -name \
+	    "slapsegiii_validation_images_*.tar.gz" -print -quit)
+	if [ "${output_found}" != "" ]; then
 		fail "Previous attempt at validation found:" \
-		    $(rp ${output_found}) "" \
+		    "$(rp "${output_found}")" "" \
 		    "You can remove it by running: '$0 clean'"
 	fi
 
@@ -715,11 +721,12 @@ compile()
 	echo -n "Building... "
 
 	if [ $# -ne 1 ]; then
-		fail "Usage: $FUNCNAME <random_seed>"
+		fail "Usage: ${FUNCNAME[0]} <random_seed>"
 	fi
 
 	local expected_lib_md5="11311d92e4edfc07e13351c1f1694d37"
-	local actual_lib_md5=$(md5sum \
+	local actual_lib_md5
+	actual_lib_md5=$(md5sum \
 	    "${src_dir}"/libslapsegiii/libslapsegiii.cpp | cut -f 1 -d ' ')
 	if [ "${expected_lib_md5}" != "${actual_lib_md5}" ]; then
 		local msg="Your copy of libslapsegiii.cpp appears to be "
@@ -729,7 +736,8 @@ compile()
 	fi
 
 	local expected_h_md5="16e1e8debada90d4b89fa8e51822d9b0"
-	local actual_h_md5=$(md5sum "${src_dir}"/slapsegiii.h | cut -f 1 -d ' ')
+	local actual_h_md5
+	actual_h_md5=$(md5sum "${src_dir}"/slapsegiii.h | cut -f 1 -d ' ')
 	if [ "${expected_h_md5}" != "${actual_h_md5}" ]; then
 		local msg="Your copy of slapsegiii.h appears to be "
 		msg+="modified. Please restore the original copy. Making "
@@ -739,41 +747,54 @@ compile()
 
 	if [ -e "${lib_dir}"/libslapsegiii.so ]; then
 		local msg="The library 'libslapsegiii.so' is in the directory "
-		msg+="$(rp ${lib_dir}). This script will build its own copy of "
-		msg+="the library to ensure that modifications have not been "
-		msg+="made, since doing so may cause issues during the "
+		msg+="$(rp "${lib_dir}"). This script will build its own copy "
+		msg+="of the library to ensure that modifications have not "
+		msg+="been made, since doing so may cause issues during the "
 		msg+="evaluation."
 		fail "${msg}"
 	fi
 
 	# Compile
 	local log="${output_dir}/compile.log"
-	make -C "${src_dir}" 2>&1 | tee "${log}" > /dev/null
-	if [ $? -ne 0 ]; then
+	if ! make -C "${src_dir}" 2>&1 | tee "${log}" > /dev/null; then
 		fail "An error occurred during compilation. Please review:" \
 		    "${log}"
 	fi
 
 	# Check that binary shows a dependency on the core library
-	local core_lib="$(get_core_library_name)"
-	ldd "${binary}" | \
-	    grep "${lib_dir}"/$(get_core_library_name) 2>&1 > /dev/null
-	if [ $? -ne 0 ]; then
-		msg="${core_lib} is not a dependency of the compiled binary. "
-		msg+="${core_lib} was either renamed after being built, or the "
-		msg+="binary is linking against a version of ${core_lib} from "
-		msg+="a directory outside of the validation package. "
-		msg+="Please review:"
-		fail "${msg}" "${log}"
+	local core_lib
+	if ! core_lib="$(get_core_library_name)"; then
+		fail "Could not get core library name"
+	fi
+
+	if ! grep -q "${lib_dir}/${core_lib}" < <(ldd "${binary}"); then
+		local msg="${core_lib} is not a dependency of the compiled "
+		msg+="binary. The library was either renamed after being "
+		msg+="built, or the binary is linking against a version of "
+		msg+="${core_lib} from a directory outside of the validation "
+		msg+="package. Please review:"
+		fail "${msg}" "$(rp "${log}")"
 	fi
 
 	# Log some extra compilation information that may be useful in helping
 	# to debug future issues
-	find "${lib_dir}" -type f -exec md5sum {} \; >> ${log}
-	cat /etc/redhat-release >> ${log}
-	ldd "${binary}" >> ${log}
-	echo "Validation Version = ${validation_version}" >> ${log}
-	echo "Random Seed = $1" >> ${log}
+	{
+		echo "Library directory:"
+		find "${lib_dir}" -type f -exec md5sum {} \;
+		echo
+
+		echo "Ubuntu Version:"
+		grep "VERSION=" /etc/os-release | cut -f 2 -d '=' | tr -d '"'
+		echo
+
+		echo "ldd output of binary:"
+		ldd "${binary}"
+		echo
+
+		echo "Validation properties:"
+		echo "Validation Version = ${validation_version}"
+		echo "Random Seed = $1"
+	} >> "${log}"
 
 	okay
 }
@@ -783,16 +804,18 @@ check_api_level()
 	echo -n "Checking API version... "
 
 	# If API level is incorrect, text is printed to stderr on execution
-	local tempfile=$(mktemp)
-	local output=$(${binary} 2> ${tempfile})
-	if [ $(grep -c "Incompatible " ${tempfile}) -ne 0 ]; then
-		output=$(<${tempfile})
-		rm ${tempfile}
+	local tempfile
+	tempfile=$(mktemp)
+	local output
+	output=$("${binary}" 2> "${tempfile}")
+	if [ "$(grep -c "Incompatible " "${tempfile}")" != "0" ]; then
+		output=$(<"${tempfile}")
+		rm "${tempfile}"
 		fail "${output}"
 		return 1
 	fi
 
-	rm ${tempfile}
+	rm "${tempfile}"
 	okay
 }
 
@@ -812,24 +835,10 @@ clean_previous_attempts()
 		return 1
 	fi
 
- 	rm -rf "${wd}"/validation_$(get_organization_name)_*
-	if [ $(find "${wd}" -name \
-	    "validation_$(get_organization_name)_*" | wc -l) -ne 0 ]; then
+ 	rm -rf "${wd}/validation_$(get_organization_name)_"*
+	if [ "$(find "${wd}" -name \
+	    "validation_$(get_organization_name)_*" | wc -l)" != "0" ]; then
 	    	fail "Failed to remove some output. Please delete it manually."
-		return 1
-	fi
-
-	okay
-
-	core_library_present
-	if [ $? -ne 0 ]; then
-		return 0
-	fi
-
-	echo -n "Cleaning compilation... "
-	make -j -C "${src_dir}" clean > /dev/null
-	if [ $? -ne 0 ]; then
-		fail "Unable to `make clean` in" "$(rp ${src_dir})"
 		return 1
 	fi
 
@@ -841,9 +850,11 @@ record_identification_information()
 {
 	local log="${output_dir}"/id.log
 
-	echo "Core Library = $(get_core_library_name)" >> ${log}
-	${binary} -i >> ${log}
-	${binary} -k >> ${log}
+	{
+		echo "Core Library = $(get_core_library_name)"
+		${binary} -i
+		${binary} -k
+	} >> "${log}"
 }
 
 # Run the validation driver for all supported slap types.
@@ -852,7 +863,7 @@ run_segmentation()
 	echo -n "Running segmentation... "
 
 	if [ $# -ne 1 ]; then
-		fail "Usage: $FUNCNAME <random_seed>"
+		fail "Usage: ${FUNCNAME[0]} <random_seed>"
 	fi
 
 	# We want to fork regardless to be sure that implementations can handle
@@ -861,18 +872,17 @@ run_segmentation()
 
 	local log="${output_dir}"/run-segment.log
 	local command="$binary -s -r $1 -f ${forks}"
-	echo $command >> ${log}
-	$(${command} >> ${log} 2>&1)
-	if [ $? -ne 0 ]; then
+	echo "${command}" >> "${log}"
+	if ! ${command} >> "${log}" 2>&1; then
 		msg="An error occurred during segmentation. Please investigate:"
 		fail "${msg}" "${log}"
 	fi
 
 	# Check for runtime error messages
-	if [ $(wc -l < ${log}) -ne 1 ]; then
+	if [ "$(wc -l < "${log}")" != "1" ]; then
 		msg="Unexpected output  was logged during segmentation. Please "
 		msg+="review:"
-		fail "${msg}" $(rp ${log})
+		fail "${msg}" "$(rp "${log}")"
 	fi
 	okay
 }
@@ -883,7 +893,7 @@ run_determine_orientation()
 	echo -n "Running orientation determination... "
 
 	if [ $# -ne 1 ]; then
-		fail "Usage: $FUNCNAME <random_seed>"
+		fail "Usage: ${FUNCNAME[0]} <random_seed>"
 	fi
 
 	# Check if determine orientation is supported
@@ -904,19 +914,18 @@ run_determine_orientation()
 
 	local log="${output_dir}"/run-determineOrientation.log
 	local command="$binary -d -r $1 -f ${forks}"
-	echo $command >> ${log}
-	$(${command} >> ${log} 2>&1)
-	if [ $? -ne 0 ]; then
+	echo "${command}" >> "${log}"
+	if ! ${command} >> "${log}" 2>&1; then
 		local msg="An error occurred during orientation determination. "
 		msg+="Please investigate:"
 		fail "${msg}" "${log}"
 	fi
 
 	# Check for runtime error messages
-	if [ $(wc -l < ${log}) -ne 1 ]; then
+	if [ "$(wc -l < "${log}")" != "1" ]; then
 		local msg="Unexpected output  was logged during orientation "
 		msg+="determination. Please review:"
-		fail "${msg}" $(rp ${log})
+		fail "${msg}" "$(rp "${log}")"
 	fi
 	okay
 }
@@ -928,8 +937,7 @@ check_segmentation_logs()
 	merge_logs "segments"
 	check_segment_log_counts
 
-	check_segmentation_log_errors
-	if [ $? -ne 0 ]; then
+	if ! check_segmentation_log_errors; then
 		warn 'failure return values present'
 	else
 		okay
@@ -951,10 +959,10 @@ check_segment_log_counts()
 	expected_logs[5]=$($binary -k | grep UpperPalm | cut -f3 -d' ')
 	expected_logs[8]=$($binary -k | grep FullPalm | cut -f3 -d' ')
 
-	for type in $(echo "${!log_lines[@]}"); do
+	for type in "${!log_lines[@]}"; do
 		local log="${output_dir}"/segments-${type}.log
 		if ! [ -e "${log}" ]; then
-			if [ ${expected_logs[$type]} == "false" ]; then
+			if [ "${expected_logs[$type]}" == "false" ]; then
 				continue
 			else
 				fail "An expected log was not generated." \
@@ -962,10 +970,10 @@ check_segment_log_counts()
 			fi
 		fi
 
-		if [ $(wc -l < "${log}") -ne ${log_lines[$type]} ]; then
+		if [ "$(wc -l < "${log}")" != "${log_lines[$type]}" ]; then
 			msg="A segmentation log does not have the expected "
 			msg+="number of lines inside. Please review:"
-			fail "${msg}" $(rp "${log}")
+			fail "${msg}" "$(rp "${log}")"
 		fi
 	done
 }
@@ -990,8 +998,7 @@ check_orientation_logs()
 	merge_logs "orientation"
 	check_orientation_log_counts
 
-	check_orientation_log_errors
-	if [ $? -ne 0 ]; then
+	if ! check_orientation_log_errors; then
 		warn 'failure return values present'
 	else
 		okay
@@ -1012,10 +1019,10 @@ check_orientation_log_counts()
 	expected_logs[5]=$($binary -k | grep UpperPalm | cut -f3 -d' ')
 	expected_logs[8]=$($binary -k | grep FullPalm | cut -f3 -d' ')
 
-	for type in $(echo "${!log_lines[@]}"); do
-		local log="${output_dir}"/orientation-${type}.log
+	for type in "${!log_lines[@]}"; do
+		local log="${output_dir}/orientation-${type}.log"
 		if ! [ -e "${log}" ]; then
-			if [ ${expected_logs[$type]} == "false" ]; then
+			if [ "${expected_logs[$type]}" == "false" ]; then
 				continue
 			else
 				fail "An expected log was not generated." \
@@ -1023,11 +1030,11 @@ check_orientation_log_counts()
 			fi
 		fi
 
-		if [ $(wc -l < "${log}") -ne ${log_lines[$type]} ]; then
+		if [ "$(wc -l < "${log}")" != "${log_lines[$type]}" ]; then
 			local msg="An orientation determination log does not "
 			msg+="have the expected number of lines inside. Please "
 			msg+="review:"
-			fail "${msg}" $(rp "${log}")
+			fail "${msg}" "$(rp "${log}")"
 		fi
 	done
 }
@@ -1043,7 +1050,7 @@ check_orientation_log_errors()
 	local has_failure_rv=0
 	local error_message=""
 	for type in ${slap_type_numbers}; do
-		if ! [ -e "${output_dir}"/orientation-${type}.log ]; then
+		if ! [ -e "${output_dir}/orientation-${type}.log" ]; then
 			continue
 		fi
 
@@ -1051,51 +1058,50 @@ check_orientation_log_errors()
 		local has_invalid_hand=0
 
 		{
-		read # Read header line
-		while read line; do
-			read name rv orientation <<< \
-			    $(awk -F, '{print $1,$3,$5}' <<< $line)
+		read -r # Read header line
+		while read -r line; do
+			read -r name rv orientation <<< \
+			    "$(awk -F, '{print $1,$3,$5}' <<< "${line}")"
 
-			if [ ${rv} != 0 ]; then
+			if [ "${rv}" != "0" ]; then
 				# We fully expect failures on canary images,
 				# so don't warn about them.
-				if [ $(grep -q canary <<< ${name}; echo $?) -ne \
-				    0 ]; then
+				if ! grep -q canary <<< "${name}"; then
 					has_failure_rv=1
 				fi
 			fi
 
 			# We only check orientation logs if they are supported,
 			# therefore NotImplemented is not permitted.
-			if [ ${rv} -eq 6 ]; then
+			if [ "${rv}" == "6" ]; then
 				supported_but_ni=1
 				continue
 			fi
 
 			# The only valid hand positions.
-			if [ ${rv} -eq 0 ]; then
-				if [ ${type} -eq 3 ]; then
-					if [ ${orientation} -ne 0 ] && \
-					    [ ${orientation} -ne 1 ] && \
-					    [ ${orientation} -ne 2 ]; then
+			if [ "${rv}" == "0" ]; then
+				if [ "${type}" == "3" ]; then
+					if [ "${orientation}" != 0 ] && \
+					    [ "${orientation}" != 1 ] && \
+					    [ "${orientation}" != 2 ]; then
 						has_invalid_hand=1
 						continue
 					fi
 				else
-					if [ ${orientation} -ne 0 ] && \
-					    [ ${orientation} -ne 1 ]; then
+					if [ "${orientation}" != "0" ] && \
+					    [ "${orientation}" != "1" ]; then
 						has_invalid_hand=1
 						continue
 					fi
 				fi
 			else
-				if [ ${orientation} != "NA" ]; then
+				if [ "${orientation}" != "NA" ]; then
 					has_invalid_hand=1
 					continue
 				fi
 			fi
 		done
-		} < "${output_dir}"/orientation-${type}.log
+		} < "${output_dir}/orientation-${type}.log"
 
 		if [ ${has_invalid_hand} -eq 1 ] || \
 		    [ ${supported_but_ni} -eq 1 ]; then
@@ -1117,7 +1123,7 @@ check_orientation_log_errors()
 		if [ ${has_invalid_hand} -eq 1 ]; then
 			error_message+='\n \x2A specified an orientation other '
 			error_message+='than '
-			if [ ${type} -eq 3 ]; then
+			if [ "${type}" == "3" ]; then
 				error_message+='Left, Right, or Thumbs.'
 			else
 				error_message+='Left or Right.'
@@ -1142,7 +1148,7 @@ check_segmentation_log_errors()
 	local has_failure_rv=0
 	local error_message=""
 	for type in ${slap_type_numbers}; do
-		if ! [ -e "${output_dir}"/segments-${type}.log ]; then
+		if ! [ -e "${output_dir}/segments-${type}.log" ]; then
 			continue
 		fi
 
@@ -1155,20 +1161,21 @@ check_segmentation_log_errors()
 		local has_deficiencies=0
 
 		{
-		read # Read header line
-		while read line; do
-			read name rv errors scode deficiencies quantity <<< \
-			    $(awk -F, '{print $1,$3,$16,$14,$17,$18}' <<< $line)
+		read -r # Read header line
+		while read -r line; do
+			read -r name rv errors scode deficiencies quantity <<< \
+			    "$(awk -F, '{print $1,$3,$16,$14,$17,$18}' <<< \
+			    "${line}")"
 
 			# Ensure that a deficiency is set when returning
 			# RequestRecapture and RequestRecaptureWithAttempt
-			if [ ${rv} -eq 2 ] || [ ${rv} -eq 3 ]; then
-				if [ "$(tr -d '\"' <<< ${deficiencies})" == \
+			if [ "${rv}" == "2" ] || [ "${rv}" == "3" ]; then
+				if [ "$(tr -d '\"' <<< "${deficiencies}")" == \
 				    "0000" ]; then
 					missing_deficiencies=1
 				fi
-			elif [ ${rv} -eq 0 ]; then
-				if [ "$(tr -d '\"' <<< ${deficiencies})" != \
+			elif [ "${rv}" == "0" ]; then
+				if [ "$(tr -d '\"' <<< "${deficiencies}")" != \
 				    "0000" ]; then
 					has_deficiencies=1
 				fi
@@ -1176,40 +1183,40 @@ check_segmentation_log_errors()
 
 			# Only check for position errors with "Success" or
 			# "RequestRecaptureWithAttempt"
-			if [ ${rv} -ne 0 ] && [ ${rv} -ne 3 ]; then
+			if [ "${rv}" != "0" ] && [ "${rv}" != "3" ]; then
 				# We fully expect failures on canary images,
 				# so don't warn about them.
-				if [ $(grep -q canary <<< ${name}; echo $?) -ne \
-				    0 ]; then
+				if ! grep -q canary <<< "${name}"; then
 					has_failure_rv=1
 				fi
 			fi
 
-			if [ ${quantity} -eq 0 ]; then
+			if [ "${quantity}" == "0" ]; then
 				has_quantity_error=1
 			fi
 
 			# Don't check coordinates unless segmentation position
 			# code is "Success"
-			if [ "${scode}" == "NA" ] || [ ${scode} -ne 0 ]; then
+			if [ "${scode}" == "NA" ] || [ "${scode}" != "0" ]; then
 				continue
 			fi
 
-			local errors=$(tr -d '"' <<< ${errors})
-			if [ $(cut -c 1 <<< ${errors}) -eq 1 ]; then
+			local errors
+			errors="$(tr -d '"' <<< "${errors}")"
+			if [ "$(cut -c 1 <<< "${errors}")" == "1" ]; then
 				has_outside_coordinates=1
 			fi
-			if [ $(cut -c 2 <<< ${errors}) -eq 1 ]; then
+			if [ "$(cut -c 2 <<< "${errors}")" == "1" ]; then
 				is_rotated=1
 			fi
-			if [ $(cut -c 3 <<< ${errors}) -eq 1 ]; then
+			if [ "$(cut -c 3 <<< "${errors}")" == "1" ]; then
 				has_nonrectangular_coordiantes=1
 			fi
-			if [ $(cut -c 4 <<< ${errors}) -eq 1 ]; then
+			if [ "$(cut -c 4 <<< "${errors}")" == "1" ]; then
 				has_irregular_coordinates=1
 			fi
 		done
-		} < "${output_dir}"/segments-${type}.log
+		} < "${output_dir}/segments-${type}.log"
 
 		if [ ${has_quantity_error} -eq 1 ] || \
 		    [ ${has_outside_coordinates} -eq 1 ] || \
@@ -1320,7 +1327,6 @@ make_tarball()
 
 	mv "${output_dir}" "${new_name}"
 	cp -pr "${lib_dir}" "${new_name}"
-	cp -pr "${config_dir}" "${new_name}"
 
 	# NIST will build a fresh libslapsegiii.so
 	if ! rm "${new_name}/$(basename "${lib_dir}")/libslapsegiii.so"; then
@@ -1339,33 +1345,30 @@ make_tarball()
 # Print success message.
 print_final_success()
 {
-	local tar_file=$(get_tarball_name)
+	local tar_file
+	tar_file="$(get_tarball_name)"
 
-	echo
-	printf '=%.0s' $(seq 1 80)
-	echo
+	local msg="You have successfully completed your part of SlapSeg III "
+	msg+="validation. Please sign and encrypt the file listed below (run "
+	msg+="'${0} encrypt' for an example)."
+	box "${msg}" 80 '=' '|' 'l' 1 0
+	boxline
+	box "${tar_file}" 80 '=' '|' 'c' 0 0
+	boxline
 
-	local msg="You have successfully completed the first step in "
-	msg+="SlapSegIII validation. Please sign and encrypt this file, send "
-	msg+="it to slapseg@nist.gov, and await a notification.\n\n"
-	msg+=$(rp "${wd}"/"${tar_file}")
-	msg+="\n\nExample encryption:\n"
-	msg+="gpg --output ${tar_file}.asc \\\\\n"
-	msg+="    --default-key jdoe@$(get_organization_name).com \\\\\n"
-	msg+="    --recipient slapseg@nist.gov \\\\\n"
-	msg+="    --recipient jdoe@$(get_organization_name).com \\\\\n"
-	msg+="    --armor --sign --encrypt \\\\\n"
-	msg+="    $(rp ${wd}/${tar_file})\n\n"
-	msg+="Additionally, be sure to include the public key of the identity "
-	msg+="that signed the validation package. This key must be the key "
-	msg+="whose key fingerprint was printed on the SlapSegIII application."
-	msg+="\n\nExample public key extraction:\n"
-	msg+="gpg --output $(get_organization_name)_$(get_lib_version)_public_"
-	msg+="key.asc --armor \\\\\n"
-	msg+="    --export jdoe@$(get_organization_name).com"
-
-	echo -e "${msg}" | fold -s
-	printf '=%.0s' $(seq 1 80)
+	local file_size
+	file_size="$(du -m "${tar_file}" | cut -f 1)"
+	# Likely will be too big for email
+	if [ "${file_size}" -ge 20 ]; then
+		msg="${tar_file}.asc may be too big for NIST's email "
+		msg+="server, so please contact pft@nist.gov for an upload "
+		msg+="link for both ${tar_file}.asc and your public key."
+	else
+		msg="Please attach both ${tar_file}.asc and your public key to "
+		msg+="an email addressed to pft@nist.gov."
+	fi
+	box "${msg}" 80 '=' '|' 'l' 0 1
+	font_reset
 	echo
 }
 
@@ -1422,7 +1425,7 @@ check_wd()
 ###############################################################################
 
 check_wd
-read validation_version < "${wd}"/VERSION
+read -r validation_version < "${wd}"/VERSION
 print_header
 
 if [ $# -ne 0 ]; then
@@ -1447,14 +1450,14 @@ check_library
 check_environment
 mkdir -p "${output_dir}"
 log_canaries
-seed=$(random_number)
-compile ${seed}
+seed="$(random_number)"
+compile "${seed}"
 check_api_level
 check_for_image_completeness
 record_identification_information
-run_segmentation ${seed}
+run_segmentation "${seed}"
 check_segmentation_logs
-run_determine_orientation ${seed}
+run_determine_orientation "${seed}"
 check_orientation_logs
 make_tarball
 print_final_success
