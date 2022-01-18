@@ -31,7 +31,7 @@ validation_dl_url="https://github.com/usnistgov/slapseg/releases"
 validation_image_request_url="mailto:slapseg@nist.gov"
 
 # Directory containing validation materials
-wd=$(readlink -f $(dirname $0))
+wd="$(cd "$(dirname "${0}")" && pwd)"
 # Directory containing validation images
 validation_image_dir="images"
 # Directory where libraries go
@@ -43,7 +43,7 @@ bin_dir="${wd}"/bin
 # Output directory for validation driver logs
 output_dir="${wd}"/output
 # Path to the compiled validation driver binary
-binary="${bin_dir}"/"slapsegiii_validation"
+binary="${bin_dir}/slapsegiii_validation"
 
 # Prefix for downloaded validation imagery tarballs
 validation_image_download_prefix=slapsegiii_validation_images_
@@ -70,7 +70,6 @@ font_yellow() { if [ -t 1 ]; then tput setaf 3; fi }
 font_underline() { if [ -t 1 ]; then tput smul; fi }
 # Reset to default text color
 font_reset() { if [ -t 1 ]; then tput sgr0; fi }
-
 
 # Print the path of the argument relative to the current working directory
 rp()
@@ -574,23 +573,23 @@ get_core_library_name()
 # Get the name of the organization from the core library.
 get_organization_name()
 {
-	name=$(get_core_library_name)
-	if [ $? -ne 0 ]; then
+	local name
+	if ! name="$(get_core_library_name)"; then
 		return 1
 	fi
 
-	cut -f2 -d_ <<< $name
+	cut -f2 -d_ <<< "${name}"
 }
 
 # Get the version of the library from the core library.
 get_lib_version()
 {
-	name=$(get_core_library_name)
-	if [ $? -ne 0 ]; then
+	local name
+	if ! name="$(get_core_library_name)"; then
 		return 1
 	fi
 
-	(cut -f3 -d_ <<< $name) | sed 's/\(.*\).so/\1/'
+	(cut -f3 -d_ <<< "${name}") | sed 's/\(.*\).so/\1/'
 }
 
 # Ensure that a library in the lib directory implements the required naming
@@ -600,16 +599,13 @@ check_library()
 	echo -n "Looking for core library... "
 
 	local core_lib=""
-	core_library_present
-	if [ $? -eq 0 ]; then
-		core_lib=$(get_core_library_name)
-		if [ $? -ne 0 ]; then
-			echo ${core_lib}
+	if core_library_present; then
+		if ! core_lib=$(get_core_library_name); then
+			echo "${core_lib}"
 			return 1
 		fi
 	else
-		get_core_library_name
-		if [ $? -ne 0 ]; then
+		if ! get_core_library_name; then
                 	local msg="No core library found in the library "
 			msg+="directory. Please review the SlapSeg III "
 			msg+="library naming conventions."
@@ -617,15 +613,19 @@ check_library()
 			    "${lib_dir}"
 			return 1
 		fi
+
+		return 1
 	fi
 
 	# Some file systems are case-sensitive
-	local vers="$(get_lib_version)"
-	if [ "${vers}" != "$(tr '[:lower:]' '[:upper:]' <<< ${vers})" ]; then
-		local correct="$(cut -f1 -d_ <<< ${core_lib})_"
-		correct+="$(cut -f2 -d_ <<< ${core_lib})_"
-		correct+="$(tr '[:lower:]' '[:upper:]' <<< ${vers})."
-		correct+="$(cut -f2 -d. <<< ${core_lib})"
+	local vers
+	vers="$(get_lib_version)"
+	if [ "${vers}" != "$(tr '[:lower:]' '[:upper:]' <<< "${vers}")" ]; then
+		local correct
+		correct="$(cut -f1 -d_ <<< "${core_lib}")_"
+		correct+="$(cut -f2 -d_ <<< "${core_lib}")_"
+		correct+="$(tr '[:lower:]' '[:upper:]' <<< "${vers}")."
+		correct+="$(cut -f2 -d. <<< "${core_lib}")"
 
 		local msg="Please use uppercase hexadecimal digits "
 		msg+="(\"ABCDEF\", not \"abcdef\") for the version in your "
@@ -635,10 +635,11 @@ check_library()
 	fi
 
 	# If SONAME is present, check that it is the same as the lib name
-	local SONAME=$(objdump -p "${lib_dir}"/${core_lib} | grep SONAME | \
+	local SONAME
+	SONAME=$(objdump -p "${lib_dir}/${core_lib}" | grep SONAME | \
 	    awk '{print $2}')
-	if [ "$SONAME" != "" ]; then
-		if [ "$SONAME" != "${core_lib}" ]; then
+	if [ "${SONAME}" != "" ]; then
+		if [ "${SONAME}" != "${core_lib}" ]; then
 			local msg="The SONAME of ${core_lib} is not valid. "
 			msg+="${core_lib} was likely renamed after being "
 			msg+="built. The SONAME must be the same name as the "
@@ -1270,41 +1271,41 @@ check_segmentation_log_errors()
 merge_logs()
 {
 	if [ $# -ne 1 ]; then
-		fail "Usage: $FUNCNAME <log_prefix>"
+		fail "Usage: ${FUNCNAME[0]} <log_prefix>"
 	fi
 
 	local log_prefix="${1}"
 
-	for type in ${slap_type_numbers}; do
-		exists=$(find "${output_dir}" -type f -name \
-		    "${log_prefix}-${type}-*" -print -quit)
+	exists=$(find "${output_dir}" -type f -name "${log_prefix}-*" \
+	    -print -quit)
 
-		if [ "${exists}" == "" ]; then
-			continue
-		fi
+	if [ "${exists}" == "" ]; then
+		fail "Could not merge ${log_prefix} logs."
+	fi
 
-		# Get the header
-		local log="${output_dir}"/${log_prefix}-${type}.log
-		head -n 1 ${exists} >> ${log}
+	# Get the header
+	local log="${output_dir}/${log_prefix}.log"
+	head -n 1 "${exists}" >> "${log}"
 
-		# Merge the logs, minus the header
-		for f in $(find "${output_dir}" -type f -name \
-		    "${log_prefix}-${type}-*"); do
-			tail -n +2 $f >> ${log}
-		    rm ${f}
-		done
+	# Merge the logs, minus the header
+	while read -r f; do
+		tail -n +2 "${f}" >> "${log}"
+		rm "${f}"
+	done < <(find "${output_dir}" -type f -name "${log_prefix}-*")
 
-		# Sort, ignoring the header
-		(head -n 1 ${log} && tail -n +2 ${log} | sort) > ${log}.sort
-		rm ${log}
-		mv ${log}.sort ${log}
-	done
+	# Sort, ignoring the header
+	(head -n 1 "${log}" && tail -n +2 "${log}" | sort) > "${log}.sort"
+	rm "${log}"
+	mv "${log}.sort" "${log}"
 }
 
 # Generate the name of the validation tarball.
 get_tarball_name()
 {
-	echo "validation_$(get_organization_name)_$(get_lib_version).tar.gz"
+	local name
+	name="slapsegiii_validation_$(get_organization_name)_"
+	name+="$(get_lib_version).tar.gz"
+	echo "${name}"
 }
 
 # Make a tarball of all libraries and logfiles to send to NIST.
@@ -1312,24 +1313,23 @@ make_tarball()
 {
 	echo -n "Creating validation submission... "
 
-	local tar_file=$(get_tarball_name)
-	local new_name="${wd}"/$(basename $(get_tarball_name) .tar.gz)
+	local tar_file
+	tar_file=$(get_tarball_name)
+	local new_name
+	new_name="${wd}/$(basename "$(get_tarball_name)" .tar.gz)"
 
 	mv "${output_dir}" "${new_name}"
 	cp -pr "${lib_dir}" "${new_name}"
+	cp -pr "${config_dir}" "${new_name}"
 
-	# We will build a fewsh libslapsegiii.so at NIST
-	rm "${new_name}"/$(basename "${lib_dir}")/libslapsegiii.so
-
-	if [ $? -ne 0 ]; then
+	# NIST will build a fresh libslapsegiii.so
+	if ! rm "${new_name}/$(basename "${lib_dir}")/libslapsegiii.so"; then
 		local msg="An error occurred while copying libraries. Check "
 		msg+="file permissions."
 		fail "${msg}"
 	fi
-	cd "${wd}" && \
-	    tar czf "${tar_file}" $(basename "${new_name}") > /dev/null && \
-	    cd - > /dev/null
-	if [ $? -ne 0 ]; then
+	if ! tar -C "${wd}" -c -z -f "${tar_file}" "$(basename "${new_name}")" \
+	    > /dev/null; then
 		fail "There was an issue creating the validation submission."
 	fi
 
