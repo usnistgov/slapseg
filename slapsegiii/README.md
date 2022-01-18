@@ -13,6 +13,7 @@ Contents
  * [Validation]
    - Package used to verify and submit SlapSeg III libraries for testing at
      NIST.
+- [include/slapsegiii.h]: The [SlapSeg III API].
 - [`libslapsegiii`]
    - Library containing required implementations of methods from the
      [SlapSeg III API]. Submitted libraries must link against **but not
@@ -37,6 +38,7 @@ The items in this repository are released in the public domain. See the
 [LICENSE] for details.
 
 [Validation]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/
+[include/slapsegiii.h]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/include/slapsegiii.h
 [`libslapsegiii`]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/libslapsegiii
 [nullimpl]: https://github.com/usnistgov/slapseg/tree/master/slapsegiii/nullimpl
 [SlapSeg III API]: https://pages.nist.gov/slapseg/doc/slapsegiii/api

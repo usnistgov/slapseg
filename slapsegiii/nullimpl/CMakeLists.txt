@@ -45,7 +45,7 @@ set(LIB_NAME "slapsegiii_${LIBRARY_NAME}_${LIBRARY_VERSION}")
 
 add_library(${LIB_NAME} SHARED)
 target_sources(${LIB_NAME} PRIVATE slapsegiii_nullimpl.cpp)
-target_include_directories(${LIB_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/../validation/src)
+target_include_directories(${LIB_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/../include)
 target_include_directories(${LIB_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
 
 # Depend on libslapsegiii

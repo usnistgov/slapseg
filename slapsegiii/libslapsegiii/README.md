@@ -40,7 +40,7 @@ License
 The items in this repository are released in the public domain. See the
 [LICENSE] for details.
 
-[`slapsegiii.h`]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src/slapsegiii.h
+[`slapsegiii.h`]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/include/slapsegiii.h
 [validation]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation
 [NIST SlapSeg team]: mailto:slapseg@nist.gov
 [open an issue]: https://github.com/usnistgov/slapseg/issues
