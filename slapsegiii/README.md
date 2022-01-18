@@ -37,7 +37,7 @@ The items in this repository are released in the public domain. See the
 [LICENSE] for details.
 
 [Validation]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/
-[`libslapsegiii`]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src/libslapsegiii
+[`libslapsegiii`]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/libslapsegiii
 [nullimpl]: https://github.com/usnistgov/slapseg/tree/master/slapsegiii/nullimpl
 [SlapSeg III API]: https://pages.nist.gov/slapseg/doc/slapsegiii/api
 [open an issue]: https://github.com/usnistgov/slapseg/issues

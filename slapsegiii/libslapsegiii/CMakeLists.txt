@@ -15,10 +15,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_library(libslapsegiii SHARED)
 target_sources(libslapsegiii PRIVATE libslapsegiii.cpp)
-target_include_directories(libslapsegiii PRIVATE ${PROJECT_SOURCE_DIR}/..)
+target_include_directories(libslapsegiii PRIVATE ${PROJECT_SOURCE_DIR}/../validation/src)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-	set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/.. CACHE PATH "..." FORCE)
+	set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/../validation CACHE PATH "..." FORCE)
 endif()
 
 # Extern the version symbols
@@ -34,7 +34,7 @@ target_compile_options(libslapsegiii PRIVATE
     -Wall -Wextra -pedantic -Wconversion -Wsign-conversion)
 
 set_target_properties(libslapsegiii PROPERTIES
-    PUBLIC_HEADER ${PROJECT_SOURCE_DIR}/../slapsegiii.h
+    PUBLIC_HEADER ${PROJECT_SOURCE_DIR}/../validation/src/slapsegiii.h
     OUTPUT_NAME slapsegiii)
 
 include(GNUInstallDirs)

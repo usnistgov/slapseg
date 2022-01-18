@@ -20,8 +20,6 @@ Contents
    - [lib/]: Directory in which all required libraries reside. There must be at
      least one *core* library, and that library **must** follow the SlapSeg III
      naming convention.
-   - [src/libslapsegiii/]: Code for the shared library implementing methods
-     declared in [src/slapsegiii.h].
    - [src/slapsegiii.h]: The SlapSeg III [API].
    - [validate]: Script that automates running the validation and performing
      checks on the output.
@@ -180,7 +178,6 @@ The items in this repository are released in the public domain. See the
 [🇺🇸 USA]: http://mirror.umd.edu/centos/7.6.1810/isos/x86_64/CentOS-7-x86_64-Everything-1810.iso
 [🇪🇺 Europe]: http://centos.mirrors.proxad.net/7.6.1810/isos/x86_64/CentOS-7-x86_64-Everything-1810.iso
 [lib/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/lib
-[src/libslapsegiii/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src/libslapsegiii
 [src/slapsegiii.h]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src/slapsegiii.h
 [bin/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/bin
 [README.md]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/README.md

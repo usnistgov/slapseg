@@ -49,7 +49,7 @@ target_include_directories(${LIB_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/../validati
 target_include_directories(${LIB_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
 
 # Depend on libslapsegiii
-add_subdirectory(${PROJECT_SOURCE_DIR}/../validation/src/libslapsegiii ${CMAKE_CURRENT_BINARY_DIR}/libslapsegiii)
+add_subdirectory(${PROJECT_SOURCE_DIR}/../libslapsegiii ${CMAKE_CURRENT_BINARY_DIR}/libslapsegiii)
 add_dependencies(${LIB_NAME} libslapsegiii)
 target_link_libraries(${LIB_NAME} PUBLIC libslapsegiii)
 
