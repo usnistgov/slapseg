@@ -12,5 +12,6 @@ slapsegiii/validation/bin
 slapsegiii/validation/*.tar.gz
 slapsegiii/validation/images/VERSION-*
 slapsegiii/validation/images/*gray
+slapsegiii/validation/include/
 slapsegiii/validation/validation_*
 slapsegiii/validation/output
