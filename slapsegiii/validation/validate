@@ -939,10 +939,9 @@ clean_previous_attempts()
 	find /tmp -maxdepth 1 -type d -name 'slapsegiii_validation_build.*' \
 	    -exec rm -rf {} \;
 
- 	rm -rf "${wd}/slapsegiii_validation_$(get_organization_name)_"*
+ 	rm -rf "${wd}/slapsegiii_validation_${org_name}_"*
 	if [ "$(find "${wd}" -name \
-	    "slapsegiii_validation_$(get_organization_name)_*" | \
-	    wc -l)" != "0" ]; then
+	    "slapsegiii_validation_${org_name}_*" | wc -l)" != "0" ]; then
 	    	fail "Failed to remove some output. Please delete it manually."
 		return 1
 	fi
