@@ -543,7 +543,7 @@ get_core_library_name()
 		return 1
 	fi
 
-	local lib_regex="libpftiii_[A-Za-z0-9]+_[0-9A-F]{4}.so"
+	local lib_regex="libslapsegiii_[A-Za-z0-9]+_[0-9A-F]{4}.so"
 
 	if ! [ -d "${lib_dir}" ]; then
 		local msg="Library directory not found. Create it and place "
@@ -666,7 +666,7 @@ check_for_image_completeness()
 		if [ "${support}" != "0" ]; then
 			if ! [ -e "images/VERSION-${type}" ]; then
 				local msg="Your library supports segmenting "
-				msg+=" ${type} slaps, but you do not have the "
+				msg+="${type} slaps, but you do not have the "
 				msg+="${type} validation imagery present in "
 				msg+="${validation_image_dir}."
 				fail "${msg}"
@@ -987,7 +987,7 @@ check_orientation_logs()
 	if [ "$($binary -k | grep DetermineOrientation | cut -f3 -d' ')" != \
 	    "true" ]; then
 	    	font_dim
-	    	echo -n "$(not implemented) "
+	    	echo -n "(not implemented) "
 	    	font_reset
 	    	font_yellow
 		echo "[SKIP]"
@@ -1361,11 +1361,11 @@ print_final_success()
 	# Likely will be too big for email
 	if [ "${file_size}" -ge 20 ]; then
 		msg="${tar_file}.asc may be too big for NIST's email "
-		msg+="server, so please contact pft@nist.gov for an upload "
+		msg+="server, so please contact slapseg@nist.gov for an upload "
 		msg+="link for both ${tar_file}.asc and your public key."
 	else
 		msg="Please attach both ${tar_file}.asc and your public key to "
-		msg+="an email addressed to pft@nist.gov."
+		msg+="an email addressed to slapseg@nist.gov."
 	fi
 	box "${msg}" 80 '=' '|' 'l' 0 1
 	font_reset
