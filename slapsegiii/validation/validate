@@ -1374,27 +1374,30 @@ merge_logs()
 
 	local log_prefix="${1}"
 
-	exists=$(find "${output_dir}" -type f -name "${log_prefix}-*" \
-	    -print -quit)
+	for type in ${slap_type_numbers}; do
+		exists=$(find "${output_dir}" -type f -name \
+		    "${log_prefix}-${type}-*" -print -quit)
+		if [ "${exists}" == "" ]; then
+			continue
+		fi
 
-	if [ "${exists}" == "" ]; then
-		fail "Could not merge ${log_prefix} logs."
-	fi
+		# Get the header
+		local log="${output_dir}/${log_prefix}-${type}.log"
 
-	# Get the header
-	local log="${output_dir}/${log_prefix}.log"
-	head -n 1 "${exists}" >> "${log}"
+		head -n 1 "${exists}" >> "${log}"
+		# Merge the logs, minus the header
+		while read -r f; do
+			tail -n +2 "${f}" >> "${log}"
+			rm "${f}"
+		done< <(find "${output_dir}" -type f -name \
+		    "${log_prefix}-${type}-*")
 
-	# Merge the logs, minus the header
-	while read -r f; do
-		tail -n +2 "${f}" >> "${log}"
-		rm "${f}"
-	done < <(find "${output_dir}" -type f -name "${log_prefix}-*")
-
-	# Sort, ignoring the header
-	(head -n 1 "${log}" && tail -n +2 "${log}" | sort) > "${log}.sort"
-	rm "${log}"
-	mv "${log}.sort" "${log}"
+		# Sort, ignoring the header
+		(head -n 1 "${log}" && tail -n +2 "${log}" | sort) > \
+		    "${log}.sort"
+		rm "${log}"
+		mv "${log}.sort" "${log}"
+	done
 }
 
 # Generate the name of the validation tarball.
