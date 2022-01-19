@@ -39,6 +39,7 @@ wd="$(cd "$(dirname "${0}")" && pwd)"
 validation_image_dir="images"
 # Directory where libraries go
 lib_dir="${wd}"/lib
+local_lib_dir="${lib_dir}"
 # Directory where validation driver sourcecode lives
 src_dir="${wd}"/src
 # Directory where validation driver is built
@@ -47,6 +48,8 @@ bin_dir="${wd}"/bin
 output_dir="${wd}"/output
 # Path to the compiled validation driver binary
 binary="${bin_dir}/slapsegiii_validation"
+# Suffix given to files set aside by this script
+move_suffix=".moved"
 
 # Prefix for downloaded validation imagery tarballs
 validation_image_download_prefix=slapsegiii_validation_images_
@@ -243,7 +246,17 @@ fail()
 		done
 	fi
 
+	if ! move_back_dirs; then
+		echo
+		local msg="Additionally, this script could not move back your "
+		msg+="renamed lib and/or config directories. They may be named "
+		msg+="$(rp "${local_lib_dir}${move_suffix}") and "
+		msg+="$(rp "${local_config_dir}${move_suffix}") respectfully."
+		box "${msg}" 80 '!' '!' 'l'
+	fi
+
 	font_reset
+	echo
 
 	print_footer "${start_sec}"
 
@@ -529,11 +542,8 @@ core_library_present()
 	local count
 	count=$(find "${lib_dir}" -type f -regextype posix-extended \
 	    -regex "${lib_dir}/${lib_regex}" -printf "%P\n" | wc -l)
-	if [ "${count}" != "1" ]; then
-		return 1
-	fi
 
-	return 0
+	test "${count}" == "1"
 }
 
 # Get the name of the core library
@@ -690,6 +700,12 @@ random_number()
 	od -A n -t uL -N 4 /dev/urandom | tr -d -C '[:digit:]'
 }
 
+# Return "DD MMM YYYY | HH:MM:SS ZZZ"
+get_date()
+{
+	date "+%d %b %Y | %T %Z"
+}
+
 # Check and warn if files from a previous validation attempt are still present
 # in the current working directory.
 check_for_previous_attempts()
@@ -724,49 +740,104 @@ compile()
 		fail "Usage: ${FUNCNAME[0]} <random_seed>"
 	fi
 
-	local expected_lib_md5="11311d92e4edfc07e13351c1f1694d37"
-	local actual_lib_md5
-	actual_lib_md5=$(md5sum \
-	    "${src_dir}"/libslapsegiii/libslapsegiii.cpp | cut -f 1 -d ' ')
-	if [ "${expected_lib_md5}" != "${actual_lib_md5}" ]; then
-		local msg="Your copy of libslapsegiii.cpp appears to be "
-		msg+="modified. Please restore the original copy. Making "
-		msg+="changes will almost certainly cause errors."
-		fail "${msg}"
-	fi
+	local log="${output_dir}/compile.log"
 
-	local expected_h_md5="16e1e8debada90d4b89fa8e51822d9b0"
-	local actual_h_md5
-	actual_h_md5=$(md5sum "${src_dir}"/slapsegiii.h | cut -f 1 -d ' ')
-	if [ "${expected_h_md5}" != "${actual_h_md5}" ]; then
-		local msg="Your copy of slapsegiii.h appears to be "
-		msg+="modified. Please restore the original copy. Making "
-		msg+="changes will almost certainly cause errors."
-		fail "${msg}"
-	fi
+	declare -A md5s
+	md5s["../libslapsegiii/libslapsegiii.cpp"]="11311d92e4edfc07e13351c1f1694d37"
+	md5s["../include/slapsegiii.h"]="16e1e8debada90d4b89fa8e51822d9b0"
 
-	if [ -e "${lib_dir}"/libslapsegiii.so ]; then
+	# Check checksums
+	local expected
+	local actual
+	echo "Source checksums:" >> "${log}"
+	for f in "${!md5s[@]}"; do
+		expected="${md5s[${f}]}"
+		actual=$(md5sum "${wd}/${f}" | cut -f 1 -d ' ')
+		if [ "${expected}" != "${actual}" ]; then
+			local bf
+			bf="$(basename "${f}")"
+			local msg="Your copy of ${bf} appears to be modified. "
+			msg+="Please restore the original copy. Making changes "
+			msg+="will almost certainly cause errors."
+			fail "${msg}"
+		fi
+
+		echo "${actual} ${f}" >> "${log}"
+	done
+	echo >> "${log}"
+
+	# Check for pre-build libslapsegiii.so
+	if [ -e "${local_lib_dir}/libslapsegiii.so" ]; then
 		local msg="The library 'libslapsegiii.so' is in the directory "
-		msg+="$(rp "${lib_dir}"). This script will build its own copy "
-		msg+="of the library to ensure that modifications have not "
-		msg+="been made, since doing so may cause issues during the "
-		msg+="evaluation."
+		msg+="$(rp "${local_lib_dir}"). This script will build its own "
+		msg+="copy of the library to ensure that modifications have "
+		msg+="not been made, since doing so may cause issues during "
+		msg+="the evaluation."
+		warn "${msg}"
+
+		echo -n "Still building... "
+		rm -f "${local_lib_dir}/libslapsegiii.so"
+		if [ -e "${local_lib_dir}/libslapsegiii.so" ]; then
+			msg="This script could not overwrite your copy of "
+			msg+="libslapsegiii.so."
+			fail "${msg}"
+		fi
+	fi
+
+	# Catch the case of hardcoding "../lib", etc. into library by always
+	# linking against libs in a different directory
+	local tmp_dir
+	tmp_dir="$(mktemp -u -t slapsegiii_libs.XXXXXXXXXX)"
+	mkdir -p "${tmp_dir}"
+	cp -r "${lib_dir}" "${tmp_dir}/lib"
+	lib_dir="${tmp_dir}/lib"
+	if [ -d "${local_lib_dir}${move_suffix}" ]; then
+		move_back_dirs
+
+		local msg="You have a directory named ${local_lib_dir}"
+		msg+="${move_suffix}. Please remove or rename it."
 		fail "${msg}"
+	else
+		if ! mv -n "${local_lib_dir}" "${local_lib_dir}${move_suffix}"
+		then
+			fail "Could not move ${local_lib_dir}"
+		fi
+		local_lib_dir="${local_lib_dir}${move_suffix}"
 	fi
 
 	# Compile
-	local log="${output_dir}/compile.log"
-	if ! make -C "${src_dir}" 2>&1 | tee "${log}" > /dev/null; then
-		fail "An error occurred during compilation. Please review:" \
-		    "${log}"
+	echo "Compilation:" >> "${log}"
+	local build_dir
+	build_dir="$(mktemp -d -t slapsegiii_validation_build.XXXXXXXXXX)"
+	if [ "${build_dir}" == "" ]; then
+		fail "Could not create build directory."
 	fi
+	cd "${build_dir}" || fail "Could not change to build directory"
+	if ! cmake \
+	    -DCMAKE_INSTALL_PREFIX="$(dirname "${lib_dir}")" \
+	    -S "${src_dir}" -B "${build_dir}" >> "${log}" 2>&1
+	then
+		local msg="Could not change back to previous directory"
+		cd "${wd}" > /dev/null || fail "${msg}"
+		fail "An error occurred during configuration. Please review:" \
+		    "$(rp "${log}")"
+	fi
+	cd "${wd}" > /dev/null || fail "Could not change back to previous directory"
+	if ! make -C "${build_dir}" VERBOSE=1 >> "${log}" 2>&1; then
+		fail "An error occurred during compilation. Please review:" \
+		    "$(rp "${log}")"
+	fi
+	if ! make -C "${build_dir}" install VERBOSE=1 >> "${log}" 2>&1; then
+		fail "An error occurred during installation. Please review:" \
+		    "$(rp "${log}")"
+	fi
+	echo >> "${log}"
 
 	# Check that binary shows a dependency on the core library
 	local core_lib
 	if ! core_lib="$(get_core_library_name)"; then
 		fail "Could not get core library name"
 	fi
-
 	if ! grep -q "${lib_dir}/${core_lib}" < <(ldd "${binary}"); then
 		local msg="${core_lib} is not a dependency of the compiled "
 		msg+="binary. The library was either renamed after being "
@@ -774,6 +845,26 @@ compile()
 		msg+="${core_lib} from a directory outside of the validation "
 		msg+="package. Please review:"
 		fail "${msg}" "$(rp "${log}")"
+	fi
+
+	# Check for ORIGIN if using multiple libraries
+	local num_libs
+	num_libs="$(find "${lib_dir}" -name "lib*" -type f | wc -l)"
+	if [ "${num_libs}" -gt 2 ]; then
+		if ! readelf -d "${lib_dir}/${core_lib}" | \
+		    grep RUNPATH | grep "\$ORIGIN" > /dev/null
+		then
+			local msg="You have supplied multiple libraries, but "
+			msg+="${core_lib} does not have an RUNPATH of \$ORIGIN."
+			msg+=" This may cause runtime issues, because the "
+			msg+="location of libraries on NIST's systems will not "
+			msg+="be laid out the same as in this validation "
+			msg+="package and the only library explicitly linked "
+			msg+="will be ${core_lib}."
+
+			warn "${msg}"
+			echo -n "Still building... "
+		fi
 	fi
 
 	# Log some extra compilation information that may be useful in helping
@@ -1375,10 +1466,29 @@ print_final_success()
 # Print validation script header message
 print_header()
 {
-	echo -n "SlapSeg III Validation (${validation_version}) -- "
-	date
-	printf '=%.0s' $(seq 1 80)
-	echo
+	local msg="SlapSeg III Validation | Version ${validation_version} | "
+	msg+="$(get_date)"
+	box "${msg}"
+}
+
+# Print validation script footer message
+print_footer()
+{
+	local start_sec
+	if [ "${#}" -eq 1 ]; then
+		start_sec="${1}"
+	fi
+
+	font_reset
+	font_dim
+	echo -n "Completed: $(get_date)"
+	if [ "${start_sec}" != "" ]; then
+		local duration=$(( ("$(date +%s)" - start_sec) ))
+		echo " (Runtime: ${duration}s)"
+	else
+		echo
+	fi
+	font_reset
 }
 
 # Print message when validation version couldn't be checked
@@ -1420,9 +1530,44 @@ check_wd()
 	fi
 }
 
+move_back_dirs()
+{
+	local rv=0
+
+	local original_path
+	original_path="$(dirname "${local_lib_dir}")/"
+	original_path+="$(basename "${local_lib_dir}" "${move_suffix}")"
+	if ! [ -d "${original_path}" ]; then
+		if mv -n "${local_lib_dir}" "${original_path}" > \
+		     /dev/null 2>&1
+		then
+			local_lib_dir="${original_path}"
+		else
+			rv=1
+		fi
+	fi
+
+	original_path="$(dirname "${local_config_dir}")/"
+	original_path+="$(basename "${local_config_dir}" "${move_suffix}")"
+	if ! [ -d "${original_path}" ]; then
+		if mv -n "${local_config_dir}" "${original_path}" > \
+		   /dev/null 2>&1
+		then
+			local_config_dir="${original_path}"
+		else
+			rv=1
+		fi
+	fi
+
+	return "${rv}"
+}
+
 ###############################################################################
 ###############################################################################
 ###############################################################################
+
+# Move directories back on SIGINT
+trap move_back_dirs INT
 
 check_wd
 read -r validation_version < "${wd}"/VERSION
@@ -1459,6 +1604,9 @@ run_segmentation "${seed}"
 check_segmentation_logs
 run_determine_orientation "${seed}"
 check_orientation_logs
+
+# Cleanup
+move_back_dirs
 make_tarball
 print_final_success
 
