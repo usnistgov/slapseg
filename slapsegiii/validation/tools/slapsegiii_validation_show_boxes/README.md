@@ -2,18 +2,18 @@
 --------------------------------
 
 Visualize participant and/or ground truth segmentation positions using
-ImageMagick on CentOS 7.
+ImageMagick.
 
 ## Requirements
 
  * Perl 5
- * perl-Getopt-Long
+ * perl-modules-5.30
  * ImageMagick
 
-Under CentOS, install all required packages with:
+Under Ubuntu 20.04, install all required packages with:
 
 ```bash
-yum install perl perl-Getopt-Long ImageMagick
+apt install perl perl-base perl-modules-5.30 imagemagick
 ```
 
 ## Arguments
