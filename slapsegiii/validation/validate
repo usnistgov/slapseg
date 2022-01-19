@@ -926,9 +926,23 @@ clean_previous_attempts()
 		return 1
 	fi
 
- 	rm -rf "${wd}/validation_$(get_organization_name)_"*
+	rm -f "${lib_dir}/libslapsegiii.so"
+	rm -rf "${wd}/include"
+
+	local org_name
+	if ! org_name="$(get_organization_name)"; then
+		fail "Could not get organization name."
+	fi
+
+	find /tmp -maxdepth 1 -type d -name 'slapsegiii_libs.*' \
+	    -exec rm -rf {} \;
+	find /tmp -maxdepth 1 -type d -name 'slapsegiii_validation_build.*' \
+	    -exec rm -rf {} \;
+
+ 	rm -rf "${wd}/slapsegiii_validation_$(get_organization_name)_"*
 	if [ "$(find "${wd}" -name \
-	    "validation_$(get_organization_name)_*" | wc -l)" != "0" ]; then
+	    "slapsegiii_validation_$(get_organization_name)_*" | \
+	    wc -l)" != "0" ]; then
 	    	fail "Failed to remove some output. Please delete it manually."
 		return 1
 	fi
