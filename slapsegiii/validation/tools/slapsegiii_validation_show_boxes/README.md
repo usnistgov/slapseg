@@ -56,20 +56,20 @@ slapsegiii_validation_show_boxes --img_name \
 
 ```bash
 validation_dir=~/slapsegiii/validation
-output_dir=${validation_dir}/preview
-mkdir -p ${output_dir}
+output_dir="${validation_dir}/preview"
+mkdir -p "${output_dir}"
 
-filelist=$(mktemp)
+filelist="$(mktemp)"
 for line in $(tail -n +2 ${validation_dir}/output/segments-2.log); do
-    cut -f 1 -d ',' <<< ${line} >> ${filelist}
+    cut -f 1 -d ',' <<< "${line}" >> "${filelist}"
 done
 
-for name in $(sort ${filelist} | uniq); do
+for name in $(sort "${filelist}" | uniq); do
     echo "Making image for ${name}..."
-    slapsegiii_validation_show_boxes --img_name ${name} \
+    slapsegiii_validation_show_boxes --img_name "${name}" \
         --dir_path ${validation_dir} -view p \
-        --save ${output_dir}/$(basename ${name} gray)png
+        --save "${output_dir}/$(basename "${name}" gray)png"
 done
-rm ${filelist}
+rm "${filelist}"
 ```
 
