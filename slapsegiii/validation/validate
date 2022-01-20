@@ -309,7 +309,7 @@ okay()
 # Check that images have been downloaded, placed in the correct spot, etc.
 check_for_images()
 {
-	echo -n "Checking for validation images... "
+	echo -n "Checking for unexpanded validation image tarballs... "
 
 	# Check that every archive present has been expanded
 	local has_deferred=0
@@ -332,15 +332,16 @@ check_for_images()
 			echo -n "Expanding $(basename "${i}")... "
 			if ! tar xf "${i}" > /dev/null 2>&1; then
 				fail "Failed to expand ${i}"
-				return
 			else
 				okay
-				return
 			fi
 		fi
 	done < <(find "${wd}" -maxdepth 1 -name \
 	    "${validation_image_download_prefix}*")
 
+	if [ ${has_deferred} -ne 0 ]; then
+		echo -n "Checking for unexpanded validation image tarballs... "
+	fi
 	okay
 }
 
