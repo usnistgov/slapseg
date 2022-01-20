@@ -33,6 +33,7 @@
 #ifndef SLAPSEGIII_H_
 #define SLAPSEGIII_H_
 
+#include <filesystem>
 #include <memory>
 #include <set>
 #include <string>
@@ -567,20 +568,29 @@ namespace SlapSegIII
 		 * Obtain a managed pointer to an object implementing
 		 * SlapSegIII::Interface.
 		 *
+		 * @param configurationDirectory
+		 * Path to a read-only directory populated with configuration
+		 * files provided in validation.
+		 *
 		 * @return
 		 * Shared pointer to an instance of Interface containing the
 		 * participant's segmentation algorithm.
 		 *
 		 * @note
 		 * A possible implementation might be:
-		 * `return (std::make_shared<Implementation>());`
+		 * `return (std::make_shared<Implementation>(
+		 *  configurationDirectory));`
+		 * @note
+		 * `configurationDirectory` may be stored on a slow disk. NIST
+		 * suggests reading data into available RAM.
 		 *
 		 * @note
 		 * This method shall return in <= 10 seconds.
 		 */
 		static
 		std::shared_ptr<Interface>
-		getImplementation();
+		getImplementation(
+		    const std::filesystem::path &configurationDirectory);
 	};
 
 	/*
@@ -600,7 +610,7 @@ namespace SlapSegIII
 	/** API major version number. */
 	uint16_t API_MAJOR_VERSION{1};
 	/** API minor version number. */
-	uint16_t API_MINOR_VERSION{1};
+	uint16_t API_MINOR_VERSION{2};
 	/** API patch version number. */
 	uint16_t API_PATCH_VERSION{0};
 	#endif /* NIST_EXTERN_API_VERSION */

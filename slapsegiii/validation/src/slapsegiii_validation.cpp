@@ -78,13 +78,14 @@ void
 SlapSegIII::Validation::printUsage(
     const std::string &name)
 {
-	std::cerr << "Usage:\t" << name << " -i(dentify)\n";
-	std::cerr << "\t" << name << " -k(inds of images supported)\n";
-	std::cerr << "\t" << name << " -s(egment) [-r random_seed] "
-	    "[-f num_procs]\n";
+	std::cerr << "Usage:\t" << name << " -i(dentify) -z config_dir\n";
+	std::cerr << "\t" << name << " -k(inds of images supported) "
+	    "-z config_dir\n";
+	std::cerr << "\t" << name << " -s(egment) -z config_dir "
+	    "[-r random_seed] [-f num_procs]\n";
 
 	const std::string blankName(name.size(), ' ');
-	std::cerr << "\t" << name << " -d(etermine orientation) "
+	std::cerr << "\t" << name << " -d(etermine orientation) -z config_dir "
 	    "[-r random_seed]\n\t" + blankName + " [-f num_procs]\n";
 }
 
@@ -93,7 +94,7 @@ SlapSegIII::Validation::parseArguments(
     int argc,
     char *argv[])
 {
-	static const char options[] {"ikr:sf:d"};
+	static const char options[] {"ikr:sf:dz:"};
 
 	bool seenOperation{false};
 	Validation::Arguments args{};
@@ -161,19 +162,25 @@ SlapSegIII::Validation::parseArguments(
 
 			args.operation = Operation::Orientation;
 			break;
+		case 'z':
+			args.configDir = optarg;
+			break;
 		}
 	}
 
 	if (!seenOperation)
+		args.operation = Operation::Usage;
+	if (args.configDir.empty())
 		args.operation = Operation::Usage;
 
 	return (args);
 }
 
 void
-SlapSegIII::Validation::printIdentification()
+SlapSegIII::Validation::printIdentification(
+    const std::filesystem::path &configDir)
 {
-	const auto id = SlapSegIII::Interface::getImplementation()->
+	const auto id = SlapSegIII::Interface::getImplementation(configDir)->
 	    getIdentification();
 
 	std::cout << "LibraryIdentifier = " << id.libraryIdentifier << '\n' <<
@@ -183,9 +190,10 @@ SlapSegIII::Validation::printIdentification()
 }
 
 void
-SlapSegIII::Validation::printSupported()
+SlapSegIII::Validation::printSupported(
+    const std::filesystem::path &configDir)
 {
-	const auto rv = SlapSegIII::Interface::getImplementation()->
+	const auto rv = SlapSegIII::Interface::getImplementation(configDir)->
 	    getSupported();
 	const auto kinds = std::get<0>(rv);
 
@@ -490,7 +498,8 @@ SlapSegIII::Validation::testOperation(
 {
         auto rng = std::mt19937_64(args.randomSeed);
 
-	const auto impl = SlapSegIII::Interface::getImplementation();
+	const auto impl = SlapSegIII::Interface::getImplementation(
+	    args.configDir);
 	const auto kinds = std::get<0>(impl->getSupported());
 	for (const auto &kind : kinds) {
 		/* Shuffle images of each Kind */
@@ -608,13 +617,13 @@ main(
 	int rv = EXIT_FAILURE;
 
 	if (!((SlapSegIII::API_MAJOR_VERSION == 1) &&
-	    (SlapSegIII::API_MINOR_VERSION == 1))) {
+	    (SlapSegIII::API_MINOR_VERSION == 2))) {
 		std::cerr << "Incompatible API version encountered.\n "
-		    "- Validation: 1.1.*\n - Participant: " <<
+		    "- Validation: 1.2.*\n - Participant: " <<
 		    SlapSegIII::API_MAJOR_VERSION << '.' <<
 		    SlapSegIII::API_MINOR_VERSION << '.' <<
 		    SlapSegIII::API_PATCH_VERSION << '\n';
-		std::cerr << "Rebuild your core library with the latest "
+		std::cerr << "Rebuild your core library with the correct "
 		    "slapsegiii.h\n";
 		return (rv);
 	}
@@ -631,7 +640,8 @@ main(
 	switch (args.operation) {
 	case SlapSegIII::Validation::Operation::Identify:
 		try {
-			SlapSegIII::Validation::printIdentification();
+			SlapSegIII::Validation::printIdentification(
+			    args.configDir);
 			rv = EXIT_SUCCESS;
 		} catch (const std::exception &e) {
 			std::cerr << "Interface::getIdentification(): " <<
@@ -655,7 +665,8 @@ main(
 		break;
 	case SlapSegIII::Validation::Operation::Supported:
 		try {
-			SlapSegIII::Validation::printSupported();
+			SlapSegIII::Validation::printSupported(
+			    args.configDir);
 			rv = EXIT_SUCCESS;
 		} catch (const std::exception &e) {
 			std::cerr << "Interface::getSupported(): " <<

@@ -40,6 +40,9 @@ validation_image_dir="images"
 # Directory where libraries go
 lib_dir="${wd}"/lib
 local_lib_dir="${lib_dir}"
+# Configuration directory provided to SlapSegIII::Interface implementation
+config_dir="${wd}"/config
+local_config_dir="${config_dir}"
 # Directory where validation driver sourcecode lives
 src_dir="${wd}"/src
 # Directory where validation driver is built
@@ -640,10 +643,12 @@ check_for_image_completeness()
 	echo -n "Checking that you have all necessary kinds of images... "
 
 	for type in ${slap_type_names}; do
-		support=$("${binary}" -k | grep -i -e "${type}" | \
-		    grep -c -e true)
+		chmod -R -w "${config_dir}"
+		support=$("${binary}" -k -z "${config_dir}" | \
+		    grep -i -e "${type}" | grep -c -e true)
 		if [ "${support}" != "0" ]; then
 			if ! [ -e "images/VERSION-${type}" ]; then
+				chmod -R +w "${config_dir}"
 				local msg="Your library supports segmenting "
 				msg+="${type} slaps, but you do not have the "
 				msg+="${type} validation imagery present in "
@@ -651,6 +656,7 @@ check_for_image_completeness()
 				fail "${msg}"
 			fi
 		fi
+		chmod -R +w "${config_dir}"
 	done
 
 	okay
@@ -713,7 +719,7 @@ compile()
 
 	declare -A md5s
 	md5s["../libslapsegiii/libslapsegiii.cpp"]="11311d92e4edfc07e13351c1f1694d37"
-	md5s["../include/slapsegiii.h"]="16e1e8debada90d4b89fa8e51822d9b0"
+	md5s["../include/slapsegiii.h"]="7b187f977252fac8c925028bf4063a41"
 
 	# Check checksums
 	local expected
@@ -772,6 +778,25 @@ compile()
 			fail "Could not move ${local_lib_dir}"
 		fi
 		local_lib_dir="${local_lib_dir}${move_suffix}"
+	fi
+
+	tmp_dir="$(mktemp -u -t slapsegiii_configs.XXXXXXXXXX)"
+	cp -r "${config_dir}" "${tmp_dir}"
+	chmod -R -w "${tmp_dir}"
+	config_dir="${tmp_dir}"
+	if [ -d "${local_config_dir}${move_suffix}" ]; then
+		move_back_dirs
+
+		local msg="You have a directory named ${local_config_dir}"
+		msg+="${move_suffix}. Please remove or rename it."
+		fail "${msg}"
+	else
+		if ! mv -n "${local_config_dir}" \
+		    "${local_config_dir}${move_suffix}"
+		then
+			fail "Could not move ${local_config_dir}"
+		fi
+		local_config_dir="${local_config_dir}${move_suffix}"
 	fi
 
 	# Compile
@@ -836,11 +861,28 @@ compile()
 		fi
 	fi
 
+	# Suspected non libraries in library directory
+	local non_libs
+	non_libs="$(find "${local_lib_dir}" \! -name "lib*" -a \! \
+	    -name README | wc -l)"
+	if [ "${non_libs}" -gt 0 ]; then
+		local msg="You have files in ${local_lib_dir} that don't "
+		msg+="appear to be libraries. That's fine, but are you sure "
+		msg+="they don't belong in \"${local_config_dir}\" instead?"
+
+		warn "${msg}"
+		echo -n "Still building... "
+	fi
+
 	# Log some extra compilation information that may be useful in helping
 	# to debug future issues
 	{
 		echo "Library directory:"
 		find "${lib_dir}" -type f -exec md5sum {} \;
+		echo
+
+		echo "Configs present:"
+		find "${config_dir}" -type f \! -name README -exec md5sum {} \;
 		echo
 
 		echo "Ubuntu Version:"
@@ -923,11 +965,13 @@ record_identification_information()
 {
 	local log="${output_dir}"/id.log
 
+	chmod -R -w "${config_dir}"
 	{
 		echo "Core Library = $(get_core_library_name)"
-		${binary} -i
-		${binary} -k
+		${binary} -i -z "${config_dir}"
+		${binary} -k -z "${config_dir}"
 	} >> "${log}"
+	chmod -R +w "${config_dir}"
 }
 
 # Run the validation driver for all supported slap types.
@@ -944,12 +988,14 @@ run_segmentation()
 	forks=$(( $(nproc --all) > 4 ? 4 : 2 ))
 
 	local log="${output_dir}"/run-segment.log
-	local command="$binary -s -r $1 -f ${forks}"
+	local command="$binary -s -r $1 -f ${forks} -z ${config_dir}"
 	echo "${command}" >> "${log}"
+	chmod -R -w "${config_dir}"
 	if ! ${command} >> "${log}" 2>&1; then
 		msg="An error occurred during segmentation. Please investigate:"
 		fail "${msg}" "${log}"
 	fi
+	chmod -R +w "${config_dir}"
 
 	# Check for runtime error messages
 	if [ "$(wc -l < "${log}")" != "1" ]; then
@@ -970,8 +1016,10 @@ run_determine_orientation()
 	fi
 
 	# Check if determine orientation is supported
-	if [ "$($binary -k | grep DetermineOrientation | cut -f3 -d' ')" != \
-	    "true" ]; then
+	chmod -R -w "${config_dir}"
+	if [ "$($binary -k -z "${config_dir}" | grep DetermineOrientation | \
+	    cut -f3 -d' ')" != "true" ]; then
+		chmod -R +w "${config_dir}"
 	    	font_dim
 	    	echo -n "(not implemented) "
 	    	font_reset
@@ -980,19 +1028,22 @@ run_determine_orientation()
 		font_reset
 		return
 	fi
+	chmod -R +w "${config_dir}"
 
 	# We want to fork regardless to be sure that implementations can handle
 	# forking, but we don't need to spawn a ton of processes either.
 	forks=$(( $(nproc --all) > 4 ? 4 : 2 ))
 
 	local log="${output_dir}"/run-determineOrientation.log
-	local command="$binary -d -r $1 -f ${forks}"
+	local command="$binary -d -r $1 -f ${forks} -z ${config_dir}"
 	echo "${command}" >> "${log}"
+	chmod -R -w "${config_dir}"
 	if ! ${command} >> "${log}" 2>&1; then
 		local msg="An error occurred during orientation determination. "
 		msg+="Please investigate:"
 		fail "${msg}" "${log}"
 	fi
+	chmod -R +w "${config_dir}"
 
 	# Check for runtime error messages
 	if [ "$(wc -l < "${log}")" != "1" ]; then
@@ -1027,10 +1078,12 @@ check_segment_log_counts()
 	log_lines[8]=413
 
 	declare -A expected_logs
-	expected_logs[2]=$($binary -k | grep TwoInch | cut -f3 -d' ')
-	expected_logs[3]=$($binary -k | grep ThreeInch | cut -f3 -d' ')
-	expected_logs[5]=$($binary -k | grep UpperPalm | cut -f3 -d' ')
-	expected_logs[8]=$($binary -k | grep FullPalm | cut -f3 -d' ')
+	chmod -R -w "${config_dir}"
+	expected_logs[2]=$($binary -k -z "${config_dir}" | grep TwoInch | cut -f3 -d' ')
+	expected_logs[3]=$($binary -k -z "${config_dir}" | grep ThreeInch | cut -f3 -d' ')
+	expected_logs[5]=$($binary -k -z "${config_dir}" | grep UpperPalm | cut -f3 -d' ')
+	expected_logs[8]=$($binary -k -z "${config_dir}" | grep FullPalm | cut -f3 -d' ')
+	chmod -R +w "${config_dir}"
 
 	for type in "${!log_lines[@]}"; do
 		local log="${output_dir}"/segments-${type}.log
@@ -1057,8 +1110,10 @@ check_orientation_logs()
 	echo -n "Checking orientation logs... "
 
 	# Check if determine orientation is supported
-	if [ "$($binary -k | grep DetermineOrientation | cut -f3 -d' ')" != \
-	    "true" ]; then
+	chmod -R -w "${config_dir}"
+	if [ "$($binary -k -z "${config_dir}" | grep DetermineOrientation | \
+	    cut -f3 -d' ')" != "true" ]; then
+		chmod -R +w "${config_dir}"
 	    	font_dim
 	    	echo -n "(not implemented) "
 	    	font_reset
@@ -1067,6 +1122,7 @@ check_orientation_logs()
 		font_reset
 		return
 	fi
+	chmod -R +w "${config_dir}"
 
 	merge_logs "orientation"
 	check_orientation_log_counts
@@ -1087,10 +1143,12 @@ check_orientation_log_counts()
 	log_lines[8]=104
 
 	declare -A expected_logs
-	expected_logs[2]=$($binary -k | grep TwoInch | cut -f3 -d' ')
-	expected_logs[3]=$($binary -k | grep ThreeInch | cut -f3 -d' ')
-	expected_logs[5]=$($binary -k | grep UpperPalm | cut -f3 -d' ')
-	expected_logs[8]=$($binary -k | grep FullPalm | cut -f3 -d' ')
+	chmod -R -w "${config_dir}"
+	expected_logs[2]=$($binary -k -z "${config_dir}" | grep TwoInch | cut -f3 -d' ')
+	expected_logs[3]=$($binary -k -z "${config_dir}" | grep ThreeInch | cut -f3 -d' ')
+	expected_logs[5]=$($binary -k -z "${config_dir}" | grep UpperPalm | cut -f3 -d' ')
+	expected_logs[8]=$($binary -k -z "${config_dir}" | grep FullPalm | cut -f3 -d' ')
+	chmod -R +w "${config_dir}"
 
 	for type in "${!log_lines[@]}"; do
 		local log="${output_dir}/orientation-${type}.log"
@@ -1453,6 +1511,7 @@ make_tarball()
 
 	mv "${output_dir}" "${new_name}"
 	cp -pr "${lib_dir}" "${new_name}"
+	cp -pr "${config_dir}" "${new_name}"
 
 	# NIST will build a fresh libslapsegiii.so
 	if ! rm "${new_name}/$(basename "${lib_dir}")/libslapsegiii.so"; then

@@ -18,6 +18,9 @@ namespace SlapSegIII
 	class NullImplementation : public Interface
 	{
 	public:
+		NullImplementation(
+		    const std::filesystem::path &configurationDirectory = "");
+
 		SubmissionIdentification
 		getIdentification()
 		    const
@@ -39,6 +42,9 @@ namespace SlapSegIII
 		    override;
 
 		~NullImplementation() = default;
+
+	private:
+		const std::filesystem::path configurationDirectory{};
 	};
 }
 

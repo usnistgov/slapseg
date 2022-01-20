@@ -8,6 +8,7 @@
 ._*
 
 # Validation cruft
+slapsegiii/validation/config
 slapsegiii/validation/bin
 slapsegiii/validation/*.tar.gz
 slapsegiii/validation/images/VERSION-*
