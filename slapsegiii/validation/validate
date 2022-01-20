@@ -314,14 +314,12 @@ check_for_images()
 	# Check that every archive present has been expanded
 	local has_deferred=0
 	while read -r i; do
-		local regex=".*\/${validation_image_download_prefix}"
-		regex+="\(.*\)-.\+.tar.gz"
 		local kind
-		# shellcheck disable=SC2001
-		kind=$(sed "s/${regex}/\1/" <<< "${i}")
-		if ! [ -e \
-		    "${wd}/${validation_image_dir}/VERSION-${kind}" ];
-		    then
+		kind=$(cut -f 4 -d '_' <<< "$(basename "${i}")" | \
+		    cut -f 1 -d '-')
+
+		if ! [ -e "${wd}/${validation_image_dir}/VERSION-${kind}" ]
+		then
 			if [ ${has_deferred} -eq 0 ]; then
 				font_yellow
 				echo "[DEFER]"
