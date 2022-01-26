@@ -63,7 +63,7 @@ SlapSegIII::SlapImage::SlapImage(
     const Kind kind,
     const CaptureTechnology captureTechnology,
     const Orientation orientation,
-    const std::vector<uint8_t> &pixels) :
+    const std::vector<std::byte> &pixels) :
     width{width},
     height{height},
     ppi{ppi},

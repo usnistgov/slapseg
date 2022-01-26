@@ -189,7 +189,7 @@ namespace SlapSegIII
 		 * @throw runtime_error
 		 * Error reading from file.
 		 */
-		std::vector<uint8_t>
+		std::vector<std::byte>
 		readFile(
 		    const std::string &pathName);
 

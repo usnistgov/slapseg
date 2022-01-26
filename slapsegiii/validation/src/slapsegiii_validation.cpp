@@ -212,7 +212,7 @@ SlapSegIII::Validation::printSupported(
 	    "\nDetermineOrientation = " << std::get<1>(rv) << '\n';
 }
 
-std::vector<uint8_t>
+std::vector<std::byte>
 SlapSegIII::Validation::readFile(
     const std::string &pathName)
 {
@@ -226,12 +226,11 @@ SlapSegIII::Validation::readFile(
 	if (size == -1)
 		throw std::runtime_error{"Could not open " + pathName};
 
-	std::vector<uint8_t> buf{};
+	std::vector<std::byte> buf{};
 	buf.reserve(static_cast<decltype(buf)::size_type>(size));
 
 	file.seekg(std::ifstream::beg);
-	buf.insert(buf.begin(), std::istream_iterator<uint8_t>(file),
-	    std::istream_iterator<uint8_t>());
+	file.read(reinterpret_cast<char*>(buf.data()), size);
 
 	return (buf);
 }

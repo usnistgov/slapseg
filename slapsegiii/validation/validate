@@ -718,8 +718,8 @@ compile()
 	local log="${output_dir}/compile.log"
 
 	declare -A md5s
-	md5s["../libslapsegiii/libslapsegiii.cpp"]="11311d92e4edfc07e13351c1f1694d37"
-	md5s["../include/slapsegiii.h"]="7b187f977252fac8c925028bf4063a41"
+	md5s["../libslapsegiii/libslapsegiii.cpp"]="2588125e9cf947ed54fabc9f4f4220fe"
+	md5s["../include/slapsegiii.h"]="7ddfaa8920aa6c2890fbbfd3507a20fd"
 
 	# Check checksums
 	local expected

@@ -33,6 +33,7 @@
 #ifndef SLAPSEGIII_H_
 #define SLAPSEGIII_H_
 
+#include <cstddef>
 #include <filesystem>
 #include <memory>
 #include <set>
@@ -185,7 +186,7 @@ namespace SlapSegIII
 		    const Kind kind,
 		    const CaptureTechnology captureTechnology,
 		    const Orientation orientation,
-		    const std::vector<uint8_t> &pixels);
+		    const std::vector<std::byte> &pixels);
 
 		/** Width of the image. */
 		uint16_t width{};
@@ -210,7 +211,7 @@ namespace SlapSegIII
 		 * To pass pixels to a C-style array, invoke pixel's `data()`
 		 * method (`pixels.data()`).
 		 */
-		std::vector<uint8_t> pixels{};
+		std::vector<std::byte> pixels{};
 	};
 
 	/** Representation of a segmentation position. */
