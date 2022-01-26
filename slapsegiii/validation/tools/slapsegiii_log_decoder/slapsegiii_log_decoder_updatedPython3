@@ -1,0 +1,379 @@
+#!/usr/bin/env python3
+
+import csv
+import argparse
+import itertools
+import os
+import sys
+
+"""
+The purpose of this file is to decode into plain language the segments and orientation logs outputted from Slapseg III algorithms. The log files are csv text files.
+They record attributes of images, as determined by an algorithm. User of this file can output a full list (default) or just the unsuccessful/incorrect results. 
+
+for segments log files: 
+script detects rCode, sCode and errors columns and outputs the result in plain language.
+An example of unsuccessful results would be request recapture with attempt due to artifacts in the image. 
+
+rCode-script detects 2 and 3, which mean request recapture due to deficiencies (reasons supporting the rCode ie: artifacts, hand geometry, image quality or incomplete). Applies to a slap image so errors carry on to each segmented finger image.
+sCode-script detects 1, 2 or 3 which describes errors detected about an image of a finger. (1-marked as missing, 2-failed to segment, 3-has a vendor defined error) 
+errors-script reads the binary column and where indicated reports irregular coordinates, non-rectangular coordinates, rotated or coordinates outside the image. Applies per finger.
+
+for orientation log files: 
+script detects rCode and the orientation code and outputs the result in plain language.
+An example of unsuccessful results would be a thumb image whose notations say it has a right hand orientation.
+
+rCode-script detects 2 and 3, which means request recapture with and without attempt respectively.
+orientation-script detects 0-right, 1-left, 2-thumbs and NA. 
+
+to run:
+
+./slapsegiii_log_decoder segments.log -o=u
+./slapsegiii_log_decoder orientation.log 
+
+"""
+
+
+def getRcode(dict):
+    """(dictionary) --> strings
+    read in a line, return rCode & deficiencies in plain language. if rCode is recoreded, there is at one deficiency as well. rCode will be the same for all fingers of the slap image.
+
+    readline(line) should be 00001000_plain_1000_13_3196x1890.gray,266900,0,"",2,292,458,821,436,329,1320,858,1298,0,"","0000","0000",1
+    """
+    rList = []
+    retMessage = ""
+    rCodeFlag = False
+    if dict["rCode"] == "2" or dict["rCode"] == "3":
+        if dict["rCode"] == "2":
+            rList.append(
+                "\n  * Image returned request recapture - for the following reason(s): ")
+            rCodeFlag = True
+        elif dict["rCode"] == "3":
+            rList.append(
+                "\n  * Image returned request recapture with attempt - for the following reason(s): ")
+            rCodeFlag = True
+        defcode = dict["deficiencies"]
+        artifacts = defcode[0]
+        imagequality = defcode[1]
+        handgeometry = defcode[2]
+        incomplete = defcode[3]
+        if artifacts == "1":
+            rList.append("\"artifacts\"")
+        if imagequality == "1":
+            if len(rList) == 2:
+                rList.append("and \"image quality\"")
+            else:
+                rList.append("\"image quality\"")
+        if handgeometry == "1":
+            if len(rList) >= 2:
+                rList.append("and \"Hand Geometry\"")
+            else:
+                rList.append("\"Hand Geometry\"")
+        if incomplete == "1":
+            if len(rList) >= 2:
+                rList.append("and \"incomplete\"")
+            else:
+                rList.append("\"incomplete\"")
+        retMessage = ' '.join(rList)
+    return retMessage, rCodeFlag
+
+
+def getScode(dict2):
+    """(dictionary) --> strings
+    read in a line, return a plain language string representing errors found in the "sCode" column
+
+    readline(line) should be 00001000_plain_1000_13_3196x1890.gray,266900,0,"",2,292,458,821,436,329,1320,858,1298,0,"","0000","0000",1
+    """
+    sCodeFlag = False
+    sList = ["\n  * Finger"]
+    sList.append(dict2["frgp"])
+    sRetMessage = " "
+    if dict2["sCode"] == "1":
+        sCodeFlag = True
+        sList.append("was marked as missing")
+    elif dict2["sCode"] == "2":
+        sCodeFlag = True
+        sList.append("failed to segment")
+    elif dict2["sCode"] == "3":
+        sCodeFlag = True
+        sList.append("has a vendor defined error")
+    else:
+        sCodeFlag = False
+    sRetMessage = ' '.join(sList)
+    return sRetMessage, sCodeFlag
+
+
+def getErrors(dict3):
+    """(dictionary) --> strings
+    read in a line, return a plain language string representing errors found in the "errors" column
+
+    readline(line) should be 00001000_plain_1000_13_3196x1890.gray,266900,0,"",2,292,458,821,436,329,1320,858,1298,0,"","0000","0000",1
+    """
+    eList = ["\n  * Finger", dict3["frgp"]]
+    eMessage = ""
+    eCodeFlag = False
+    if dict3["errors"]:
+        errCols = dict3["errors"]
+        irregularCoordinates = errCols[0]
+        nonRectangularCoordinates = errCols[1]
+        rotated = errCols[2]
+        coordinatesOutsideImage = errCols[3]
+        if irregularCoordinates == "1":
+            eCodeFlag = True
+            eList.append("coordinates form a concave shape")
+        if nonRectangularCoordinates == "1":
+            eCodeFlag = True
+            if len(eList) >= 3:
+                eList.append("and coordinates do not form a rectangle")
+            else:
+                eList.append("coordinates do not form a rectangle")
+        if rotated == "1":
+            eCodeFlag = True
+            if len(eList) >= 3:
+                eList.append("and is rotated but should not be")
+            else:
+                eList.append("is rotated and should not be")
+        if coordinatesOutsideImage == "1":
+            eCodeFlag = True
+            if len(eList) >= 3:
+                eList.append("and has coordinates outside the image")
+            else:
+                eList.append("has coordinates outside the image")
+    eMessage = ' '.join(eList)
+    return eMessage, eCodeFlag
+
+
+def getRcodeFromOrientationFile(dict5):
+    """(dictionary) --> strings
+    read in a line, return rCode in plain language. 
+
+    readline(line) should be 00001024_plain_500_14_1564x980.gray,3,0,"",0    
+    """
+    rCOList = []
+    retMessage = ""
+    rCOFlag = False
+    if dict5["rCode"] == "2" or dict5["rCode"] == "3":
+        if dict5["rCode"] == "2":
+            rCOList.append(
+                "\n  * Image returned request recapture -incorrect ")
+            rCOFlag = True
+        elif dict5["rCode"] == "3":
+            rCOList.append(
+                "\n  * Image returned request recapture with attempt - incorrect ")
+            rCOFlag = True
+        retMessage = ''.join(rCOList)
+    return retMessage, rCOFlag
+
+
+def getOrientation(dict4):
+    """(dictionary) --> strings
+    read in a line, return orientation in plain language.
+
+    readline(line) should be 00001024_plain_500_14_1564x980.gray,3,0,"",0
+    """
+    oCodeFlag = False
+    oList = ["\n  * Image orientation is "]
+    oRetMessage = ""
+    nameStr = dict4["name"]
+    fng = ""
+    if dict4["orientation"] == "0":
+        if "canary" in nameStr:
+            oCodeflag = False
+            #print("canary line skip")
+            oList.append("right hand")
+        else:
+            fields = nameStr.split("_")
+            fng = fields[3]
+            if fng == "13" or fng == "26" or fng == "21":
+                # this means orientation value agrees with type of image/image name.
+                oCodeFlag = False
+                oList.append("right hand")
+            elif fng == "14" or fng == "15" or fng == "28" or fng == "23":
+                # this means orientation value is not correct, and does not agree with type of image/image name.
+                oCodeFlag = True
+                oList.append("right hand - incorrect")
+        #oList.append("right hand")
+    if dict4["orientation"] == "1":
+        if "canary" in nameStr:
+            oCodeflag = False
+            #print("canary line skip")
+            oList.append("left hand")
+        else:
+            fields = nameStr.split("_")
+            fng = fields[3]
+            if fng == "14" or fng == "28" or fng == "23":
+                # this means orientation value agrees with type of image/image name.
+                oCodeFlag = False
+                oList.append("left hand")
+            elif fng == "13" or fng == "15" or fng == "26" or fng == "21":
+                # this means orientation value is not correct, and does not agree with type of image/image name.
+                oCodeFlag = True
+                oList.append("left hand - incorrect")
+        #oList.append("left hand")
+    if dict4["orientation"] == "NA":
+        oCodeFlag = True
+        oList.append("NA - incorrect")
+    if dict4["orientation"] == "2":
+        if "canary" in nameStr:
+            oCodeflag = False
+            #print("canary line skip")
+            oList.append("thumbs")
+        else:
+            fields = nameStr.split("_")
+            fng = fields[3]
+            if fng == "15":
+                # this means orientation value agrees with type of image/image name.
+                oCodeFlag = False
+                oList.append("thumbs")
+            elif fng == "13" or fng == "14":
+                # this means orientation value is not correct, and does not agree with type of image/image name.
+                oCodeFlag = True
+                oList.append("thumbs - incorrect")
+        # oList.append("thumbs")
+    oRetMessage = ''.join(oList)
+    return oRetMessage, oCodeFlag
+# in above incorrects are image files/lines with NA and those where orientation recorded doesn't agree with the type of image, correct/full prints all.
+
+
+def processSegmentsLog(dicttest):
+    """(dictionary) --> none
+    reads a segments log file then outputs results in plain language.
+    """
+    rCodeErrorsPerSlapImage = []
+    allErrorsPerSlapImage = []
+    rFlag = False
+    sFlag = False
+    eFlag = False
+    for key, values in dicttest.items():
+        #print(key, values)
+        # checking first value/line for a slap image, if rCode error is present it will be the same for all fingers of the slap.
+        rCodeErrorLine, rFlag = getRcode(values[0])
+        if rFlag == True:
+            rCodeErrorsPerSlapImage.append(rCodeErrorLine)
+        for value in values:
+            sCodeErrorLine, sFlag = getScode(value)
+            eCodeErrorLine, eFlag = getErrors(value)
+            if sFlag == True:
+                allErrorsPerSlapImage.append(sCodeErrorLine)
+            if eFlag == True:
+                allErrorsPerSlapImage.append(eCodeErrorLine)
+        if printFormat == "u":  # output format
+            if rCodeErrorsPerSlapImage or allErrorsPerSlapImage:
+                print(key),
+                if rCodeErrorsPerSlapImage:
+                    rCodeErrsStr = ' '.join(rCodeErrorsPerSlapImage)
+                    print(rCodeErrsStr),
+                if allErrorsPerSlapImage:
+                    allErrsStr = ' '.join(allErrorsPerSlapImage)
+                    print(allErrsStr)
+        elif printFormat == "f":  # output format
+            print(key),
+            if rCodeErrorsPerSlapImage or allErrorsPerSlapImage:
+                if rCodeErrorsPerSlapImage:
+                    rCodeErrsStr = ' '.join(rCodeErrorsPerSlapImage)
+                    print(rCodeErrsStr),
+                if allErrorsPerSlapImage:
+                    allErrsStr = ' '.join(allErrorsPerSlapImage)
+                    print(allErrsStr)
+            else:
+                print("\n  * Returned successfully and no issues")
+        allErrorsPerSlapImage = []
+        allErrsStr = ""
+        rCodeErrorsPerSlapImage = []
+        rCodeErrsStr = ""
+    endMsg = "\n seg func done"
+    return endMsg
+
+
+def processOrientationLog(dicttest2):
+    """(dictionary) --> none
+    reads an orientation log file then outputs results in plain language
+    """
+    orientationMsgsPerSlapImage = []
+    incorrectMsgsPerSlapImage = []
+    rCodeOrientationFlag = False
+    orientationFlag = False
+    for key, values in dicttest2.items():
+        for value in values:
+            rCodeOrientationLine, rCodeOrientationFlag = getRcodeFromOrientationFile(
+                value)
+            orientationValueLine, orientationFlag = getOrientation(value)
+            if rCodeOrientationFlag == True:
+                # if rCode is 2 or 3 there is an rCode error for that line
+                incorrectMsgsPerSlapImage.append(rCodeOrientationLine)
+            else:
+                # if rCode is NOT 2 or 3 there is no rCode errors for that line.
+                orientationMsgsPerSlapImage.append(rCodeOrientationLine)
+            if orientationFlag == True:
+                # if orientation value is "NA" it is considered an error on that line.
+                incorrectMsgsPerSlapImage.append(orientationValueLine)
+            else:
+                orientationMsgsPerSlapImage.append(orientationValueLine)
+        if printFormat == "u":
+            # print(key),
+            if incorrectMsgsPerSlapImage:
+                print(key),
+                incorrectMsgsStr = ''.join(incorrectMsgsPerSlapImage)
+                print(incorrectMsgsStr)
+        elif printFormat == "f":
+            print(key),
+            if incorrectMsgsPerSlapImage:
+                incorrectMsgsStr = ''.join(incorrectMsgsPerSlapImage)
+                print(incorrectMsgsStr),
+            if orientationMsgsPerSlapImage:
+                orientationMsgsStr = ''.join(orientationMsgsPerSlapImage)
+                print(orientationMsgsStr)
+            else:
+                print
+        orientationMsgsPerSlapImage = []
+        orientationMsgsStr = ""
+        incorrectMsgsPerSlapImage = []
+        incorrectMsgsStr = ""
+
+
+def is_empty_file(fpath):
+    return os.path.isfile(fpath) and os.path.getsize(fpath) > 0
+
+
+parser = argparse.ArgumentParser(
+    description='print segmentation and orientation errors in plain language')
+parser.add_argument("logfileName", type=argparse.FileType(
+    'r'),  help="enter the segments-x.log or orientation-x.log file.")
+parser.add_argument("-o", "--output", dest="_output", choices=[
+                    "f", "u"], default="f", help="specify the output format: f - full, or u - unsuccessful results only (default is full)", required=False)
+cmdArgs = parser.parse_args()
+filename = cmdArgs.logfileName
+printFormat = cmdArgs._output
+
+fileExistsAndNotEmpty = is_empty_file(cmdArgs.logfileName.name)
+if not fileExistsAndNotEmpty:  # catches empty file.
+    print("{} : Is it empty? Try again. ".format(cmdArgs.logfileName.name))
+    os._exit(0)
+
+imgnamedict = {}
+reader = csv.DictReader(filename)
+
+c = 1
+input_file_type = "empty"
+for row in reader:
+    # print(row)
+    try:
+        img = row["name"]
+    except KeyError as ex:
+        # catches file with at least one col and two rows.
+        print("[{}]: Is this slapsegiii orientation/segments log in the correct format? Try again. ".format(cmdArgs.logfileName.name))
+        os._exit(0)
+    imgnamedict.setdefault(img, []).append(row)
+    if c == 1:
+        if len(row) == 18:
+            input_file_type = "segments"
+        elif len(row) == 5:
+            input_file_type = "orientation"
+
+
+if input_file_type == "segments":
+    processSegmentsLog(imgnamedict)
+elif input_file_type == "orientation":
+    processOrientationLog(imgnamedict)
+else:
+    print("The file you entered is {}. Is the file in the correct format?".format(
+        cmdArgs.logfileName.name))  # catches if file only has one row, no cols
