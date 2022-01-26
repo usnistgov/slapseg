@@ -32,13 +32,18 @@ Requirements
 
  * Fingerprint Imagery
    - Because organizations must agree to NIST Special Database terms and conditions, the required fingerprint imagery is not included in this GitHub repository. Request and download the data from our requests website. Download the data by requesting it from the SlapSeg III test staff and [agreeing to the terms].
- * CentOS 7.6.1810
-   - Even if this is not the latest version of CentOS, it will be the version
-     used to run the evaluation. Direct downloads are available from the [CentOS
-     Vault] ([🇺🇸 USA], [🇪🇺 Europe]).
-   - The [validate] script  requires these base CentOS packages:
-      - `binutils`, `centos-release`, `coreutils`, `curl`, `file`, `gawk`,
-        `gcc-c++`, `grep`, `iputils`, `make`, `sed`, `which`, `yum`
+ * Ubuntu Server 20.04.03 LTS
+   - Even if this is not the latest version of Ubuntu Server, it will be the
+     version used to run the evaluation. Direct downloads are available from the
+     [Ubuntu Mirrors] ([🇺🇸 USA], [🇪🇺 Europe]) and directly from the [NIST
+     Image Group].
+   - We **highly suggest** matching the exact versions of packages installed in
+     our environment. A link to the names and versions of these pacakages is
+     available.
+   - The [validate] script  requires these base Ubuntu Server packages:
+      - `base-files`, `binutils`, `cmake`, `coreutils`, `curl`, `dpkg`, `file`,
+        `findutils`, `g++`, `gawk`, `grep`, `libc-bin`, `make`, `sed`, `tar`,
+        `xz-utils`
 
 It is **highly suggested** that you make sure your submission will build and run
 as expected on environments as close as possible to the NIST evaluation
@@ -165,9 +170,10 @@ The items in this repository are released in the public domain. See the
 [LICENSE] for details.
 
 [API]: https://pages.nist.gov/slapseg/doc/slapsegiii/api/
-[CentOS Vault]: http://vault.centos.org/
-[🇺🇸 USA]: http://mirror.umd.edu/centos/7.6.1810/isos/x86_64/CentOS-7-x86_64-Everything-1810.iso
-[🇪🇺 Europe]: http://centos.mirrors.proxad.net/7.6.1810/isos/x86_64/CentOS-7-x86_64-Everything-1810.iso
+[Ubuntu Mirrors]: https://launchpad.net/ubuntu/+cdmirrors
+[🇺🇸 USA]: https://mirror.math.princeton.edu/pub/ubuntu-iso/focal/ubuntu-20.04.3-live-server-amd64.iso
+[🇪🇺 Europe]: http://mirror.init7.net/ubuntu-releases/focal/ubuntu-20.04.3-live-server-amd64.iso
+[NIST Image Group]: https://nigos.nist.gov/evaluations/ubuntu-20.04.3-live-server-amd64.iso
 [lib/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/lib
 [bin/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/bin
 [README.md]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/README.md
