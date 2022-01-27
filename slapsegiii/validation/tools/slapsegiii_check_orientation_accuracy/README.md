@@ -1,11 +1,11 @@
-﻿slapsegiii_check_orientation_accuracy
+slapsegiii_check_orientation_accuracy
 --------------------------------------
 
 Scan participant validation orientation logs to verify finger position and orientation value match.
 
 ## Requirements
 
- * Python 2.x
+ * Python 3.x
 
 ## Arguments
 

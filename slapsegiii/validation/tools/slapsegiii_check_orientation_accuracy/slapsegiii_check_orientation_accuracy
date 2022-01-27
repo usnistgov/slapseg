@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # This software was developed at the National Institute of Standards and
 # Techology (NIST) by employees of the Federal Government in the course
@@ -8,7 +8,8 @@
 # its use by other parties, and makes no guarantees, expressed or implied,
 # about its quality, reliability, or any other characteristic.
 
-from __future__ import division  #allows my interger division to show me the resulting float number. (don't need this for python 3)
+# allows my interger division to show me the resulting float number. (don't need this for python 3)
+#from __future__ import division
 import argparse
 import os
 import re
@@ -16,16 +17,21 @@ import sys
 
 
 def dir_path(str):
-	if  str.endswith("/"):
-		news = str
-	else:
-		news = str + "/"
-	return news
+    if str.endswith("/"):
+        news = str
+    else:
+        news = str + "/"
+    return news
 
-parser = argparse.ArgumentParser(description='verify orientation value matches finger position ')
-parser.add_argument("dir", type=dir_path,  help="enter the full path/directory above the vendors validation directory.")
-parser.add_argument("-k", "--kind", dest="_kind",nargs="+", choices=["2", "3","5", "8"], default=["2","3","5","8"], help="2, 3, 5, or 8 for twoinch, threeinch, upperpalm or fullpalm image log", required=False)
-parser.add_argument("-o", "--output", dest="_output", choices=["stats", "incorrect"], default="incorrect", help="specify the format to print output", required=False)
+
+parser = argparse.ArgumentParser(
+    description='verify orientation value matches finger position ')
+parser.add_argument("dir", type=dir_path,
+                    help="enter the full path/directory above the vendors validation directory.")
+parser.add_argument("-k", "--kind", dest="_kind", nargs="+", choices=["2", "3", "5", "8"], default=[
+                    "2", "3", "5", "8"], help="2, 3, 5, or 8 for twoinch, threeinch, upperpalm or fullpalm image log", required=False)
+parser.add_argument("-o", "--output", dest="_output", choices=[
+                    "stats", "incorrect"], default="incorrect", help="specify the format to print output", required=False)
 cmdArgs = parser.parse_args()
 basename = os.path.basename(cmdArgs.dir)
 dirname = os.path.dirname(cmdArgs.dir)
@@ -35,190 +41,204 @@ ORIENTATION = "orientation"
 kindlist = []
 kindlist = cmdArgs._kind
 columns = []
-actual_dict = { "13": "Right", "14": "Left", "15": "Thumbs", "21": "Right", "23": "Left", "26": "Right", "28": "Left" }
-line_value = { "0": "Right", "1": "Left", "2": "Thumbs" }
+actual_dict = {"13": "Right", "14": "Left", "15": "Thumbs",
+               "21": "Right", "23": "Left", "26": "Right", "28": "Left"}
+line_value = {"0": "Right", "1": "Left", "2": "Thumbs"}
 
-if not dirname :
-        dirname = "."
+if not dirname:
+    dirname = "."
 if not os.path.exists(dirname):
-	print("Directory {} does not exist. Program terminated.".format(dirname))
-	os._exit(0)
+    print("Directory {} does not exist. Program terminated.".format(dirname))
+    os._exit(0)
 if not os.path.isdir(dirname):
-	print("Path {} is not a directory. Program terminated.".format(dirname))
-	os._exit(0)
+    print("Path {} is not a directory. Program terminated.".format(dirname))
+    os._exit(0)
 vendorGeneratedItems = os.listdir(dirname)
-#print(vendorGeneratedItems)
+# print(vendorGeneratedItems)
 subdirstr = ""
 
 for v in vendorGeneratedItems:
-        a = re.search(r'validation_\w+_\d\d\d\d$|^output$', v, re.I)
-        if a:
-                subdirstr = a.group(0)
-		break
-	
-if not a:
-	print("No validation directory found. Program terminated.")
-        os._exit(0)
+    a = re.search(r'validation_\w+_\d\d\d\d$|^output$', v, re.I)
+    if a:
+        subdirstr = a.group(0)
+        break
 
-#find id.log, read it, locate values for TwoInch, ThreeInch, UpperPalm, FullPalm
+
+if not a:
+    print("No validation directory found. Program terminated.")
+    os._exit(0)
+
+# find id.log, read it, locate values for TwoInch, ThreeInch, UpperPalm, FullPalm
 idfile = dirname + "/" + subdirstr + "/" + "id.log"
-#print(idfile)
+# print(idfile)
 if os.path.isfile(idfile):
-	r = open(idfile,"r")
+    r = open(idfile, "r")
 else:
-	print("{}     No id.log found - Program Terminated.".format(idfile))
-	os._exit(0)
+    print("{}     No id.log found - Program Terminated.".format(idfile))
+    os._exit(0)
 
 idlines = r.readlines()
-#print(idlines)
+# print(idlines)
 idlines_dict = {}
 for idl in idlines:
-	#print(idl)
-	if re.search(r'Core ', idl):
-		continue
-	#idl = idl.strip(" ")
-	id = idl.strip("\n")
-	key,value = id.split("=")
-	#print("{}  {}".format(key, value))
-	idlines_dict[key] = value
+    # print(idl)
+    if re.search(r'Core ', idl):
+        continue
+    #idl = idl.strip(" ")
+    id = idl.strip("\n")
+    key, value = id.split("=")
+    #print("{}  {}".format(key, value))
+    idlines_dict[key] = value
 
-newIdKindlist = []   #if nothing entered for "kind" argument - create new kindlist that comes from id.log = which specifies which orientation logs validation should produce.
+# if nothing entered for "kind" argument - create new kindlist that comes from id.log = which specifies which orientation logs validation should produce.
+newIdKindlist = []
 for idkey, idval in idlines_dict.items():
-	#print("{}:{}".format(idkey, idval))
-	if idkey == "TwoInch " and idval == " true":
-		newIdKindlist.append("2")
-	if idkey == "ThreeInch " and idval == " true":
-		newIdKindlist.append("3")
-	if idkey == "UpperPalm " and idval == " true":
-		newIdKindlist.append("5")
-	if idkey == "FullPalm " and idval == " true":
-		newIdKindlist.append("8")
-#for k in newIdKindlist:
+    #print("{}:{}".format(idkey, idval))
+    if idkey == "TwoInch " and idval == " true":
+        newIdKindlist.append("2")
+    if idkey == "ThreeInch " and idval == " true":
+        newIdKindlist.append("3")
+    if idkey == "UpperPalm " and idval == " true":
+        newIdKindlist.append("5")
+    if idkey == "FullPalm " and idval == " true":
+        newIdKindlist.append("8")
+# for k in newIdKindlist:
 #	print(k)
 
 if kindlist == ["2", "3", "5", "8"]:
-	#print("default list, put newIdKindlist into kindlist")
-	kindlist = newIdKindlist
-#else:
-	#print("use given kindlist, do nothing")
+    #print("default list, put newIdKindlist into kindlist")
+    kindlist = newIdKindlist
+# else:
+    #print("use given kindlist, do nothing")
 
 o_log_exists = False
 orientlog_path = ""
-#check for existence of required orientation logs
+# check for existence of required orientation logs
 for n in kindlist:
-	orientlog_path = dirname + "/" + subdirstr + "/" + ORIENTATION + "-" + n + ".log"
-	#print(orientlog_path)
-	o_log_exists = os.path.exists(orientlog_path)
-	if not o_log_exists:
-		print("An orientation log for kind {} does not exist. Program Terminated. ".format(n))
-		os._exit(0)
+    orientlog_path = dirname + "/" + subdirstr + "/" + ORIENTATION + "-" + n + ".log"
+    # print(orientlog_path)
+    o_log_exists = os.path.exists(orientlog_path)
+    if not o_log_exists:
+        print(
+            "An orientation log for kind {} does not exist. Program Terminated. ".format(n))
+        os._exit(0)
 
-#for each kind option...process its file 
+# for each kind option...process its file
 for k in kindlist:
-	currfile = ("{}/{}/{}-{}.log".format(dirname,str(subdirstr),ORIENTATION,k,))
-	img_grp = ""
-	if k == "2":
-        	img_grp = "Two Inch"
-	elif k == "3":
-        	img_grp = "Three Inch"
-	elif k == "5":
-		img_grp = "UpperPalm"
-	elif k == "8":
-		img_grp = "FullPalm"
+    currfile = ("{}/{}/{}-{}.log".format(dirname,
+                                         str(subdirstr), ORIENTATION, k,))
+    img_grp = ""
+    if k == "2":
+        img_grp = "Two Inch"
+    elif k == "3":
+        img_grp = "Three Inch"
+    elif k == "5":
+        img_grp = "UpperPalm"
+    elif k == "8":
+        img_grp = "FullPalm"
+    totalRightCnt = 0
+    correctRightCnt = 0
+    incorrectRightCnt = 0
+    skipRightCnt = 0
+    totalLeftCnt = 0
+    correctLeftCnt = 0
+    incorrectLeftCnt = 0
+    skipLeftCnt = 0
+    totalThumbsCnt = 0
+    correctThumbsCnt = 0
+    incorrectThumbsCnt = 0
+    skipThumbsCnt = 0
+    f = open(currfile, "r")
+    lines = f.readlines()
+    if cmdArgs._output == "incorrect":
+        print("\n* {} ({}):".format(img_grp, currfile))
+    for line in lines:
+        l = line.strip("\n")
+        columns = l.split(",")
+        if columns[0] == "name":
+            continue
+        if re.search(r'canary-', l):
+            continue
+        filename = columns[0]
+        f = re.search(r'\w+_\d+_(\d\d)_\d+x', filename)
+        finger = f.group(1)
+        # print(finger)
+        line_orient = columns[4]
+        if finger in ["13", "26", "21"]:
+            totalRightCnt = totalRightCnt + 1
+            #print("inside 13 26 21")
+            if line_orient == "0":
+                correctRightCnt = correctRightCnt + 1
+            elif line_orient == "NA":
+                skipRightCnt = skipRightCnt + 1
+            else:
+                incorrectRightCnt = incorrectRightCnt + 1
+                if cmdArgs._output == "incorrect":
+                    print(" * {} (Actual: {}, Paricipant: {})".format(filename,
+                                                                      actual_dict[finger], line_value[line_orient]))
+                if finger in ["14", "28", "23"]:
+                    totalLeftCnt = totalLeftCnt + 1
+                    #print("inside 14 28 23")
+                    if line_orient == "1":
+                        correctLeftCnt = correctLeftCnt + 1
+                    elif line_orient == "NA":
+                        skipLeftCnt = skipLeftCnt + 1
+                    else:
+                        incorrectLeftCnt = incorrectLeftCnt + 1
+                        if cmdArgs._output == "incorrect":
+                            print(" * {} (Actual: {}, Paricipant: {})".format(filename,
+                                                                              actual_dict[finger], line_value[line_orient]))
+                # if k==3 or 5 there are finger 15s. k==2 there are no finger 15s.
+                if finger == "15" and k in ["3", "5"]:
+                    totalThumbsCnt = totalThumbsCnt + 1
+                    #print("inside 15 3 or 5")
+                    if line_orient == "2":
+                        correctThumbsCnt = correctThumbsCnt + 1
+                    elif line_orient == "NA":
+                        skipThumbsCnt = skipThumbsCnt + 1
+                    else:
+                        incorrectThumbsCnt = incorrectThumbsCnt + 1
+                        if cmdArgs._output == "incorrect":
+                            print(" * {} (Actual: {}, Paricipant: {})".format(filename,
+                                                                              actual_dict[finger], line_value[line_orient]))
+                #print(" total right count {}".format(totalRightCnt ))
+                #print(" total left count {}".format(totalLeftCnt ))
+                #print(" total thumbs count {}".format(totalThumbsCnt ))
 
-	totalRightCnt =0
-	correctRightCnt =0
-	incorrectRightCnt =0
-	skipRightCnt =0
-	totalLeftCnt =0
-        correctLeftCnt =0
-        incorrectLeftCnt =0
-        skipLeftCnt =0
-	totalThumbsCnt =0
-        correctThumbsCnt =0
-        incorrectThumbsCnt =0
-        skipThumbsCnt =0
-	f = open(currfile,"r")
-	lines = f.readlines()
-	if cmdArgs._output == "incorrect":	
-		print("\n* {} ({}):".format(img_grp, currfile))
-	for line in lines:
-		l = line.strip("\n")
-		columns = l.split(",")
-		if columns[0] == "name":
-			continue
-		if re.search(r'canary-', l):
-			continue
-		filename = columns[0]
-		f = re.search(r'\w+_\d+_(\d\d)_\d+x', filename)
-		finger = f.group(1)
-		#print(finger)
-		line_orient = columns[4]
-		if finger in ["13", "26", "21"]:
-			totalRightCnt = totalRightCnt + 1
-			#print("inside 13 26 21")
-			if line_orient == "0":
-				correctRightCnt = correctRightCnt + 1
-			elif line_orient == "NA":
-				skipRightCnt = skipRightCnt + 1
-			else:
-				incorrectRightCnt = incorrectRightCnt + 1	
-				if cmdArgs._output == "incorrect":
-                                        print(" * {} (Actual: {}, Paricipant: {})".format(filename, actual_dict[finger], line_value[line_orient]))
-		if finger in ["14", "28", "23"]:
-                        totalLeftCnt = totalLeftCnt + 1
-			#print("inside 14 28 23")
-                        if line_orient == "1":
-                                correctLeftCnt = correctLeftCnt + 1
-                        elif line_orient == "NA":
-                                skipLeftCnt = skipLeftCnt + 1
-                        else:
-                                incorrectLeftCnt = incorrectLeftCnt + 1
-				if cmdArgs._output == "incorrect":
-					print(" * {} (Actual: {}, Paricipant: {})".format(filename, actual_dict[finger], line_value[line_orient]))
-		if finger == "15" and k in ["3", "5"]:  #if k==3 or 5 there are finger 15s. k==2 there are no finger 15s.
-                        totalThumbsCnt = totalThumbsCnt + 1
-                        #print("inside 15 3 or 5")
-			if line_orient == "2":
-                                correctThumbsCnt = correctThumbsCnt + 1
-                        elif line_orient == "NA":
-                                skipThumbsCnt = skipThumbsCnt + 1
-                        else:
-                                incorrectThumbsCnt = incorrectThumbsCnt + 1
-				if cmdArgs._output == "incorrect":
-                                        print(" * {} (Actual: {}, Paricipant: {})".format(filename, actual_dict[finger], line_value[line_orient]))
-		#print(" total right count {}".format(totalRightCnt ))
-		#print(" total left count {}".format(totalLeftCnt ))
-		#print(" total thumbs count {}".format(totalThumbsCnt ))
+    if incorrectLeftCnt == 0 and incorrectRightCnt == 0 and incorrectThumbsCnt == 0:
+        print("  * 0 items incorrect.")
 
-	if incorrectLeftCnt == 0 and incorrectRightCnt == 0 and incorrectThumbsCnt == 0:
-		print("  * 0 items incorrect.")
-
-
-	if cmdArgs._output == "stats":
-		print("{} {}:".format(img_grp, currfile))
-		print(" * Right: ")
-		if totalRightCnt != 0:
-			print("  * Correct: {} ({}%)".format(correctRightCnt, round(correctRightCnt/float(totalRightCnt)*100,1) ))  #this is really correctRightCnt / totalRightCnt * 100
-			print("  * Incorrect: {} ({}%)".format(incorrectRightCnt, round(incorrectRightCnt/float(totalRightCnt)*100,1) ))
-			print("  * Skip: {} ({}%)".format(skipRightCnt, round(skipRightCnt/float(totalRightCnt)*100,1) ))
-		else:
-                        print("  * None")
-		print(" * Left: ")
-		if totalLeftCnt != 0:	
-			print("  * Correct: {} ({}%)".format(correctLeftCnt, round(correctLeftCnt/float(totalLeftCnt)*100,1) ))  
-			print("  * Incorrect: {} ({}%)".format(incorrectLeftCnt, round(incorrectLeftCnt/float(totalLeftCnt)*100,1) ))
-			print("  * Skip: {} ({}%)".format(skipLeftCnt, round(skipLeftCnt/float(totalLeftCnt)*100,1) ))
-		else:
-                        print("  * None")
-		if k in [ "3", "5"]:
-			print(" * Thumbs: ")
-			if totalThumbsCnt != 0:
-				print("  * Correct: {} ({}%)".format(correctThumbsCnt, round(correctThumbsCnt/float(totalThumbsCnt)*100,1) ))  
-				print("  * Incorrect: {} ({}%)".format(incorrectThumbsCnt, round(incorrectThumbsCnt/float(totalThumbsCnt)*100,1) ))
-				print("  * Skip: {} ({}%)".format(skipThumbsCnt, round(skipThumbsCnt/float(totalThumbsCnt)*100,1) ))
-			else:
-				print("  * None")
-
-
-
+    if cmdArgs._output == "stats":
+        print("{} {}:".format(img_grp, currfile))
+        print(" * Right: ")
+        if totalRightCnt != 0:
+            # this is really correctRightCnt / totalRightCnt * 100
+            print("  * Correct: {} ({}%)".format(correctRightCnt,
+                                                 round(correctRightCnt/float(totalRightCnt)*100, 1)))
+            print("  * Incorrect: {} ({}%)".format(incorrectRightCnt,
+                                                   round(incorrectRightCnt/float(totalRightCnt)*100, 1)))
+            print("  * Skip: {} ({}%)".format(skipRightCnt,
+                                              round(skipRightCnt/float(totalRightCnt)*100, 1)))
+        else:
+            print("  * None")
+        print(" * Left: ")
+        if totalLeftCnt != 0:
+            print("  * Correct: {} ({}%)".format(correctLeftCnt,
+                                                 round(correctLeftCnt/float(totalLeftCnt)*100, 1)))
+            print("  * Incorrect: {} ({}%)".format(incorrectLeftCnt,
+                                                   round(incorrectLeftCnt/float(totalLeftCnt)*100, 1)))
+            print("  * Skip: {} ({}%)".format(skipLeftCnt,
+                                              round(skipLeftCnt/float(totalLeftCnt)*100, 1)))
+        else:
+            print("  * None")
+        if k in ["3", "5"]:
+            print(" * Thumbs: ")
+            if totalThumbsCnt != 0:
+                print("  * Correct: {} ({}%)".format(correctThumbsCnt,
+                                                     round(correctThumbsCnt/float(totalThumbsCnt)*100, 1)))
+                print("  * Incorrect: {} ({}%)".format(incorrectThumbsCnt,
+                                                       round(incorrectThumbsCnt/float(totalThumbsCnt)*100, 1)))
+                print("  * Skip: {} ({}%)".format(skipThumbsCnt,
+                                                  round(skipThumbsCnt/float(totalThumbsCnt)*100, 1)))
+            else:
+                print("  * None")
