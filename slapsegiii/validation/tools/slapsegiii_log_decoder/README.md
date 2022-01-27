@@ -1,11 +1,11 @@
-﻿slapsegiii_log_decoder
+slapsegiii_log_decoder
 --------------------------------------
 
 Decode into plain language the segments and orientation logs outputted from Slapseg III algorithms.
 
 ## Requirements
 
- * Python 2.x
+ * Python 3.x
 
 ## Arguments
 
