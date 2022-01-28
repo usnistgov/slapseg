@@ -719,7 +719,7 @@ compile()
 
 	declare -A md5s
 	md5s["../libslapsegiii/libslapsegiii.cpp"]="2588125e9cf947ed54fabc9f4f4220fe"
-	md5s["../include/slapsegiii.h"]="7ddfaa8920aa6c2890fbbfd3507a20fd"
+	md5s["../include/slapsegiii.h"]="91f50f3a3486416ffbeba66dc8117acf"
 	md5s["src/slapsegiii_validation.cpp"]="389cee0f81e280648ab9f63525983ae9"
 	md5s["src/slapsegiii_validation_data.h"]="1ce6cb0105061ec2e85302834a3c4701"
 	md5s["src/slapsegiii_validation.h"]="2ea4d0c1810e260c0c16c76dd87b3c65"
