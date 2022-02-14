@@ -259,9 +259,21 @@ SlapSegIII::NullImplementation::determineOrientation(
 	    SlapImage::Orientation{}));
 }
 
-std::shared_ptr<SlapSegIII::Interface>
-SlapSegIII::Interface::getImplementation()
+/******************************************************************************/
+
+SlapSegIII::NullImplementation::NullImplementation(
+    const std::filesystem::path &configurationDirectory) :
+    SlapSegIII::Interface{},
+    configurationDirectory{configurationDirectory}
 {
-	return (std::make_shared<SlapSegIII::NullImplementation>());
+	/* Parse contents of configurationDirectory, if necessary */
+}
+
+std::shared_ptr<SlapSegIII::Interface>
+SlapSegIII::Interface::getImplementation(
+    const std::filesystem::path &configurationDirectory)
+{
+	return (std::make_shared<SlapSegIII::NullImplementation>(
+	    configurationDirectory));
 }
 

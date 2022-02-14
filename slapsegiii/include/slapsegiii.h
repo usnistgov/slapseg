@@ -33,6 +33,8 @@
 #ifndef SLAPSEGIII_H_
 #define SLAPSEGIII_H_
 
+#include <cstddef>
+#include <filesystem>
 #include <memory>
 #include <set>
 #include <string>
@@ -184,7 +186,7 @@ namespace SlapSegIII
 		    const Kind kind,
 		    const CaptureTechnology captureTechnology,
 		    const Orientation orientation,
-		    const std::vector<uint8_t> &pixels);
+		    const std::vector<std::byte> &pixels);
 
 		/** Width of the image. */
 		uint16_t width{};
@@ -209,7 +211,7 @@ namespace SlapSegIII
 		 * To pass pixels to a C-style array, invoke pixel's `data()`
 		 * method (`pixels.data()`).
 		 */
-		std::vector<uint8_t> pixels{};
+		std::vector<std::byte> pixels{};
 	};
 
 	/** Representation of a segmentation position. */
@@ -567,20 +569,29 @@ namespace SlapSegIII
 		 * Obtain a managed pointer to an object implementing
 		 * SlapSegIII::Interface.
 		 *
+		 * @param configurationDirectory
+		 * Path to a read-only directory populated with configuration
+		 * files provided in validation.
+		 *
 		 * @return
 		 * Shared pointer to an instance of Interface containing the
 		 * participant's segmentation algorithm.
 		 *
 		 * @note
 		 * A possible implementation might be:
-		 * `return (std::make_shared<Implementation>());`
+		 * `return (std::make_shared<Implementation>(
+		 *  configurationDirectory));`
+		 * @note
+		 * `configurationDirectory` may be stored on a slow disk. NIST
+		 * suggests reading data into available RAM.
 		 *
 		 * @note
 		 * This method shall return in <= 10 seconds.
 		 */
 		static
 		std::shared_ptr<Interface>
-		getImplementation();
+		getImplementation(
+		    const std::filesystem::path &configurationDirectory);
 	};
 
 	/*
@@ -600,10 +611,17 @@ namespace SlapSegIII
 	/** API major version number. */
 	uint16_t API_MAJOR_VERSION{1};
 	/** API minor version number. */
-	uint16_t API_MINOR_VERSION{1};
+	uint16_t API_MINOR_VERSION{2};
 	/** API patch version number. */
 	uint16_t API_PATCH_VERSION{0};
 	#endif /* NIST_EXTERN_API_VERSION */
+
+	/*
+	 * Ensure that std::byte is exactly 8 bits, such that reinterpret_casts
+	 * may be safely used.
+	 */
+	static_assert(std::is_same_v<std::underlying_type_t<std::byte>,
+	    uint8_t>, "std::byte not represented as unsigned 8 bit type");
 }
 
 #endif /* SLAPSEGIII_H_ */

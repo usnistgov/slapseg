@@ -2,18 +2,18 @@
 --------------------------------
 
 Visualize participant and/or ground truth segmentation positions using
-ImageMagick on CentOS 7.
+ImageMagick.
 
 ## Requirements
 
  * Perl 5
- * perl-Getopt-Long
+ * perl-modules-5.30
  * ImageMagick
 
-Under CentOS, install all required packages with:
+Under Ubuntu 20.04, install all required packages with:
 
 ```bash
-yum install perl perl-Getopt-Long ImageMagick
+apt install perl perl-base perl-modules-5.30 imagemagick
 ```
 
 ## Arguments
@@ -56,20 +56,20 @@ slapsegiii_validation_show_boxes --img_name \
 
 ```bash
 validation_dir=~/slapsegiii/validation
-output_dir=${validation_dir}/preview
-mkdir -p ${output_dir}
+output_dir="${validation_dir}/preview"
+mkdir -p "${output_dir}"
 
-filelist=$(mktemp)
+filelist="$(mktemp)"
 for line in $(tail -n +2 ${validation_dir}/output/segments-2.log); do
-    cut -f 1 -d ',' <<< ${line} >> ${filelist}
+    cut -f 1 -d ',' <<< "${line}" >> "${filelist}"
 done
 
-for name in $(sort ${filelist} | uniq); do
+for name in $(sort "${filelist}" | uniq); do
     echo "Making image for ${name}..."
-    slapsegiii_validation_show_boxes --img_name ${name} \
+    slapsegiii_validation_show_boxes --img_name "${name}" \
         --dir_path ${validation_dir} -view p \
-        --save ${output_dir}/$(basename ${name} gray)png
+        --save "${output_dir}/$(basename "${name}" gray)png"
 done
-rm ${filelist}
+rm "${filelist}"
 ```
 

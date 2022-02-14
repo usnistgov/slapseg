@@ -96,7 +96,7 @@ SlapSegIII::Validation::Validate::hasCorrectQuantity(
 	return (positions.size() == getCorrectQuantity(orientation));
 }
 
-uint8_t
+std::vector<SlapSegIII::SegmentationPosition>::size_type
 SlapSegIII::Validation::Validate::getCorrectQuantity(
     const SlapImage::Orientation orientation)
 {

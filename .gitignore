@@ -1,15 +1,18 @@
 # Compilation
 *.o
 *.so
+**/build/*
 
 # Temp files
 .DS_Store
 ._*
 
 # Validation cruft
+slapsegiii/validation/config
 slapsegiii/validation/bin
 slapsegiii/validation/*.tar.gz
 slapsegiii/validation/images/VERSION-*
 slapsegiii/validation/images/*gray
-slapsegiii/validation/validation_*
+slapsegiii/validation/include/
 slapsegiii/validation/output
+slapsegiii/validation/slapsegiii_validation_*_*

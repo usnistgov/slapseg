@@ -49,6 +49,8 @@ namespace SlapSegIII
 			Operation operation{};
 			/** Number of processes to run. */
 			uint8_t numProcs{1};
+			/** Path to configuration directory. */
+			std::filesystem::path configDir{};
 		};
 		/** Convenience definition for struct Arguments. */
 		using Arguments = struct Arguments;
@@ -118,17 +120,27 @@ namespace SlapSegIII
 		 * @brief
 		 * Print identification information about a SlapSegIII
 		 * implementation.
+		 *
+		 * @param configDir
+		 * Path to read-only configuration directory provided by
+		 * implementation.
 		 */
 		void
-		printIdentification();
+		printIdentification(
+		    const std::filesystem::path &configDir);
 
 		/**
 		 * @brief
 		 * Print what kinds of SlapSegIII images are supported by a
 		 * SlapSegIII implementation.
+		 *
+		 * @param configDir
+		 * Path to read-only configuration directory provided by
+		 * implementation.
 		 */
 		void
-		printSupported();
+		printSupported(
+		    const std::filesystem::path &configDir);
 
 		/**
 		 * @brief
@@ -177,7 +189,7 @@ namespace SlapSegIII
 		 * @throw runtime_error
 		 * Error reading from file.
 		 */
-		std::vector<uint8_t>
+		std::vector<std::byte>
 		readFile(
 		    const std::string &pathName);
 

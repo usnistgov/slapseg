@@ -20,9 +20,6 @@ Contents
    - [lib/]: Directory in which all required libraries reside. There must be at
      least one *core* library, and that library **must** follow the SlapSeg III
      naming convention.
-   - [src/libslapsegiii/]: Code for the shared library implementing methods
-     declared in [src/slapsegiii.h].
-   - [src/slapsegiii.h]: The SlapSeg III [API].
    - [validate]: Script that automates running the validation and performing
      checks on the output.
  * Supporting Files
@@ -35,13 +32,18 @@ Requirements
 
  * Fingerprint Imagery
    - Because organizations must agree to NIST Special Database terms and conditions, the required fingerprint imagery is not included in this GitHub repository. Request and download the data from our requests website. Download the data by requesting it from the SlapSeg III test staff and [agreeing to the terms].
- * CentOS 7.6.1810
-   - Even if this is not the latest version of CentOS, it will be the version
-     used to run the evaluation. Direct downloads are available from the [CentOS
-     Vault] ([🇺🇸 USA], [🇪🇺 Europe]).
-   - The [validate] script  requires these base CentOS packages:
-      - `binutils`, `centos-release`, `coreutils`, `curl`, `file`, `gawk`,
-        `gcc-c++`, `grep`, `iputils`, `make`, `sed`, `which`, `yum`
+ * Ubuntu Server 20.04.03 LTS
+   - Even if this is not the latest version of Ubuntu Server, it will be the
+     version used to run the evaluation. Direct downloads are available from the
+     [Ubuntu Mirrors] ([🇺🇸 USA], [🇪🇺 Europe]) and directly from the [NIST
+     Image Group].
+   - We **highly suggest** matching the exact versions of packages installed in
+     our environment. A link to the names and versions of these pacakages is
+     available.
+   - The [validate] script  requires these base Ubuntu Server packages:
+      - `base-files`, `binutils`, `cmake`, `coreutils`, `curl`, `dpkg`, `file`,
+        `findutils`, `g++`, `gawk`, `grep`, `libc-bin`, `make`, `sed`, `tar`,
+        `xz-utils`
 
 It is **highly suggested** that you make sure your submission will build and run
 as expected on environments as close as possible to the NIST evaluation
@@ -66,17 +68,19 @@ How to Run
 $ cp /path/to/libslapsegiii_nfseg_5001.so lib/
 $ cp /path/to/slapsegiii_validation_images_*.tar.gz .
 $ ./validate
-
-SlapSeg III Validation (201904051243) -- Fri Apr  5 12:44:04 EDT 2019
+================================================================================
+|  SlapSeg III Validation | Version 202201261256 | 26 Jan 2022 | 17:58:03 UTC  |
 ================================================================================
 Checking for required packages... [OKAY]
 Checking for previous validation attempts... [OKAY]
-Checking validation version... (201904051243) [OKAY]
-Checking OS and version... (CentOS 7.6.1810) [OKAY]
-Checking for validation images... [DEFER]
-Expanding slapsegiii_validation_images_twoinch-201902130947.tar.gz... [OKAY]
-Expanding slapsegiii_validation_images_threeinch-201902130947.tar.gz... [OKAY]
-Checking for validation images... [OKAY]
+Checking validation version... (202201261256) [OKAY]
+Checking OS and version... (Ubuntu Server 20.04.3 LTS (Focal Fossa)) [OKAY]
+Checking for unexpanded validation image tarballs... [DEFER]
+Expanding slapsegiii_validation_images_upperpalm-202006111448.tar.gz... [OKAY]
+Expanding slapsegiii_validation_images_fullpalm-201902271132.tar.gz... [OKAY]
+Expanding slapsegiii_validation_images_twoinch-201902271132.tar.gz... [OKAY]
+Expanding slapsegiii_validation_images_threeinch-201902271132.tar.gz... [OKAY]
+Checking for unexpanded validation image tarballs... [OKAY]
 Checking validation image versions... [OKAY]
 Looking for core library... (libslapsegiii_nfseg_5001.so) [OKAY]
 Checking for known environment variables... [OKAY]
@@ -84,36 +88,26 @@ Building... [OKAY]
 Checking API version... [OKAY]
 Checking that you have all necessary kinds of images... [OKAY]
 Running segmentation... [OKAY]
-Checking segmentation logs... [OKAY]
-Running orientation determination... [OKAY]
-Checking orientation logs... [OKAY]
-Creating validation submission... (validation_nfseg_5001.tar.gz) [OKAY]
+Checking segmentation logs... [WARN]
 
 ================================================================================
-You have successfully completed the first step in SlapSegIII validation. Please
-sign and encrypt this file, send it to slapseg@nist.gov, and await a
-notification.
-
-validation_nfseg_5001.tar.gz
-
-Example encryption:
-gpg --output validation_nfseg_5001.tar.gz.asc \
-    --default-key jdoe@nfseg.com \
-    --recipient slapseg@nist.gov \
-    --recipient jdoe@nfseg.com \
-    --armor --sign --encrypt \
-    validation_nfseg_5001.tar.gz
-
-Additionally, be sure to include the public key of the identity that signed the
-validation package. This key must be the key whose key fingerprint was printed
-on the SlapSegIII application.
-
-Example public key extraction:
-gpg --output nfseg_5001_public_key.asc --armor \
-    --export jdoe@nfseg.com
+|                        failure return values present                         |
 ================================================================================
-********************************************************************************
-Fri Apr  5 12:50:11 EDT 2019
+Running orientation determination... (not implemented) [SKIP]
+Checking orientation logs... (not implemented) [SKIP]
+Creating validation submission... (slapsegiii_validation_nfseg_0001.tar.gz) [OKAY]
+================================================================================
+| You have successfully completed your part of SlapSeg III validation. Please  |
+| sign and encrypt the file listed below (run './validate encrypt' for an      |
+| example).                                                                    |
+|                                                                              |
+|                  slapsegiii_validation_nfseg_0001.tar.gz                  |
+|                                                                              |
+| Please attach both slapsegiii_validation_nfseg_0001.tar.gz.asc and your   |
+| public key to an email addressed to slapseg@nist.gov.                        |
+================================================================================
+
+Wed 26 Jan 2022 06:04:32 PM UTC
 ```
 </details>
 
@@ -168,8 +162,7 @@ to the [NIST SlapSeg team].
 
 The SlapSeg team sends updates about the SlapSeg tests to their mailing list.
 Enter your e-mail address on the [mailing list site], or send a blank e-mail to
-SlapSeg+subscribe@list.nist.gov to be automatically subscribed. Posts to the
-list are mirrored on an [RSS feed].
+SlapSeg+subscribe@list.nist.gov to be automatically subscribed.
 
 License
 -------
@@ -177,12 +170,11 @@ The items in this repository are released in the public domain. See the
 [LICENSE] for details.
 
 [API]: https://pages.nist.gov/slapseg/doc/slapsegiii/api/
-[CentOS Vault]: http://vault.centos.org/
-[🇺🇸 USA]: http://mirror.umd.edu/centos/7.6.1810/isos/x86_64/CentOS-7-x86_64-Everything-1810.iso
-[🇪🇺 Europe]: http://centos.mirrors.proxad.net/7.6.1810/isos/x86_64/CentOS-7-x86_64-Everything-1810.iso
+[Ubuntu Mirrors]: https://launchpad.net/ubuntu/+cdmirrors
+[🇺🇸 USA]: https://mirror.math.princeton.edu/pub/ubuntu-iso/focal/ubuntu-20.04.3-live-server-amd64.iso
+[🇪🇺 Europe]: http://mirror.init7.net/ubuntu-releases/focal/ubuntu-20.04.3-live-server-amd64.iso
+[NIST Image Group]: https://nigos.nist.gov/evaluations/ubuntu-20.04.3-live-server-amd64.iso
 [lib/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/lib
-[src/libslapsegiii/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src/libslapsegiii
-[src/slapsegiii.h]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src/slapsegiii.h
 [bin/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/bin
 [README.md]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/README.md
 [src/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/src
@@ -191,7 +183,6 @@ The items in this repository are released in the public domain. See the
 [NIST SlapSeg team]: mailto:slapseg@nist.gov
 [open an issue]: https://github.com/usnistgov/slapseg/issues
 [mailing list site]: https://groups.google.com/a/list.nist.gov/forum/#!forum/slapseg/join
-[RSS feed]: https://groups.google.com/a/list.nist.gov/forum/feed/slapseg/msgs/rss.xml
 [LICENSE]: https://github.com/usnistgov/slapseg/blob/master/LICENSE.md
 [test plan]: https://pages.nist.gov/slapseg/doc/slapsegiii/testplan.pdf
 [agreeing to the terms]: https://nigos.nist.gov/datasets/slapsegiii_validation/request

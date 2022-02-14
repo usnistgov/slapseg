@@ -156,7 +156,7 @@ namespace SlapSegIII
 			 * @return
 			 * The correct number of elements.
 			 */
-			uint8_t
+			std::vector<SegmentationPosition>::size_type
 			getCorrectQuantity(
 			    const SlapImage::Orientation orientation);
 
