@@ -1496,39 +1496,60 @@ merge_logs()
 	done
 }
 
+get_final_output_name()
+{
+	local name="slapsegiii_validation_"
+	if ! name+="$(get_organization_name)"; then
+		fail "Could not get organization name."
+	fi
+	name+="_"
+	if ! name+="$(get_lib_version)"; then
+		fail "Could not get library version."
+	fi
+
+	echo "${name}"
+}
+
 # Generate the name of the validation tarball.
 get_tarball_name()
 {
-	local name
-	name="slapsegiii_validation_$(get_organization_name)_"
-	name+="$(get_lib_version).tar.gz"
-	echo "${name}"
+	echo "$(get_final_output_name).tar.xz"
 }
 
 # Make a tarball of all libraries and logfiles to send to NIST.
 make_tarball()
 {
 	echo -n "Creating validation submission... "
-
+	local final_output_name
+	if ! final_output_name="$(get_final_output_name)"; then
+		fail "Could not get final output name."
+	fi
+	local final_output_path="${wd}/${final_output_name}"
 	local tar_file
-	tar_file=$(get_tarball_name)
-	local new_name
-	new_name="${wd}/$(basename "$(get_tarball_name)" .tar.gz)"
-
-	mv "${output_dir}" "${new_name}"
-	cp -pr "${lib_dir}" "${new_name}"
-	cp -pr "${config_dir}" "${new_name}"
-
-	# NIST will build a fresh libslapsegiii.so
-	if ! rm "${new_name}/$(basename "${lib_dir}")/libslapsegiii.so"; then
-		local msg="An error occurred while copying libraries. Check "
-		msg+="file permissions."
-		fail "${msg}"
+	tar_file="$(get_tarball_name)"
+	if ! mv -n "${output_dir}" "${final_output_path}" > /dev/null 2>&1; then
+		fail "Could not rename $(rp "${output_dir}")"
 	fi
-	if ! tar -C "${wd}" -c -z -f "${tar_file}" "$(basename "${new_name}")" \
-	    > /dev/null; then
-		fail "There was an issue creating the validation submission."
+	if ! cp -pr "${local_lib_dir}" "${final_output_path}"; then
+		fail "Could not copy $(rp "${local_lib_dir}")"
 	fi
+	if ! cp -pr "${local_config_dir}" "${final_output_path}"; then
+		fail "Could not copy $(rp "${local_config_dir}")"
+	fi
+
+	# Remove unnecessary files
+	if ! find "${final_output_path}" \( -type f -name 'libslapsegiii.so' \
+	    -o -name 'README' \) -exec rm -f {} \;; then
+		fail "Could not remove unnecessary validation files"
+	fi
+
+	if ! tar -C "${wd}" -c -J -f "${tar_file}" "${final_output_name}" > \
+	    /dev/null 2>&1; then
+		fail "There was an issue creating the validation tar file."
+	fi
+
+	# Update globals
+	output_dir="$(dirname "${output_dir}")/$(get_final_output_name)"
 
 	okay "${tar_file}"
 }
