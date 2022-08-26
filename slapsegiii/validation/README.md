@@ -57,9 +57,10 @@ How to Run
     (i.e., the directory containing this file, [README.md]).
  3. Execute [validate].
  4. **If successful**, sign *and* encrypt the resulting output archive in a
-    single step, and e-mail it, along with the encrypting identity's public key,
-    to slapseg@nist.gov. If unsuccessful, correct any errors described and try
-    again.
+    single step, and upload it, along with the encrypting identity's public key,
+    and your original signed evaluation agreement via [the SlapSeg upload form].
+    For an example of how to use GnuPG to encrypt, run `validate encrypt`. If
+    unsuccessful, correct any errors described and try again.
 
 <details>
   <summary><em>Expand to view the output from an example run.</em></summary>
@@ -186,3 +187,4 @@ The items in this repository are released in the public domain. See the
 [LICENSE]: https://github.com/usnistgov/slapseg/blob/master/LICENSE.md
 [test plan]: https://pages.nist.gov/slapseg/doc/slapsegiii/testplan.pdf
 [agreeing to the terms]: https://nigos.nist.gov/datasets/slapsegiii_validation/request
+[the SlapSeg upload form]: https://pages.nist.gov/slapseg/upload
