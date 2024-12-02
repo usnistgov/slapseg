@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Upper Palm (“FiveInch” Data) | Neurotechnology+0014</title>
+  <meta name="description" content="4 Upper Palm (“FiveInch” Data) | Neurotechnology+0014" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Upper Palm (“FiveInch” Data) | Neurotechnology+0014" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Upper Palm (“FiveInch” Data) | Neurotechnology+0014" />
+  
+  
+  
+
+<meta name="author" content="Slap Fingerprint Segmentation Evaluation III" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="identification-flats-threeinch-data.html"/>
+<link rel="next" href="full-palm-eightinch-data.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-32629RT6DJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-32629RT6DJ');
+</script>
+<link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css">
+<script src="https://pages.nist.gov/nist-header-footer/js/nist-header-footer.js" type="text/javascript" defer="defer"></script>
+<script async id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIST&subagency=github&pua=UA-66610693-1&yt=true&exts=ppsx,pps,f90,sch,rtf,wrl,txz,m1v,xlsm,msi,xsd,f,tif,eps,mpg,xml,pl,xlt,c"></script>
+
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="participation-information.html"><a href="participation-information.html"><i class="fa fa-check"></i><b>1</b> Participation Information</a><ul>
+<li class="chapter" data-level="1.1" data-path="participation-information.html"><a href="participation-information.html#names-and-dates"><i class="fa fa-check"></i><b>1.1</b> Names and Dates</a></li>
+<li class="chapter" data-level="1.2" data-path="participation-information.html"><a href="participation-information.html#libraries"><i class="fa fa-check"></i><b>1.2</b> Libraries</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html"><i class="fa fa-check"></i><b>2</b> Tenprint Cards (“TwoInch” Data)</a><ul>
+<li class="chapter" data-level="2.1" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#segmentation-timing"><i class="fa fa-check"></i><b>2.1</b> Segmentation Timing</a></li>
+<li class="chapter" data-level="2.2" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#segmentation-centers-and-dimensions"><i class="fa fa-check"></i><b>2.2</b> Segmentation Centers and Dimensions</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#segmentation-centers"><i class="fa fa-check"></i><b>2.2.1</b> Segmentation Centers</a></li>
+<li class="chapter" data-level="2.2.2" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#segmentation-dimensions"><i class="fa fa-check"></i><b>2.2.2</b> Segmentation Dimensions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#subsec-twoinch-stats"><i class="fa fa-check"></i><b>2.3</b> Detailed Segmentation Statistics</a></li>
+<li class="chapter" data-level="2.4" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#sec-twoinch-troublesome"><i class="fa fa-check"></i><b>2.4</b> Handling Troublesome Images</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#twoinch-troublesome-capture-failures"><i class="fa fa-check"></i><b>2.4.1</b> Capture Failures</a></li>
+<li class="chapter" data-level="2.4.2" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#twoinch-segmentation-failure"><i class="fa fa-check"></i><b>2.4.2</b> Segmentation Failures</a></li>
+<li class="chapter" data-level="2.4.3" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#twoinch-troublesome-missing"><i class="fa fa-check"></i><b>2.4.3</b> Identifying Missing Fingers</a></li>
+<li class="chapter" data-level="2.4.4" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#twoinch-sequence-error"><i class="fa fa-check"></i><b>2.4.4</b> Sequence Error</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="tenprint-cards-twoinch-data.html"><a href="tenprint-cards-twoinch-data.html#sec-twoinch-orientation"><i class="fa fa-check"></i><b>2.5</b> Determining Orientation</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html"><i class="fa fa-check"></i><b>3</b> Identification Flats (“ThreeInch” Data)</a><ul>
+<li class="chapter" data-level="3.1" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#segmentation-timing-1"><i class="fa fa-check"></i><b>3.1</b> Segmentation Timing</a></li>
+<li class="chapter" data-level="3.2" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#segmentation-centers-and-dimensions-1"><i class="fa fa-check"></i><b>3.2</b> Segmentation Centers and Dimensions</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#segmentation-centers-1"><i class="fa fa-check"></i><b>3.2.1</b> Segmentation Centers</a></li>
+<li class="chapter" data-level="3.2.2" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#segmentation-dimensions-1"><i class="fa fa-check"></i><b>3.2.2</b> Segmentation Dimensions</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#subsec-threeinch-stats"><i class="fa fa-check"></i><b>3.3</b> Detailed Segmentation Statistics</a></li>
+<li class="chapter" data-level="3.4" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#sec-threeinch-troublesome"><i class="fa fa-check"></i><b>3.4</b> Handling Troublesome Images</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#threeinch-troublesome-capture-failures"><i class="fa fa-check"></i><b>3.4.1</b> Capture Failures</a></li>
+<li class="chapter" data-level="3.4.2" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#threeinch-segmentation-failure"><i class="fa fa-check"></i><b>3.4.2</b> Segmentation Failures</a></li>
+<li class="chapter" data-level="3.4.3" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#threeinch-troublesome-missing"><i class="fa fa-check"></i><b>3.4.3</b> Identifying Missing Fingers</a></li>
+<li class="chapter" data-level="3.4.4" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#threeinch-sequence-error"><i class="fa fa-check"></i><b>3.4.4</b> Sequence Error</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="identification-flats-threeinch-data.html"><a href="identification-flats-threeinch-data.html#sec-threeinch-orientation"><i class="fa fa-check"></i><b>3.5</b> Determining Orientation</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html"><i class="fa fa-check"></i><b>4</b> Upper Palm (“FiveInch” Data)</a><ul>
+<li class="chapter" data-level="4.1" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#segmentation-timing-2"><i class="fa fa-check"></i><b>4.1</b> Segmentation Timing</a></li>
+<li class="chapter" data-level="4.2" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#segmentation-centers-and-dimensions-2"><i class="fa fa-check"></i><b>4.2</b> Segmentation Centers and Dimensions</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#segmentation-centers-2"><i class="fa fa-check"></i><b>4.2.1</b> Segmentation Centers</a></li>
+<li class="chapter" data-level="4.2.2" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#segmentation-dimensions-2"><i class="fa fa-check"></i><b>4.2.2</b> Segmentation Dimensions</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#subsec-fiveinch-stats"><i class="fa fa-check"></i><b>4.3</b> Detailed Segmentation Statistics</a></li>
+<li class="chapter" data-level="4.4" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#sec-fiveinch-troublesome"><i class="fa fa-check"></i><b>4.4</b> Handling Troublesome Images</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#fiveinch-troublesome-capture-failures"><i class="fa fa-check"></i><b>4.4.1</b> Capture Failures</a></li>
+<li class="chapter" data-level="4.4.2" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#fiveinch-segmentation-failure"><i class="fa fa-check"></i><b>4.4.2</b> Segmentation Failures</a></li>
+<li class="chapter" data-level="4.4.3" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#fiveinch-troublesome-missing"><i class="fa fa-check"></i><b>4.4.3</b> Identifying Missing Fingers</a></li>
+<li class="chapter" data-level="4.4.4" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#fiveinch-sequence-error"><i class="fa fa-check"></i><b>4.4.4</b> Sequence Error</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="upper-palm-fiveinch-data.html"><a href="upper-palm-fiveinch-data.html#sec-upperpalm-orientation"><i class="fa fa-check"></i><b>4.5</b> Determining Orientation</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html"><i class="fa fa-check"></i><b>5</b> Full Palm (“EightInch” Data)</a><ul>
+<li class="chapter" data-level="5.1" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html#segmentation-timing-3"><i class="fa fa-check"></i><b>5.1</b> Segmentation Timing</a></li>
+<li class="chapter" data-level="5.2" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html#segmentation-centers-and-dimensions-3"><i class="fa fa-check"></i><b>5.2</b> Segmentation Centers and Dimensions</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html#segmentation-centers-3"><i class="fa fa-check"></i><b>5.2.1</b> Segmentation Centers</a></li>
+<li class="chapter" data-level="5.2.2" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html#segmentation-dimensions-3"><i class="fa fa-check"></i><b>5.2.2</b> Segmentation Dimensions</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html#subsec-eightinch-stats"><i class="fa fa-check"></i><b>5.3</b> Detailed Segmentation Statistics</a></li>
+<li class="chapter" data-level="5.4" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html#sec-eightinch-troublesome"><i class="fa fa-check"></i><b>5.4</b> Handling Troublesome Images</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html#eightinch-troublesome-capture-failures"><i class="fa fa-check"></i><b>5.4.1</b> Capture Failures</a></li>
+<li class="chapter" data-level="5.4.2" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html#eightinch-segmentation-failure"><i class="fa fa-check"></i><b>5.4.2</b> Segmentation Failures</a></li>
+<li class="chapter" data-level="5.4.3" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html#eightinch-troublesome-missing"><i class="fa fa-check"></i><b>5.4.3</b> Identifying Missing Fingers</a></li>
+<li class="chapter" data-level="5.4.4" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html#eightinch-sequence-error"><i class="fa fa-check"></i><b>5.4.4</b> Sequence Error</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="full-palm-eightinch-data.html"><a href="full-palm-eightinch-data.html#sec-fullpalm-orientation"><i class="fa fa-check"></i><b>5.5</b> Determining Orientation</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="tenprint-cards-twoinch-data-1.html"><a href="tenprint-cards-twoinch-data-1.html"><i class="fa fa-check"></i><b>A</b> Tenprint Cards (“TwoInch” Data)</a><ul>
+<li class="chapter" data-level="A.1" data-path="tenprint-cards-twoinch-data-1.html"><a href="tenprint-cards-twoinch-data-1.html#bootstrap-confidence-for-segmentation-statistics"><i class="fa fa-check"></i><b>A.1</b> Bootstrap Confidence for Segmentation Statistics</a></li>
+<li class="chapter" data-level="A.2" data-path="tenprint-cards-twoinch-data-1.html"><a href="tenprint-cards-twoinch-data-1.html#jaccard-index"><i class="fa fa-check"></i><b>A.2</b> Jaccard Index</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="identification-flats-threeinch-data-1.html"><a href="identification-flats-threeinch-data-1.html"><i class="fa fa-check"></i><b>B</b> Identification Flats (“ThreeInch” Data)</a><ul>
+<li class="chapter" data-level="B.1" data-path="identification-flats-threeinch-data-1.html"><a href="identification-flats-threeinch-data-1.html#bootstrap-confidence-for-segmentation-statistics-1"><i class="fa fa-check"></i><b>B.1</b> Bootstrap Confidence for Segmentation Statistics</a></li>
+<li class="chapter" data-level="B.2" data-path="identification-flats-threeinch-data-1.html"><a href="identification-flats-threeinch-data-1.html#jaccard-index-1"><i class="fa fa-check"></i><b>B.2</b> Jaccard Index</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="upper-palm-fiveinch-data-1.html"><a href="upper-palm-fiveinch-data-1.html"><i class="fa fa-check"></i><b>C</b> Upper Palm (“FiveInch” Data)</a><ul>
+<li class="chapter" data-level="C.1" data-path="upper-palm-fiveinch-data-1.html"><a href="upper-palm-fiveinch-data-1.html#bootstrap-confidence-for-segmentation-statistics-2"><i class="fa fa-check"></i><b>C.1</b> Bootstrap Confidence for Segmentation Statistics</a></li>
+<li class="chapter" data-level="C.2" data-path="upper-palm-fiveinch-data-1.html"><a href="upper-palm-fiveinch-data-1.html#jaccard-index-2"><i class="fa fa-check"></i><b>C.2</b> Jaccard Index</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="full-palm-eightinch-data-1.html"><a href="full-palm-eightinch-data-1.html"><i class="fa fa-check"></i><b>D</b> Full Palm (“EightInch” Data)</a><ul>
+<li class="chapter" data-level="D.1" data-path="full-palm-eightinch-data-1.html"><a href="full-palm-eightinch-data-1.html#bootstrap-confidence-for-segmentation-statistics-3"><i class="fa fa-check"></i><b>D.1</b> Bootstrap Confidence for Segmentation Statistics</a></li>
+<li class="chapter" data-level="D.2" data-path="full-palm-eightinch-data-1.html"><a href="full-palm-eightinch-data-1.html#jaccard-index-3"><i class="fa fa-check"></i><b>D.2</b> Jaccard Index</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><code>Neurotechnology+0014</code></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="upper-palm-fiveinch-data" class="section level1">
+<h1><span class="header-section-number">4</span> Upper Palm (“FiveInch” Data)</h1>
+<div id="segmentation-timing-2" class="section level2">
+<h2><span class="header-section-number">4.1</span> Segmentation Timing</h2>
+<p>All algorithms are run over a small fixed corpus of FiveInch images to estimate
+the total runtime of the evaluation. To be evaluated under SlapSeg III,
+algorithms <strong>must</strong> segment the timing corpus, on average, in under <span class="math inline">1 500</span>
+milliseconds. This maximum reference time is documented in the SlapSeg III test
+plan, and is subject to change. Times are measured by running a single process
+on an isolated compute node equipped with an Intel Gold 6254 CPU (submissions
+received prior to February 2022 were timed with a Intel Xeon E5-4650 CPU).</p>
+<p>Box plots of segmentation times are separated by slap orientation in</p>
+<p><a href="upper-palm-fiveinch-data.html#fig:fig-fiveinch-timing-html">Figure <a href="upper-palm-fiveinch-data.html#fig:fig-fiveinch-timing-html">4.1</a></a>. Tabular representations are enumerated in <a href="upper-palm-fiveinch-data.html#tab:tab-fiveinch-timing">Table <a href="upper-palm-fiveinch-data.html#tab:tab-fiveinch-timing">4.1</a></a>. Results are reported in milliseconds.</p>
+<div class="figure" style="text-align: center"><span id="fig:fig-fiveinch-timing-html"></span>
+<img src="plots/Neurotechnology+0014_timing_UpperPalm_timing.png" alt="Box plots of elapsed time in milliseconds when segmenting the FiveInch timing test corpus, separated by slap orientation." width="900" />
+<p class="caption">
+Figure 4.1: Box plots of elapsed time in milliseconds when segmenting the FiveInch timing test corpus, separated by slap orientation.
+</p>
+</div>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:tab-fiveinch-timing">Table 4.1: </span>Elapsed time in milliseconds when segmenting the FiveInch timing test corpus, separated by slap orientation.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Right
+</th>
+<th style="text-align:right;">
+Left
+</th>
+<th style="text-align:right;">
+Combined
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Minimum
+</td>
+<td style="text-align:right;">
+595
+</td>
+<td style="text-align:right;border-right:1px solid;">
+616
+</td>
+<td style="text-align:right;">
+595
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+25%
+</td>
+<td style="text-align:right;">
+619
+</td>
+<td style="text-align:right;border-right:1px solid;">
+620
+</td>
+<td style="text-align:right;">
+619
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Median
+</td>
+<td style="text-align:right;">
+630
+</td>
+<td style="text-align:right;border-right:1px solid;">
+630
+</td>
+<td style="text-align:right;">
+630
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+75%
+</td>
+<td style="text-align:right;">
+714
+</td>
+<td style="text-align:right;border-right:1px solid;">
+717
+</td>
+<td style="text-align:right;">
+716
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maximum
+</td>
+<td style="text-align:right;">
+1 083
+</td>
+<td style="text-align:right;border-right:1px solid;">
+1 583
+</td>
+<td style="text-align:right;">
+1 583
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<div id="segmentation-centers-and-dimensions-2" class="section level2">
+<h2><span class="header-section-number">4.2</span> Segmentation Centers and Dimensions</h2>
+<div id="segmentation-centers-2" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> Segmentation Centers</h3>
+<p>The plots in this section show the distribution of segmentation position centers
+<span class="math inline">(<em>x</em>, <em>y</em>)</span> for FiveInch data. At the top of each figure is a combined plot for all
+finger positions of a given slap orientation. These figures are isolated in
+plots faceted at the bottom of the figure.</p>
+<p>Plots of segmentation centers for the right hand FiveInch data are shown in
+<a href="upper-palm-fiveinch-data.html#fig:upperpalm-centers-right">Figure <a href="upper-palm-fiveinch-data.html#fig:upperpalm-centers-right">4.2</a></a> and plots
+of segmentation centers for the left hand are shown in <a href="upper-palm-fiveinch-data.html#fig:upperpalm-centers-left">Figure
+<a href="upper-palm-fiveinch-data.html#fig:upperpalm-centers-left">4.3</a></a>. Blank lines that
+may appear in the plots are <strong>not</strong> rendering artifacts. Rather, they are
+indicative of image downsampling. Centers have been normalized to 500 pixels
+per inch.</p>
+<p>Points in each plot are plotted with a semi-transparent opacity. This results in
+points of particular color appearing “darker” to indicate a higher frequency of
+the observed value, while “lighter” points indicate a lower observed frequency.</p>
+<div class="figure" style="text-align: center"><span id="fig:upperpalm-centers-right"></span>
+<img src="plots/Neurotechnology+0014_full_UpperPalm_center_right.png" alt="Segmentation centers for right hand FiveInch data." width="900" />
+<p class="caption">
+Figure 4.2: Segmentation centers for right hand FiveInch data.
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:upperpalm-centers-left"></span>
+<img src="plots/Neurotechnology+0014_full_UpperPalm_center_left.png" alt="Segmentation centers for left hand FiveInch data." width="900" />
+<p class="caption">
+Figure 4.3: Segmentation centers for left hand FiveInch data.
+</p>
+</div>
+</div>
+<div id="segmentation-dimensions-2" class="section level3">
+<h3><span class="header-section-number">4.2.2</span> Segmentation Dimensions</h3>
+<p>The plots in this section show the distribution of segmentation position widths
+and heights for FiveInch data. At the top of each figure is a combined plot for
+all finger positions of a given slap orientation. These figures are isolated in
+plots faceted at the bottom of the figure.</p>
+<p>Plots of segmentation position dimensions for the right hand FiveInch data are
+shown in <a href="upper-palm-fiveinch-data.html#fig:upperpalm-wh-right">Figure <a href="upper-palm-fiveinch-data.html#fig:upperpalm-wh-right">4.4</a></a> and the
+left hand in <a href="upper-palm-fiveinch-data.html#fig:upperpalm-wh-left">Figure <a href="upper-palm-fiveinch-data.html#fig:upperpalm-wh-left">4.5</a></a>. Blank
+lines that may appear in the plots are <strong>not</strong> rendering artifacts. Rather,
+they are indicative of image downsampling. Dimensions have been normalized to
+500 pixels per inch.</p>
+<div class="figure" style="text-align: center"><span id="fig:upperpalm-wh-right"></span>
+<img src="plots/Neurotechnology+0014_full_UpperPalm_wh_right.png" alt="Segmentation position dimensions for right hand FiveInch data." width="900" />
+<p class="caption">
+Figure 4.4: Segmentation position dimensions for right hand FiveInch data.
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:upperpalm-wh-left"></span>
+<img src="plots/Neurotechnology+0014_full_UpperPalm_wh_left.png" alt="Segmentation position dimensions for left hand FiveInch data." width="900" />
+<p class="caption">
+Figure 4.5: Segmentation position dimensions for left hand FiveInch data.
+</p>
+</div>
+
+</div>
+</div>
+<div id="subsec-fiveinch-stats" class="section level2">
+<h2><span class="header-section-number">4.3</span> Detailed Segmentation Statistics</h2>
+<p>This section shows detailed results of segmentation of FiveInch data. Values in
+each table are the percentage that the variable in the left-most column was
+correctly segmented.</p>
+<p>Each table has three columns of percentages. The <em>Standard Scoring</em> column shows
+the percentage of correctly-segmented positions based on the scoring metrics
+defined in the SlapSeg III scoring document. The <em>Ignoring Bottom Y</em> column
+shows how the percentage would change if the threshold for the <em>bottom</em> <span class="math inline"><em>Y</em></span>
+coordinate of the segmentation position was ignored. Similarly, the <em>Ignoring
+Bottom X and Y</em> columns shows how the percentage would change if only the top,
+left, and right sides of the segmentation position were considered. These two
+supplemental columns are included because it has traditionally been difficult to
+determine the exact location of the distal interphalangeal joint.</p>
+<p><a href="#upperpalm-per-subject">Table <a href="upper-palm-fiveinch-data.html#tab:upperpalm-per-subject">4.2</a></a> shows how
+successful <code>Neurotechnology+0014</code> segmented fingers for each subject in the test
+corpus. <a href="#upperpalm-per-frgp">Table <a href="upper-palm-fiveinch-data.html#tab:upperpalm-per-frgp">4.3</a></a> shows success for
+specific finger positions over the entire test corpus. Similarly, <a href="#upperpalm-per-finger-type">Table
+<a href="upper-palm-fiveinch-data.html#tab:upperpalm-per-finger-type">4.4</a></a> shows success for
+segmenting the same finger position from both hands.</p>
+<p>The remainder of the tables show success per subject when considering
+combinations of subsets of the fingers on each slap image. <a href="#upperpalm-per-hand-all">Table
+<a href="upper-palm-fiveinch-data.html#tab:upperpalm-per-hand-all">4.5</a></a> shows success for
+combinations of all fingers, <a href="#upperpalm-per-hand-index-middle">Table
+<a href="upper-palm-fiveinch-data.html#tab:upperpalm-per-hand-index-middle">4.6</a></a> for
+just the index and middle fingers, and <a href="#upperpalm-per-hand-index-middle-%20ring">Table
+<a href="upper-palm-fiveinch-data.html#tab:upperpalm-per-hand-index-middle-ring">4.7</a></a> for all except the little finger.</p>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:upperpalm-per-subject">Table 4.2: </span>For each subject, the percentage that at least <em>Number of Fingers</em> fingers were correctly segmented, regardless of hand, for a maximum of eight correctly-segmented fingers. In <em>Standard Scoring</em>, scoring rules are followed exactly. In <em>Ignoring Bottom Y</em>, the bottom left and bottom right Y coordinates are ignored. <em>Ignoring Bottom X and Y</em> only checks the locations of the top left and top right coordinates.
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Number of Fingers
+</th>
+<th style="text-align:left;">
+Standard Scoring
+</th>
+<th style="text-align:left;">
+Ignoring Bottom Y
+</th>
+<th style="text-align:left;">
+Ignoring Bottom X and Y
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+99.9
+</td>
+<td style="text-align:left;">
+99.9
+</td>
+<td style="text-align:left;">
+99.9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+99.9
+</td>
+<td style="text-align:left;">
+99.9
+</td>
+<td style="text-align:left;">
+99.9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+99.2
+</td>
+<td style="text-align:left;">
+99.2
+</td>
+<td style="text-align:left;">
+99.2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+98.7
+</td>
+<td style="text-align:left;">
+98.7
+</td>
+<td style="text-align:left;">
+99.1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+95.0
+</td>
+<td style="text-align:left;">
+95.1
+</td>
+<td style="text-align:left;">
+95.8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+89.9
+</td>
+<td style="text-align:left;">
+90.3
+</td>
+<td style="text-align:left;">
+91.0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+80.2
+</td>
+<td style="text-align:left;">
+80.4
+</td>
+<td style="text-align:left;">
+81.8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+58.0
+</td>
+<td style="text-align:left;">
+58.6
+</td>
+<td style="text-align:left;">
+62.5
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:upperpalm-per-frgp">Table 4.3: </span>For all subjects, percentage that a particular friction ridge generalized position was correctly segmented. In <em>Ignoring Bottom Y</em>, the bottom left and bottom right Y coordinates are ignored. <em>Ignoring Bottom X and Y</em> only checks the locations of the top left and top right coordinates.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Finger
+</th>
+<th style="text-align:left;">
+Standard Scoring
+</th>
+<th style="text-align:left;">
+Ignoring Bottom Y
+</th>
+<th style="text-align:left;">
+Ignoring Bottom X and Y
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="4">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Right</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Index
+</td>
+<td style="text-align:left;">
+93.1
+</td>
+<td style="text-align:left;">
+93.1
+</td>
+<td style="text-align:left;">
+94.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Middle
+</td>
+<td style="text-align:left;">
+91.2
+</td>
+<td style="text-align:left;">
+91.4
+</td>
+<td style="text-align:left;">
+92.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Ring
+</td>
+<td style="text-align:left;">
+91.5
+</td>
+<td style="text-align:left;">
+91.8
+</td>
+<td style="text-align:left;">
+92.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Little
+</td>
+<td style="text-align:left;">
+90.4
+</td>
+<td style="text-align:left;">
+90.4
+</td>
+<td style="text-align:left;">
+91.2
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Left</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Index
+</td>
+<td style="text-align:left;">
+92.4
+</td>
+<td style="text-align:left;">
+92.7
+</td>
+<td style="text-align:left;">
+93.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Middle
+</td>
+<td style="text-align:left;">
+90.2
+</td>
+<td style="text-align:left;">
+90.2
+</td>
+<td style="text-align:left;">
+90.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Ring
+</td>
+<td style="text-align:left;">
+91.0
+</td>
+<td style="text-align:left;">
+91.5
+</td>
+<td style="text-align:left;">
+92.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Little
+</td>
+<td style="text-align:left;">
+86.6
+</td>
+<td style="text-align:left;">
+86.7
+</td>
+<td style="text-align:left;">
+88.5
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:upperpalm-per-finger-type">Table 4.4: </span>Percentage that a particular type of fingerprint was correctly segmented on <em>Either</em> or <em>Both</em> hands. In <em>Ignoring Bottom Y</em>, the bottom left and bottom right Y coordinates are ignored. <em>Ignoring Bottom X and Y</em> only checks the locations of the top left and top right coordinates.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Fingers
+</th>
+<th style="text-align:left;">
+Standard Scoring
+</th>
+<th style="text-align:left;">
+Ignoring Bottom Y
+</th>
+<th style="text-align:left;">
+Ignoring Bottom X and Y
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="2">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Index</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Either
+</td>
+<td style="text-align:left;">
+97.8
+</td>
+<td style="text-align:left;">
+97.8
+</td>
+<td style="text-align:left;">
+98.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Both
+</td>
+<td style="text-align:left;">
+86.3
+</td>
+<td style="text-align:left;">
+86.6
+</td>
+<td style="text-align:left;">
+88.1
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Middle</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Either
+</td>
+<td style="text-align:left;">
+97.9
+</td>
+<td style="text-align:left;">
+97.9
+</td>
+<td style="text-align:left;">
+98.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Both
+</td>
+<td style="text-align:left;">
+82.1
+</td>
+<td style="text-align:left;">
+82.2
+</td>
+<td style="text-align:left;">
+83.7
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Ring</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Either
+</td>
+<td style="text-align:left;">
+98.0
+</td>
+<td style="text-align:left;">
+98.2
+</td>
+<td style="text-align:left;">
+98.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Both
+</td>
+<td style="text-align:left;">
+83.0
+</td>
+<td style="text-align:left;">
+83.7
+</td>
+<td style="text-align:left;">
+84.6
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Little</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Either
+</td>
+<td style="text-align:left;">
+98.4
+</td>
+<td style="text-align:left;">
+98.4
+</td>
+<td style="text-align:left;">
+98.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Both
+</td>
+<td style="text-align:left;">
+77.2
+</td>
+<td style="text-align:left;">
+77.3
+</td>
+<td style="text-align:left;">
+79.4
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:upperpalm-per-hand-all">Table 4.5: </span>Percentage of segmentation success by hand for combinations of all eight fingers of a FiveInch slap. In <em>Ignoring Bottom Y</em>, the bottom left and bottom right Y coordinates are ignored. <em>Ignoring Bottom X and Y</em> only checks the locations of the top left and top right coordinates.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Fingers
+</th>
+<th style="text-align:left;">
+Standard Scoring
+</th>
+<th style="text-align:left;">
+Ignoring Bottom Y
+</th>
+<th style="text-align:left;">
+Ignoring Bottom X and Y
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="4">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Right</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Any
+</td>
+<td style="text-align:left;">
+99.6
+</td>
+<td style="text-align:left;">
+99.6
+</td>
+<td style="text-align:left;">
+99.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+At Least Two
+</td>
+<td style="text-align:left;">
+97.7
+</td>
+<td style="text-align:left;">
+97.7
+</td>
+<td style="text-align:left;">
+97.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+At Least Three
+</td>
+<td style="text-align:left;">
+91.4
+</td>
+<td style="text-align:left;">
+91.5
+</td>
+<td style="text-align:left;">
+92.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+All Four
+</td>
+<td style="text-align:left;">
+77.5
+</td>
+<td style="text-align:left;">
+77.8
+</td>
+<td style="text-align:left;">
+81.1
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Left</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Any
+</td>
+<td style="text-align:left;">
+99.5
+</td>
+<td style="text-align:left;">
+99.6
+</td>
+<td style="text-align:left;">
+99.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+At Least Two
+</td>
+<td style="text-align:left;">
+97.7
+</td>
+<td style="text-align:left;">
+97.9
+</td>
+<td style="text-align:left;">
+98.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+At Least Three
+</td>
+<td style="text-align:left;">
+91.0
+</td>
+<td style="text-align:left;">
+91.0
+</td>
+<td style="text-align:left;">
+91.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+All Four
+</td>
+<td style="text-align:left;">
+72.0
+</td>
+<td style="text-align:left;">
+72.7
+</td>
+<td style="text-align:left;">
+74.8
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:upperpalm-per-hand-index-middle">Table 4.6: </span>Percentage of segmentation success by hand when only considering combinations of index and middle fingers. In <em>Ignoring Bottom Y</em>, the bottom left and bottom right Y coordinates are ignored. <em>Ignoring Bottom X and Y</em> only checks the locations of the top left and top right coordinates.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Fingers
+</th>
+<th style="text-align:left;">
+Standard Scoring
+</th>
+<th style="text-align:left;">
+Ignoring Bottom Y
+</th>
+<th style="text-align:left;">
+Ignoring Bottom X and Y
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="2">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Right</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Either Index or Middle
+</td>
+<td style="text-align:left;">
+98.1
+</td>
+<td style="text-align:left;">
+98.1
+</td>
+<td style="text-align:left;">
+98.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Both Index and Middle
+</td>
+<td style="text-align:left;">
+86.2
+</td>
+<td style="text-align:left;">
+86.3
+</td>
+<td style="text-align:left;">
+89.1
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Left</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Either Index or Middle
+</td>
+<td style="text-align:left;">
+98.4
+</td>
+<td style="text-align:left;">
+98.4
+</td>
+<td style="text-align:left;">
+98.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Both Index and Middle
+</td>
+<td style="text-align:left;">
+84.2
+</td>
+<td style="text-align:left;">
+84.5
+</td>
+<td style="text-align:left;">
+85.0
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:upperpalm-per-hand-index-middle-ring">Table 4.7: </span>Percentage of segmentation success by hand when only considering combinations of index, middle, and ring fingers. In <em>Ignoring Bottom Y</em>, the bottom left and bottom right Y coordinates are ignored. <em>Ignoring Bottom X and Y</em> only checks the locations of the top left and top right coordinates.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Fingers
+</th>
+<th style="text-align:left;">
+Standard Scoring
+</th>
+<th style="text-align:left;">
+Ignoring Bottom Y
+</th>
+<th style="text-align:left;">
+Ignoring Bottom X and Y
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="3">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Right</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Any
+</td>
+<td style="text-align:left;">
+99.1
+</td>
+<td style="text-align:left;">
+99.1
+</td>
+<td style="text-align:left;">
+99.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+At Least Two
+</td>
+<td style="text-align:left;">
+95.2
+</td>
+<td style="text-align:left;">
+95.2
+</td>
+<td style="text-align:left;">
+95.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+All Three
+</td>
+<td style="text-align:left;">
+81.5
+</td>
+<td style="text-align:left;">
+81.9
+</td>
+<td style="text-align:left;">
+84.8
+</td>
+</tr>
+<tr grouplength="3">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>Left</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+Any
+</td>
+<td style="text-align:left;">
+99.1
+</td>
+<td style="text-align:left;">
+99.2
+</td>
+<td style="text-align:left;">
+99.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+At Least Two
+</td>
+<td style="text-align:left;">
+95.2
+</td>
+<td style="text-align:left;">
+95.2
+</td>
+<td style="text-align:left;">
+95.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+All Three
+</td>
+<td style="text-align:left;">
+79.3
+</td>
+<td style="text-align:left;">
+80.0
+</td>
+<td style="text-align:left;">
+80.9
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<div id="sec-fiveinch-troublesome" class="section level2">
+<h2><span class="header-section-number">4.4</span> Handling Troublesome Images</h2>
+<div id="fiveinch-troublesome-capture-failures" class="section level3">
+<h3><span class="header-section-number">4.4.1</span> Capture Failures</h3>
+<p>Segmentation algorithms may refuse to process an image. This may happen for a
+technical reason (e.g., the algorithm cannot parse the image data), or for a
+practical reason (e.g., the hand in the image is placed incorrectly). These
+failure scenarios are the result of capturing improper image data. In these
+types of scenarios, it is important to examine the cause of the failure. With
+many live scan capture setups, segmentation is performed immediately after
+capture. If an algorithm can detect that it won’t be able to segment an image
+due to a technical or practical issue, it can alert the operator to perform a
+recapture before the subject leaves.</p>
+<p>The SlapSeg III API encourages algorithms to identify these failure reasons by
+specifying pre-defined <em>deficiencies</em> in the image. Algorithms should attempt
+segmentation even if an image deficiency is encountered if at all possible.
+Note that SlapSeg III <em>guarantees</em> well-formed image data, so failures to parse
+are <strong>not</strong> an indicator of the data provided.</p>
+<p>Reasons for capture-type failures reported by <code>Neurotechnology+0014</code> are enumerated in <a href="upper-palm-fiveinch-data.html#tab:tab-fiveinch-api-failures">Table <a href="upper-palm-fiveinch-data.html#tab:tab-fiveinch-api-failures">4.8</a></a>.</p>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:tab-fiveinch-api-failures">Table 4.8: </span>Count of self-reported capture-type failure reasoning.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Failure Reason
+</th>
+<th style="text-align:right;">
+Images
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Request Recapture (No Attempt)
+</td>
+<td style="text-align:right;">
+115
+</td>
+</tr>
+</tbody>
+</table>
+<p>In situations where the algorithm feels that the presented image should be recaptured (<a href="upper-palm-fiveinch-data.html#tab:tab-fiveinch-api-failures">Table <a href="upper-palm-fiveinch-data.html#tab:tab-fiveinch-api-failures">4.8</a></a>), one or more image deficiencies must be identified. These deficiencies are enumerated in <a href="upper-palm-fiveinch-data.html#tab:tab-fiveinch-deficiencies">Table <a href="upper-palm-fiveinch-data.html#tab:tab-fiveinch-deficiencies">4.9</a></a>. At this point, NIST does not have a groundtruth of image deficiencies, but plans to update this table with the accuracy of deficiency observations in the future.</p>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:tab-fiveinch-deficiencies">Table 4.9: </span>Count of image deficiencies reported when requesting a recapture.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Deficiency
+</th>
+<th style="text-align:right;">
+Count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Hand Geometry
+</td>
+<td style="text-align:right;">
+115
+</td>
+</tr>
+</tbody>
+</table>
+<div id="fiveinch-troublesome-recovery" class="section level4">
+<h4><span class="header-section-number">4.4.1.1</span> Recovery</h4>
+<p>When encountering a segmentation failure, SlapSeg III algorithms are encouraged to provide a <em>best-effort</em> segmentation when possible. In some cases, that best-effort may be correct, which reduces the amount of images that need to be manually adjudicated by an operator.</p>
+<p><code>Neurotechnology+0014</code> did not attempt any recovery segmentations.</p>
+</div>
+</div>
+<div id="fiveinch-segmentation-failure" class="section level3">
+<h3><span class="header-section-number">4.4.2</span> Segmentation Failures</h3>
+<p>Even if an algorithm accepts an image for processing, it can still fail to
+process one or more fingers from the image, regardless of if the algorithm
+requested a recapture and provided best-effort segmentation.</p>
+<p>The SlapSeg III API allows
+algorithms to communicate reasons for failure to process these fingers. In some
+cases, the distal phalanx in question might not be present in the image due to
+amputation or being placed outside the platen’s capture area. It is imperative
+that the segmentation algorithm correctly report this as failing to segment the
+correct friction ridge generalized position without disrupting the sequence of
+valid positions present in the image. This can help prompt an operator to
+recapture or record additional information about the subject.</p>
+<p>In SlapSeg III, a number of images are missing fingers or otherwise have fingers
+that will not be able to be segmented.
+Reasons for segmentation failures reported by <code>Neurotechnology+0014</code> are enumerated in <a href="upper-palm-fiveinch-data.html#tab:fiveinch-seg-fail">Table <a href="upper-palm-fiveinch-data.html#tab:fiveinch-seg-fail">4.10</a></a>.</p>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:fiveinch-seg-fail">Table 4.10: </span>Count of self-reported segmentation failure reasoning.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Failure Reason
+</th>
+<th style="text-align:left;">
+Fingers
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Finger Not Found
+</td>
+<td style="text-align:left;">
+440
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Finger Found, but Can’t Segment
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vendor Defined
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="fiveinch-troublesome-missing" class="section level3">
+<h3><span class="header-section-number">4.4.3</span> Identifying Missing Fingers</h3>
+<p>A small portion of the test corpus in SlapSeg III are missing fingers. <a href="upper-palm-fiveinch-data.html#tab:fiveinch-missing-finger">Table
+<a href="upper-palm-fiveinch-data.html#tab:fiveinch-missing-finger">4.11</a></a> shows how
+successful <code>Neurotechnology+0014</code> was in correctly determining if a finger was
+missing. The <em>Missed</em> row shows when a segmentation position was returned for
+a missing finger. All possible failure reasons are enumerated, but are not
+considered <em>Correctly Identified</em> because the algorithm specified failure for a
+reason other than the finger not being found.</p>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:fiveinch-missing-finger">Table 4.11: </span>Performance of <code>Neurotechnology+0014</code> at detecting fingers missing from an image.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Result
+</th>
+<th style="text-align:left;">
+Percentage
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Missed
+</td>
+<td style="text-align:left;">
+15.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Correctly Identified
+</td>
+<td style="text-align:left;">
+37.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Other Failure: Finger Found, but Can’t Segment
+</td>
+<td style="text-align:left;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Other Failure: Vendor Defined
+</td>
+<td style="text-align:left;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Other Failure: Segmentation Not Attempted
+</td>
+<td style="text-align:left;">
+47.4
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="fiveinch-sequence-error" class="section level3">
+<h3><span class="header-section-number">4.4.4</span> Sequence Error</h3>
+<p>Sequence error occurs when a fingerprint is segmented from an image but assigned
+an incorrect finger position (e.g., segmenting a right middle finger but
+labeling it a right index finger). <a href="upper-palm-fiveinch-data.html#tab:fiveinch-sequence-error">Table
+<a href="upper-palm-fiveinch-data.html#tab:fiveinch-sequence-error">4.12</a></a> shows cases
+in which a segmentation position was returned that matched a ground truth
+segmentation position for a different finger in the same image.</p>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:fiveinch-sequence-error">Table 4.12: </span>Percentage of images in the dataset where one or more segmentation positions correctly matched an incorrect finger position within the same image, indicating sequence error.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Hand
+</th>
+<th style="text-align:left;">
+Standard Scoring
+</th>
+<th style="text-align:left;">
+Ignoring Bottom Y
+</th>
+<th style="text-align:left;">
+Ignoring Bottom X and Y
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Left
+</td>
+<td style="text-align:left;">
+4.77
+</td>
+<td style="text-align:left;">
+4.77
+</td>
+<td style="text-align:left;">
+4.91
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Right
+</td>
+<td style="text-align:left;">
+3.99
+</td>
+<td style="text-align:left;">
+3.99
+</td>
+<td style="text-align:left;">
+4.26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Combined
+</td>
+<td style="text-align:left;">
+4.38
+</td>
+<td style="text-align:left;">
+4.38
+</td>
+<td style="text-align:left;">
+4.58
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div id="sec-upperpalm-orientation" class="section level2">
+<h2><span class="header-section-number">4.5</span> Determining Orientation</h2>
+<p>An <em>optional</em> portion of the SlapSeg III API asked participants to determine the
+hand orientation of an image. Participants were provided the kind
+(e.g., upper palm) and needed to
+determine whether the image was of the left or right hand.</p>
+<strong>Overall Upper Palm accuracy</strong>: 87.5%
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-41">Table 4.13: </span>Percentage of accuracy when determining hand orientation of an upper palm image. The first column indicates the true hand orientation. Subsequent columns indicate the percentage of the time in which the indicated hand orientation was hypothesized.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Left
+</th>
+<th style="text-align:left;">
+Right
+</th>
+<th style="text-align:left;">
+Skip
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Left
+</td>
+<td style="text-align:left;">
+<b>85</b>
+</td>
+<td style="text-align:left;">
+7.8
+</td>
+<td style="text-align:left;">
+7.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Right
+</td>
+<td style="text-align:left;">
+1.6
+</td>
+<td style="text-align:left;">
+<b>90.1</b>
+</td>
+<td style="text-align:left;">
+8.3
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="identification-flats-threeinch-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="full-palm-eightinch-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Neurotechnology+0014.pdf"],
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>
