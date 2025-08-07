@@ -1894,4 +1894,4 @@ print_final_success
 if [ ${validation_version_checked} -eq 0 ]; then
 	print_couldnt_check_version
 fi
-date
+print_footer "${start_sec}"
