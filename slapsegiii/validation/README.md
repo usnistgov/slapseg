@@ -103,9 +103,9 @@ Creating validation submission... (slapsegiii_validation_nfseg_5001.tar.xz) [OKA
 | sign and encrypt the file listed below (run './validate encrypt' for an      |
 | example).                                                                    |
 |                                                                              |
-|                  slapsegiii_validation_nfseg_5001.tar.xz                  |
+|                  slapsegiii_validation_nfseg_5001.tar.xz                     |
 |                                                                              |
-| Please upload both slapsegiii_validation_nfseg_5001.tar.xz.asc and your   |
+| Please upload both slapsegiii_validation_nfseg_5001.tar.xz.asc and your      |
 | public key via https://pages.nist.gov/slapseg/upload.                        |
 ================================================================================
 
