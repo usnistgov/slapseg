@@ -32,7 +32,7 @@ Requirements
 
  * Fingerprint Imagery
    - Because organizations must agree to NIST Special Database terms and conditions, the required fingerprint imagery is not included in this GitHub repository. Request and download the data from our requests website. Download the data by requesting it from the SlapSeg III test staff and [agreeing to the terms].
- * Ubuntu Server 20.04.03 LTS
+ * Ubuntu Server 24.04.3 LTS
    - Even if this is not the latest version of Ubuntu Server, it will be the
      version used to run the evaluation. Direct downloads are available from the
      [Ubuntu Mirrors] ([🇺🇸 USA], [🇪🇺 Europe]) and directly from the [NIST
@@ -47,8 +47,9 @@ Requirements
 
 It is **highly suggested** that you make sure your submission will build and run
 as expected on environments as close as possible to the NIST evaluation
-machines, in order to avoid validation delays. The CPUs used for SlapSeg III are
-**Intel Xeon E5-2680** and **Intel Xeon E5-4650**.
+machines, in order to avoid validation delays. Timing statistics are reported
+when run on a **Intel Xeon Gold 6254** CPU, but all Intel CPU types shall be
+supported. Use of unavailable intrinsics shall degrade gracefully.
 
 How to Run
 ----------
@@ -70,12 +71,12 @@ $ cp /path/to/libslapsegiii_nfseg_5001.so lib/
 $ cp /path/to/slapsegiii_validation_images_*.tar.gz .
 $ ./validate
 ================================================================================
-|  SlapSeg III Validation | Version 202201261256 | 26 Jan 2022 | 17:58:03 UTC  |
+|  SlapSeg III Validation | Version 202203311259 | 07 Aug 2025 | 14:32:18 EDT  |
 ================================================================================
 Checking for required packages... [OKAY]
 Checking for previous validation attempts... [OKAY]
 Checking validation version... (202201261256) [OKAY]
-Checking OS and version... (Ubuntu Server 20.04.3 LTS (Focal Fossa)) [OKAY]
+Checking OS and version... (Ubuntu Server 24.04.3 LTS (Noble Numbat)) [OKAY]
 Checking for unexpanded validation image tarballs... [DEFER]
 Expanding slapsegiii_validation_images_upperpalm-202006111448.tar.gz... [OKAY]
 Expanding slapsegiii_validation_images_fullpalm-201902271132.tar.gz... [OKAY]
@@ -96,19 +97,19 @@ Checking segmentation logs... [WARN]
 ================================================================================
 Running orientation determination... (not implemented) [SKIP]
 Checking orientation logs... (not implemented) [SKIP]
-Creating validation submission... (slapsegiii_validation_nfseg_0001.tar.gz) [OKAY]
+Creating validation submission... (slapsegiii_validation_nfseg_5001.tar.xz) [OKAY]
 ================================================================================
 | You have successfully completed your part of SlapSeg III validation. Please  |
 | sign and encrypt the file listed below (run './validate encrypt' for an      |
 | example).                                                                    |
 |                                                                              |
-|                  slapsegiii_validation_nfseg_0001.tar.gz                  |
+|                  slapsegiii_validation_nfseg_5001.tar.xz                  |
 |                                                                              |
-| Please attach both slapsegiii_validation_nfseg_0001.tar.gz.asc and your   |
-| public key to an email addressed to slapseg@nist.gov.                        |
+| Please upload both slapsegiii_validation_nfseg_5001.tar.xz.asc and your   |
+| public key via https://pages.nist.gov/slapseg/upload.                        |
 ================================================================================
 
-Wed 26 Jan 2022 06:04:32 PM UTC
+Thu Aug  7 02:32:39 PM EDT 2025
 ```
 </details>
 
@@ -172,9 +173,9 @@ The items in this repository are released in the public domain. See the
 
 [API]: https://pages.nist.gov/slapseg/doc/slapsegiii/api/
 [Ubuntu Mirrors]: https://launchpad.net/ubuntu/+cdmirrors
-[🇺🇸 USA]: https://mirror.math.princeton.edu/pub/ubuntu-iso/focal/ubuntu-20.04.3-live-server-amd64.iso
-[🇪🇺 Europe]: http://mirror.init7.net/ubuntu-releases/focal/ubuntu-20.04.3-live-server-amd64.iso
-[NIST Image Group]: https://nigos.nist.gov/evaluations/ubuntu-20.04.3-live-server-amd64.iso
+[🇺🇸 USA]: https://mirror.math.princeton.edu/pub/ubuntu-iso/noble/ubuntu-24.04.3-live-server-amd64.iso
+[🇪🇺 Europe]: http://mirror.init7.net/ubuntu-releases/noble/ubuntu-24.04.3-live-server-amd64.iso
+[NIST Image Group]: https://nigos.nist.gov/evaluations/ubuntu-24.04.3-live-server-amd64.iso
 [lib/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/lib
 [bin/]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/bin
 [README.md]: https://github.com/usnistgov/slapseg/blob/master/slapsegiii/validation/README.md
