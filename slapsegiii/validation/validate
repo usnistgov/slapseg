@@ -1424,6 +1424,7 @@ check_segmentation_log_errors()
 		local has_frgp_error=0
 		local missing_deficiencies=0
 		local has_deficiencies=0
+		local has_duplicate_fgp=0
 
 		{
 		read -r # Read header line
@@ -1496,6 +1497,17 @@ check_segmentation_log_errors()
 		done
 		} < "${output_dir}/segments-${type}.log"
 
+		# Check for duplicate FGP
+		local total_segments
+		total_segments=$(wc -l "${output_dir}/segments-${type}.log" | \
+		    cut -f 1 -d ' ')
+		local unique_segments
+		unique_segments=$(cut -f 1,5 -d ',' \
+		    "${output_dir}/segments-${type}.log" | sort | uniq | wc -l)
+		if [ "${total_segments}" != "${unique_segments}" ]; then
+			has_duplicate_fgp=1
+		fi
+
 		if [ ${has_quantity_error} -eq 1 ] || \
 		    [ ${has_outside_coordinates} -eq 1 ] || \
 		    [ ${is_rotated} -eq 1 ] || \
@@ -1503,7 +1515,8 @@ check_segmentation_log_errors()
 		    [ ${has_irregular_coordinates} -eq 1 ] || \
 		    [ ${has_deficiencies} -eq 1 ] || \
 		    [ ${has_frgp_error} -eq 1 ] || \
-		    [ ${missing_deficiencies} -eq 1 ]; then
+		    [ ${missing_deficiencies} -eq 1 ] ||
+		    [ ${has_duplicate_fgp} -eq 1 ]; then
 		    	local p="${output_dir}"/segments-${type}.log
 		    	if [ "${error_message}" != "" ]; then
 		    		error_message+="\n"
@@ -1549,6 +1562,10 @@ check_segmentation_log_errors()
 
 		if [ ${has_irregular_coordinates} -eq 1 ]; then
 			error_message+='\n \x2A has irregular coordinates.'
+		fi
+
+		if [ ${has_duplicate_fgp} -eq 1 ]; then
+			error_message+='\n \x2A has images with duplicate FGP.'
 		fi
 	done
 

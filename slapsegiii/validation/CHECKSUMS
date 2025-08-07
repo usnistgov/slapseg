@@ -7,4 +7,4 @@ SHA256 (src/slapsegiii_validation.h) = 588673c6f781b2eddb31a64426e1aa8b7dbeb2f44
 SHA256 (src/slapsegiii_validation_utils.h) = ef7c76c7ac2f06278272cd6742308e26ef49d4824b42754c4ca328b9b63b4bf0
 SHA256 (src/slapsegiii_validation_validate.cpp) = 88f0f79b14e12add43c1e6c6154f8a5da4fb6256a6c3d061e23dcdcf15fe9ecc
 SHA256 (src/slapsegiii_validation_validate.h) = ceb159adb1dd2375ca66be25dd8a7627296e08a5dcbeaa1f9ebf88eba1b37429
-SHA256 (validate) = 6ecd5fd70261afd34fb66b5706f3f77caaf094bae03f605841ceb316eddf42e3
+SHA256 (validate) = 04a4b3a3c2a1ecf5676331fd1a8eda51fb3046138834696967609747f3c8abaf
