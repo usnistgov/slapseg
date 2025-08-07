@@ -71,7 +71,7 @@ $ cp /path/to/libslapsegiii_nfseg_5001.so lib/
 $ cp /path/to/slapsegiii_validation_images_*.tar.gz .
 $ ./validate
 ================================================================================
-|  SlapSeg III Validation | Version 202203311259 | 07 Aug 2025 | 14:32:18 EDT  |
+|  SlapSeg III Validation | Version 202508071458 | 07 Aug 2025 | 15:01:33 EDT  |
 ================================================================================
 Checking for required packages... [OKAY]
 Checking for previous validation attempts... [OKAY]
@@ -109,8 +109,7 @@ Creating validation submission... (slapsegiii_validation_nfseg_5001.tar.xz) [OKA
 | public key via https://pages.nist.gov/slapseg/upload.                        |
 ================================================================================
 
-Thu Aug  7 02:32:39 PM EDT 2025
-```
+Completed: 07 Aug 2025 | 15:01:53 EDT (Runtime: 20s)```
 </details>
 
 Submission Contents
