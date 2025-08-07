@@ -531,7 +531,6 @@ get_core_library_name()
 		local msg="Library directory not found. Create it and place "
 		msg+="the core library inside."
 		fail "${msg}" "" "The library directory is:" "${lib_dir}"
-		return 1
 	fi
 
 	local core_lib=""
@@ -540,7 +539,6 @@ get_core_library_name()
 	    -regex "${lib_dir}/${lib_regex}" -printf "%P\n" | wc -l)
 	if [ "${count}" != "1" ]; then
 		fail "More than one core library found in ${lib_dir}"
-		return 1
 	fi
 
 	local core_lib
@@ -550,7 +548,6 @@ get_core_library_name()
 		local msg="No core library found in the library directory. "
 		msg+="Please review the SlapSeg III library naming conventions."
 		fail "${msg}" "" "The library directory is:" "${lib_dir}"
-		return 1
 	fi
 
 	echo "${core_lib}"
@@ -597,7 +594,6 @@ check_library()
 			msg+="library naming conventions."
                 	fail "${msg}" "" "The library directory is:" \
 			    "${lib_dir}"
-			return 1
 		fi
 
 		return 1
@@ -920,7 +916,6 @@ check_api_level()
 		output=$(<"${tempfile}")
 		rm "${tempfile}"
 		fail "${output}"
-		return 1
 	fi
 
 	rm "${tempfile}"
@@ -934,13 +929,11 @@ clean_previous_attempts()
 	rm -rf "${bin_dir}"
 	if [ -d "${bin_dir}" ]; then
 		fail "Failed to remove" "${bin_dir}"
-		return 1
 	fi
 
 	rm -rf "${output_dir}"
 	if [ -d "${output_dir}" ]; then
 		fail "Failed to remove" "${output_dir}"
-		return 1
 	fi
 
 	rm -f "${lib_dir}/libslapsegiii.so"
@@ -960,7 +953,6 @@ clean_previous_attempts()
 	if [ "$(find "${wd}" -name \
 	    "slapsegiii_validation_${org_name}_*" | wc -l)" != "0" ]; then
 	    	fail "Failed to remove some output. Please delete it manually."
-		return 1
 	fi
 
 	okay
@@ -1596,7 +1588,7 @@ print_footer()
 	font_dim
 	echo -n "Completed: $(get_date)"
 	if [ "${start_sec}" != "" ]; then
-		local duration=$(( ("$(date +%s)" - start_sec) ))
+		local duration=$(( "$(date +%s)" - start_sec ))
 		echo " (Runtime: ${duration}s)"
 	else
 		echo
@@ -1684,7 +1676,7 @@ print_couldnt_check_version()
 	echo
 	printf '*%.0s' $(seq 1 80)
 	echo
-	echo -e -n ${msg} | fold -s
+	echo -e -n "${msg}" | fold -s
 	printf '*%.0s' $(seq 1 80)
 	echo
 }
