@@ -713,35 +713,30 @@ compile()
 
 	local log="${output_dir}/compile.log"
 
-	declare -A md5s
-	md5s["../libslapsegiii/libslapsegiii.cpp"]="2588125e9cf947ed54fabc9f4f4220fe"
-	md5s["../include/slapsegiii.h"]="91f50f3a3486416ffbeba66dc8117acf"
-	md5s["src/slapsegiii_validation.cpp"]="389cee0f81e280648ab9f63525983ae9"
-	md5s["src/slapsegiii_validation_data.h"]="1ce6cb0105061ec2e85302834a3c4701"
-	md5s["src/slapsegiii_validation.h"]="2ea4d0c1810e260c0c16c76dd87b3c65"
-	md5s["src/slapsegiii_validation_utils.h"]="ae940adf6ed49fc0bc133c4bda64f201"
-	md5s["src/slapsegiii_validation_validate.cpp"]="5e838ee2cbe1cac6ffc67b28e43d2797"
-	md5s["src/slapsegiii_validation_validate.h"]="823bd7251bd5bd25ea3dc46a6cd1313a"
+	# cksum -a sha256 "../libslapsegiii/libslapsegiii.cpp" \
+	#    "../include/slapsegiii.h" \
+	#    "src/CMakeLists.txt" \
+	#    "src/slapsegiii_validation.cpp" \
+	#    "src/slapsegiii_validation_data.h" \
+	#    "src/slapsegiii_validation.h" \
+	#    "src/slapsegiii_validation_utils.h" \
+	#    "src/slapsegiii_validation_validate.cpp" \
+	#    "src/slapsegiii_validation_validate.h" \
+	#    "validate" > \
+	#    CHECKSUMS
 
 	# Check checksums
-	local expected
-	local actual
 	echo "Source checksums:" >> "${log}"
-	for f in "${!md5s[@]}"; do
-		expected="${md5s[${f}]}"
-		actual=$(md5sum "${wd}/${f}" | cut -f 1 -d ' ')
-		if [ "${expected}" != "${actual}" ]; then
-			local bf
-			bf="$(basename "${f}")"
-			local msg="Your copy of ${bf} appears to be modified. "
-			msg+="Please restore the original copy. Making changes "
-			msg+="will almost certainly cause errors."
-			fail "${msg}"
-		fi
-
-		echo "${actual} ${f}" >> "${log}"
-	done
-	echo >> "${log}"
+	if ! cksum --strict --check "${wd}/CHECKSUMS" >> "${log}"; then
+		local msg="One or more validation source files appears to have "
+		msg+="been modified. Refer to \"${wd}/CHECKSUMS\"."
+		fail "${msg}"
+	fi
+	{
+		echo
+		cksum -a sha256 "${wd}/validate"
+		echo
+	} >> "${log}"
 
 	if [ -n "${LD_LIBRARY_PATH}" ]; then
 		local msg="You appear to have set the variable "
