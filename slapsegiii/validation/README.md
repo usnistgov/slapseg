@@ -75,7 +75,7 @@ $ ./validate
 ================================================================================
 Checking for required packages... [OKAY]
 Checking for previous validation attempts... [OKAY]
-Checking validation version... (202201261256) [OKAY]
+Checking validation version... (202508071458) [OKAY]
 Checking OS and version... (Ubuntu Server 24.04.3 LTS (Noble Numbat)) [OKAY]
 Checking for unexpanded validation image tarballs... [DEFER]
 Expanding slapsegiii_validation_images_upperpalm-202006111448.tar.gz... [OKAY]
